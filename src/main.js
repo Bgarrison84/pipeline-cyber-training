@@ -23,10 +23,9 @@ export function getComplianceRefs() {
 }
 
 export function renderBadge(directiveKey) {
-  // Fallback text only if fetch failed (network error)
-  const fallbacks = { TSA: 'TSA SD-02F', NIST: 'NIST SP 800-82 Rev 3' };
+  // Use shortName from compliance-refs.json; fallback to key only if fetch failed
   const shortName = complianceRefs?.directives?.[directiveKey]?.shortName
-    ?? fallbacks[directiveKey];
+    ?? directiveKey;
 
   const colorClasses = {
     TSA:  'bg-[var(--color-badge-tsa-bg)] text-[var(--color-badge-tsa-text)]',
