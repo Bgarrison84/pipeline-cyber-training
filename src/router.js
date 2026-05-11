@@ -41,8 +41,9 @@ const viewRenderers = {
 };
 
 export function handleRoute() {
-  const { view, params } = matchRoute(window.location.hash);
   const app = document.getElementById('app');
+  if (!app) return;
+  const { view, params } = matchRoute(window.location.hash);
   const renderer = viewRenderers[view] ?? viewRenderers['not-found'];
   app.innerHTML = renderer(params);
   setActiveModule(params.moduleId ?? null);
