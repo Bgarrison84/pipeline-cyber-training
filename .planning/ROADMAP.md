@@ -10,7 +10,7 @@
 
 ## Phases
 
-- [ ] **Phase 1: App Shell + Build Pipeline + Deploy** - Navigable static site with hash routing, Vite build, and live GitHub Pages deployment
+- [x] **Phase 1: App Shell + Build Pipeline + Deploy** - Navigable static site with hash routing, Vite build, and live GitHub Pages deployment
 - [ ] **Phase 2: Content Loader + Lesson Rendering + Module 1** - Markdown fetch pipeline, syntax-highlighted code blocks, and first complete module authored
 - [ ] **Phase 3: Progress Store** - localStorage persistence with schema versioning, quota handling, and data export
 - [ ] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars
@@ -36,10 +36,10 @@
   5. Running `vite build` locally produces a deployable `dist/` that GitHub Actions deploys automatically on push to main; `.nojekyll` is present
 **Plans:** 4 plans
 Plans:
-- [ ] 01-01-PLAN.md — Node upgrade + Vite scaffold + design tokens + compliance data + Vitest test stubs (Wave 0)
-- [ ] 01-02-PLAN.md — Hash router + app entry point + index.html shell + sidebar JS (Wave 1)
-- [ ] 01-03-PLAN.md — Home view + module placeholder view + not-found view (Wave 2)
-- [ ] 01-04-PLAN.md — GitHub Actions deploy workflow + live URL verification (Wave 3)
+- [x] 01-01-PLAN.md — Node upgrade + Vite scaffold + design tokens + compliance data + Vitest test stubs (Wave 0)
+- [x] 01-02-PLAN.md — Hash router + app entry point + index.html shell + sidebar JS (Wave 1)
+- [x] 01-03-PLAN.md — Home view + module placeholder view + not-found view (Wave 2)
+- [x] 01-04-PLAN.md — GitHub Actions deploy workflow + live URL verification (Wave 3)
 **UI hint:** yes
 
 ### Phase 2: Content Loader + Lesson Rendering + Module 1
@@ -139,7 +139,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. App Shell + Build Pipeline + Deploy | 0/4 | Planned | - |
+| 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
 | 2. Content Loader + Lesson Rendering + Module 1 | 0/? | Not started | - |
 | 3. Progress Store | 0/? | Not started | - |
 | 4. Quiz Engine + Lesson Progress UI | 0/? | Not started | - |

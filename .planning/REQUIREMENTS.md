@@ -76,8 +76,8 @@
 
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| SHELL-01 | Phase 1 | Pending |
-| SHELL-02 | Phase 1 | Pending |
+| SHELL-01 | Phase 1 | ✓ Shipped |
+| SHELL-02 | Phase 1 | ✓ Shipped |
 | SHELL-03 | Phase 4 | Pending |
 | SHELL-04 | Phase 6 | Pending |
 | CONT-01 | Phase 2 | Pending |
@@ -97,7 +97,7 @@
 | MOD-03 | Phase 7 | Pending |
 | MOD-04 | Phase 7 | Pending |
 | MOD-05 | Phase 8 | Pending |
-| DATA-01 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | ✓ Shipped |
 | DATA-02 | Phase 7 | Pending |
 | DATA-03 | Phase 7 | Pending |
 | DATA-04 | Phase 3 | Pending |
