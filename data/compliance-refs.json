@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "lastVerified": "2026-05-11",
+  "directives": {
+    "TSA": {
+      "name": "TSA Security Directive Pipeline-2021-02F",
+      "shortName": "TSA SD-02F",
+      "effectiveDate": "2025-05-03",
+      "expiryDate": "2026-05-02",
+      "sourceUrl": "https://www.tsa.gov/sites/default/files/tsa-security-directive-pipeline-2021-02f-and-memo-508c.pdf"
+    },
+    "NIST": {
+      "name": "NIST Special Publication 800-82 Revision 3",
+      "shortName": "NIST SP 800-82 Rev 3",
+      "publishedDate": "2023-09",
+      "sourceUrl": "https://csrc.nist.gov/pubs/sp/800/82/r3/final"
+    }
+  }
+}

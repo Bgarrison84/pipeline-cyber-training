@@ -1,0 +1,83 @@
+// src/sidebar.js
+import { MODULES } from './modules-config.js';
+
+export function initSidebar() {
+  const sidebarModules = document.getElementById('sidebar-modules');
+  if (!sidebarModules) return;
+
+  sidebarModules.innerHTML = MODULES.map(mod => `
+    <div class="sidebar-module" data-module-id="${mod.id}" aria-current="false">
+      <a href="#/module/${mod.id}"
+         aria-label="${mod.title}"
+         style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-primary); text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: border-color 150ms ease, background 150ms ease;"
+         onmouseover="this.style.color='var(--color-accent)'"
+         onmouseout="if(!this.closest('.sidebar-module--active'))this.style.color='var(--color-text-primary)'">
+        <i data-lucide="${mod.icon.toLowerCase()}" style="width:20px;height:20px;flex-shrink:0;"></i>
+        <span class="sidebar-label" style="font-size: var(--text-body); font-weight: 400; white-space: nowrap; overflow: hidden;">${mod.title}</span>
+      </a>
+      <div class="sidebar-lessons" style="padding-left: calc(20px + var(--spacing-sm) + var(--spacing-md));">
+        ${mod.lessons.map(lesson => `
+          <span aria-disabled="true"
+                aria-label="${lesson.title} — available in Phase 2"
+                style="display: block; padding: var(--spacing-xs) var(--spacing-sm); font-size: var(--text-body); color: var(--color-text-muted); opacity: 0.4; pointer-events: none; cursor: default; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+            ${lesson.title}
+          </span>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // Lucide icons in sidebar
+  if (typeof lucide !== 'undefined') {
+    lucide.createIcons();
+  }
+
+  // Collapse toggle
+  const shell     = document.getElementById('shell');
+  const toggleBtn = document.getElementById('sidebar-toggle');
+  let isCollapsed = false;
+
+  if (toggleBtn) {
+    toggleBtn.addEventListener('click', () => {
+      isCollapsed = !isCollapsed;
+      shell.classList.toggle('sidebar-collapsed', isCollapsed);
+      toggleBtn.setAttribute('aria-label',
+        isCollapsed ? 'Expand navigation' : 'Collapse navigation'
+      );
+      document.querySelectorAll('.sidebar-label').forEach(el => {
+        el.style.opacity  = isCollapsed ? '0' : '1';
+        el.style.width    = isCollapsed ? '0' : '';
+        el.style.overflow = isCollapsed ? 'hidden' : '';
+      });
+    });
+  }
+}
+
+export function setActiveModule(moduleId) {
+  document.querySelectorAll('.sidebar-module').forEach(el => {
+    const id       = el.dataset.moduleId;
+    const isActive = id === moduleId;
+    const link     = el.querySelector('a');
+
+    el.classList.toggle('sidebar-module--active', isActive);
+    el.setAttribute('aria-current', isActive ? 'page' : 'false');
+
+    if (link) {
+      if (isActive) {
+        link.style.borderLeftColor = 'var(--color-accent)';
+        link.style.background = 'rgba(249, 115, 22, 0.08)';
+        link.style.color = 'var(--color-accent)';
+      } else {
+        link.style.borderLeftColor = 'transparent';
+        link.style.background = '';
+        link.style.color = 'var(--color-text-primary)';
+      }
+    }
+
+    // Show/hide lesson list with max-height transition
+    const lessonList = el.querySelector('.sidebar-lessons');
+    if (lessonList) {
+      lessonList.style.maxHeight = isActive ? lessonList.scrollHeight + 'px' : '0';
+    }
+  });
+}

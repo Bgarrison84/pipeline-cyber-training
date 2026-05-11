@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-bg-base: #1a1a1a;
+  --color-bg-secondary: #2a2a2a;
+  --color-bg-surface: #f5f5f4;
+  --color-accent: #f97316;
+  --color-accent-hover: #ea6c00;
+  --color-text-primary: #f5f5f4;
+  --color-text-muted: #737373;
+  --color-text-on-light: #1a1a1a;
+  --color-border: #3a3a3a;
+  --color-destructive: #ef4444;
+
+  /* Badge colors */
+  --color-badge-tsa-bg: #1e3a5f;
+  --color-badge-tsa-text: #93c5fd;
+  --color-badge-nist-bg: #1a3a2a;
+  --color-badge-nist-text: #86efac;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --text-mono: 0.8125rem;    /* 13px */
+  --text-body: 0.875rem;     /* 14px */
+  --text-heading: 1.25rem;   /* 20px */
+  --text-display: 1.75rem;   /* 28px */
+
+  /* Spacing (4px base) */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
+
+  /* Fixed layout dimensions */
+  --sidebar-width-expanded: 256px;
+  --sidebar-width-collapsed: 48px;
+  --topbar-height: 48px;
+}
+
+/* Sidebar collapse — toggled on #shell via JS class */
+#shell.sidebar-collapsed {
+  grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+}
+
+/* Transition on sidebar element itself — NOT on grid container */
+#sidebar {
+  transition: width 200ms ease;
+  overflow: hidden;
+}
+
+/* Text labels fade with slight delay */
+.sidebar-label {
+  transition: opacity 150ms ease 50ms, width 150ms ease 50ms;
+}
+
+/* Lesson list max-height transition */
+.sidebar-lessons {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 200ms ease;
+}
+
+/* Focus ring — all interactive elements */
+*:focus-visible {
+  outline: 3px solid #f97316;
+  outline-offset: 2px;
+}
