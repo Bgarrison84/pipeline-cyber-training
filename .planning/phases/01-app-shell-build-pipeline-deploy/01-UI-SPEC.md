@@ -57,15 +57,18 @@ Source: CONTEXT.md D-05, D-06; desktop-primary note in key decisions block.
 
 | Role | Size | Weight | Line Height | Font |
 |------|------|--------|-------------|------|
+| Mono (code/hashes/IDs) | 13px | 400 (regular) | 1.5 | JetBrains Mono |
 | Body | 14px | 400 (regular) | 1.6 | Inter |
-| Label | 12px | 600 (semibold) | 1.4 | Inter |
 | Heading (module title) | 20px | 600 (semibold) | 1.2 | Inter |
-| Display (app name / page title) | 28px | 700 (bold) | 1.1 | Inter |
+| Display (app name / page title) | 28px | 600 (semibold) | 1.1 | Inter |
+
+Declared weights: exactly 2 — 400 (regular) and 600 (semibold).
 
 Notes:
 
-- Two weights declared: 400 (regular) and 600 (semibold). 700 used only for the app display name ("OT Security Lab") in the top bar — treat as a one-off, not a third weight.
-- Monospace text (hash URLs, code inline, compliance IDs in badges): JetBrains Mono 13px / 400 / line-height 1.5.
+- Labels (compliance coverage label, section card labels, progress readout): rendered at Body 14px / 600 (semibold) / uppercase / letter-spacing 0.08em. The weight + case treatment differentiates labels from body text without a separate size token.
+- Compliance badge IDs and small text elements use `--text-mono` (13px / JetBrains Mono / 400).
+- "OT Security Lab" app display name in top bar: 28px / 600 (semibold) / `--color-accent`. The accent orange at 28px creates strong visual differentiation without requiring a third weight.
 - Sidebar lesson labels (grayed out items): Body 14px / 400 / opacity 40% — communicates disabled without a separate color token.
 - All font sizes are declared as Tailwind v4 CSS custom properties in `@theme` block so downstream phases inherit them.
 
@@ -138,11 +141,10 @@ All tokens MUST be declared as CSS custom properties in the `@theme` block of `s
   /* Typography */
   --font-sans: "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", monospace;
-  --text-body: 0.875rem;     /* 14px */
-  --text-label: 0.75rem;     /* 12px */
+  --text-mono: 0.8125rem;    /* 13px — monospace: code, hashes, compliance IDs */
+  --text-body: 0.875rem;     /* 14px — body text and labels (labels use semibold+uppercase) */
   --text-heading: 1.25rem;   /* 20px */
   --text-display: 1.75rem;   /* 28px */
-  --text-mono: 0.8125rem;    /* 13px */
 
   /* Spacing (mirrors 8-point scale) */
   --spacing-xs: 0.25rem;   /* 4px */
@@ -176,8 +178,8 @@ These are the UI components the executor must build for Phase 1. No pre-built li
 ### 2. Top Bar
 
 - Height: 48px, background `--color-bg-secondary`, border-bottom `1px solid --color-border`
-- Left: "OT Security Lab" in Display type (28px, weight 700, `--color-accent`). The app name itself is the accent — it is the primary visual anchor.
-- Right: two items — "Compliance Index" link (14px, semibold, muted text, hover → accent) + overall progress readout ("0 / 5 modules" in 12px label weight — placeholder text in Phase 1)
+- Left: "OT Security Lab" in Display type (28px, weight 600 semibold, `--color-accent`). The app name itself is the accent — it is the primary visual anchor.
+- Right: two items — "Compliance Index" link (14px, semibold, muted text, hover → accent) + overall progress readout ("0 / 5 modules" at 14px semibold uppercase letter-spacing — placeholder text in Phase 1)
 - Top bar does NOT scroll — `position: sticky; top: 0; z-index: 50`
 
 ### 3. Sidebar
@@ -206,7 +208,7 @@ Structure (top to bottom):
 3. Compliance IDs row: Horizontal list of badge components (TSA / NIST badges per module's coverage — sourced from `data/compliance-refs.json`)
 4. Four labeled section skeletons, each a card:
    - Card background: `--color-bg-secondary`, border `1px solid --color-border`, padding `--spacing-lg`
-   - Section label: 12px / semibold / `--color-text-muted` / uppercase / letter-spacing 0.08em
+   - Section label: 14px / 600 (semibold) / `--color-text-muted` / uppercase / letter-spacing 0.08em
    - Section names: "Lessons", "Quizzes", "Terminal Exercises", "Scenarios"
    - Content of each card: a single line of muted italic text — see Copywriting section
 5. All four section cards are arranged in a 2×2 grid on desktop (min-width 1024px), stacked on narrow viewports
@@ -214,8 +216,8 @@ Structure (top to bottom):
 ### 5. Compliance Badge
 
 - Inline component: rounded pill shape, 4px border-radius, padding `4px 8px`
-- TSA badge: background `--color-badge-tsa-bg`, text `--color-badge-tsa-text`, monospace 12px
-- NIST badge: background `--color-badge-nist-bg`, text `--color-badge-nist-text`, monospace 12px
+- TSA badge: background `--color-badge-tsa-bg`, text `--color-badge-tsa-text`, monospace 13px (`--text-mono`)
+- NIST badge: background `--color-badge-nist-bg`, text `--color-badge-nist-text`, monospace 13px (`--text-mono`)
 - Text content: the control ID string exactly (e.g., "TSA SD-02F", "NIST SP 800-82 Rev 3")
 - Never render version strings as inline text — always route through `compliance-refs.json`
 
@@ -226,7 +228,7 @@ Rendered at `#/` route — lists all 5 modules as cards.
 - Card: `--color-bg-secondary`, border `1px solid --color-border`, padding `--spacing-lg`, full-width in a vertical list (desktop: max-width 800px, centered)
 - Module name: Heading size (20px / semibold)
 - Module description: Body (14px / 400 / muted)
-- Estimated time (if available): Label (12px / muted)
+- Estimated time (if available): 14px / semibold / uppercase / letter-spacing 0.08em / muted
 - Compliance badges row below description
 - Arrow-right icon (Lucide ArrowRight, 16px, muted) — indicates navigability
 - Hover state: border color → `--color-accent` (transition 150ms), no background change
@@ -352,6 +354,7 @@ Every component must handle these states. No blank screens, no unhandled conditi
 - Active module item: `aria-current="page"` on the containing `<a>` or `<button>`
 - Disabled lesson items: `aria-disabled="true"` + `aria-label="{lesson title} — available in Phase 2"`
 - Sidebar toggle button: `aria-label="Collapse navigation"` / `aria-label="Expand navigation"` (dynamic)
+- In collapsed mode, each sidebar module link includes `aria-label='{module name}'` (e.g., `aria-label='Logging & Auditing'`) so screen readers announce the destination when icons-only are visible.
 - All color contrast passes WCAG AA:
   - Body text `#f5f5f4` on `#1a1a1a` background: contrast ratio ≈ 17:1 (AAA)
   - Accent `#f97316` on `#1a1a1a` background: contrast ratio ≈ 4.8:1 (AA pass for normal text)
