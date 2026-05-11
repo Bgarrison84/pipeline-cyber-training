@@ -52,5 +52,7 @@ export function handleRoute() {
   }
 }
 
+// hashchange handles all navigations after initial load
+// 'load' listener removed — init() in main.js owns the initial render
+// (after loadComplianceRefs resolves, so badges show correct text on first paint)
 window.addEventListener('hashchange', handleRoute);
-window.addEventListener('load', handleRoute);
