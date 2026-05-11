@@ -1,5 +1,6 @@
 // src/main.js
 import { handleRoute } from './router.js';
+import { initSidebar } from './sidebar.js';
 import { setComplianceRefs, renderBadge } from './badge.js';
 import './style.css';
 
@@ -27,6 +28,7 @@ export function getComplianceRefs() {
 async function init() {
   await loadComplianceRefs();
   handleRoute();
+  initSidebar();
 }
 
 init();
