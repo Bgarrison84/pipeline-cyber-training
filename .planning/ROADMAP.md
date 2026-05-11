@@ -34,7 +34,12 @@
   3. Each module and lesson placeholder has a unique hash URL (e.g. `#/module/logging-auditing`) that is bookmarkable and returns the same view on reload
   4. `data/compliance-refs.json` exists in the repo with the current TSA directive version string (SD-02F) as the canonical reference — no version string is hardcoded anywhere else
   5. Running `vite build` locally produces a deployable `dist/` that GitHub Actions deploys automatically on push to main; `.nojekyll` is present
-**Plans:** TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 01-01-PLAN.md — Node upgrade + Vite scaffold + design tokens + compliance data + Vitest test stubs (Wave 0)
+- [ ] 01-02-PLAN.md — Hash router + app entry point + index.html shell + sidebar JS (Wave 1)
+- [ ] 01-03-PLAN.md — Home view + module placeholder view + not-found view (Wave 2)
+- [ ] 01-04-PLAN.md — GitHub Actions deploy workflow + live URL verification (Wave 3)
 **UI hint:** yes
 
 ### Phase 2: Content Loader + Lesson Rendering + Module 1
@@ -134,7 +139,7 @@
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. App Shell + Build Pipeline + Deploy | 0/? | Not started | - |
+| 1. App Shell + Build Pipeline + Deploy | 0/4 | Planned | - |
 | 2. Content Loader + Lesson Rendering + Module 1 | 0/? | Not started | - |
 | 3. Progress Store | 0/? | Not started | - |
 | 4. Quiz Engine + Lesson Progress UI | 0/? | Not started | - |
@@ -147,3 +152,4 @@
 
 *Roadmap created: 2026-05-10*
 *Mode: mvp | Granularity: fine | Coverage: 26/26*
+*Phase 1 planned: 2026-05-11 — 4 plans, 4 waves*
