@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OT Security Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
+  <!-- Lucide CDN (Phase 1 only — swap to npm in Phase 2) -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="bg-[var(--color-bg-base)] text-[var(--color-text-primary)] h-screen overflow-hidden">
+  <div id="shell" class="grid h-screen"
+       style="grid-template-columns: var(--sidebar-width-expanded) 1fr; grid-template-rows: var(--topbar-height) 1fr;">
+    <header id="top-bar" class="col-span-2 flex items-center justify-between px-[var(--spacing-md)]"
+            style="background: var(--color-bg-secondary); border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 50;">
+      <span style="font-size: var(--text-display); font-weight: 600; color: var(--color-accent);">OT Security Lab</span>
+      <div class="flex items-center gap-[var(--spacing-md)]">
+        <a href="#/compliance" style="font-size: var(--text-body); font-weight: 600; color: var(--color-text-muted);"
+           onmouseover="this.style.color='var(--color-accent)'"
+           onmouseout="this.style.color='var(--color-text-muted)'">Compliance Index</a>
+        <span style="font-size: var(--text-body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;">0 of 5 modules complete</span>
+      </div>
+    </header>
+    <nav id="sidebar" aria-label="Module navigation"
+         style="background: var(--color-bg-secondary); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; overflow: hidden;">
+      <div id="sidebar-modules" style="flex: 1; overflow-y: auto;"></div>
+      <button id="sidebar-toggle" aria-label="Collapse navigation"
+              style="width: 100%; height: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; border-top: 1px solid var(--color-border); background: transparent; cursor: pointer; color: var(--color-text-muted);">
+        <i data-lucide="chevron-left" style="width: 20px; height: 20px;"></i>
+      </button>
+    </nav>
+    <main id="app" role="main" style="overflow-y: auto;"></main>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
