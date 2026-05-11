@@ -23,7 +23,7 @@ const SECTION_CARDS = [
 
 export function renderModule({ moduleId }) {
   const mod = MODULES.find(m => m.id === moduleId);
-  if (!mod) return renderModuleNotFound(moduleId);
+  if (!mod) return renderModuleNotFound();
 
   const sectionCards = SECTION_CARDS.map(s => `
     <div style="border: 1px solid var(--color-border); background: var(--color-bg-secondary); padding: var(--spacing-lg); border-radius: 4px;">
@@ -35,7 +35,7 @@ export function renderModule({ moduleId }) {
   return `
     <section style="padding: var(--spacing-xl);">
       <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
-        <i data-lucide="${mod.icon.toLowerCase()}" style="width:24px;height:24px;color:var(--color-accent)"></i>
+        <i data-lucide="${mod.icon}" style="width:24px;height:24px;color:var(--color-accent)"></i>
         <h1 style="font-size: var(--text-heading); font-weight: 600;">${mod.title}</h1>
       </div>
 
@@ -45,7 +45,7 @@ export function renderModule({ moduleId }) {
       </div>
 
       <div style="margin-bottom: var(--spacing-lg);">
-        <p style="font-size: var(--text-body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--spacing-xs);">Compliance controls covered</p>
+        <p style="font-size: var(--text-body); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--spacing-xs);">COMPLIANCE CONTROLS COVERED</p>
         <div style="display: flex; gap: var(--spacing-xs);">
           ${mod.complianceTags.map(tag => renderBadge(tag)).join('')}
         </div>
@@ -58,23 +58,11 @@ export function renderModule({ moduleId }) {
   `;
 }
 
-function renderModuleNotFound(moduleId) {
-  // Use textContent pattern via data attribute to avoid XSS from hash-derived string
+function renderModuleNotFound() {
+  // Static text only — never inject moduleId (hash-derived) into innerHTML (T-03-01)
   return `
-    <section style="padding: var(--spacing-xl);">
-      <p style="font-size: var(--text-body); color: var(--color-text-muted);" id="module-not-found-msg">Module not found.</p>
+    <section style=”padding: var(--spacing-xl);”>
+      <p style=”font-size: var(--text-body); color: var(--color-text-muted);”>Module not found.</p>
     </section>
-    <script>
-      (function() {
-        const el = document.getElementById('module-not-found-msg');
-        if (el) {
-          const safe = document.createElement('span');
-          safe.textContent = ${JSON.stringify(moduleId)};
-          el.textContent = 'Module “';
-          el.appendChild(safe);
-          el.appendChild(document.createTextNode('” not found.'));
-        }
-      })();
-    </script>
   `;
 }
