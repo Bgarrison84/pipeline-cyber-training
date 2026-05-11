@@ -1,3 +1,12 @@
 node_modules/
 dist/
 .DS_Store
+
+# Vite .env files — prevent accidental secret commits
+.env.local
+.env.*.local
+*.env
+
+# Alternative package manager lock files (project uses npm)
+yarn.lock
+pnpm-lock.yaml
