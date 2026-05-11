@@ -61,7 +61,11 @@ export function setActiveModule(moduleId) {
     const link     = el.querySelector('a');
 
     el.classList.toggle('sidebar-module--active', isActive);
-    el.setAttribute('aria-current', isActive ? 'page' : 'false');
+    if (isActive) {
+      el.setAttribute('aria-current', 'page');
+    } else {
+      el.removeAttribute('aria-current');
+    }
 
     if (link) {
       if (isActive) {
