@@ -9,7 +9,7 @@ import { dirname, resolve } from 'path'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-const raw = readFileSync(resolve(__dirname, '../data/compliance-refs.json'), 'utf-8')
+const raw = readFileSync(resolve(__dirname, '../public/data/compliance-refs.json'), 'utf-8')
 const refs = JSON.parse(raw)
 
 describe('compliance-refs.json', () => {
