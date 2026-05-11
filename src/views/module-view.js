@@ -1,6 +1,7 @@
 // src/views/module-view.js
 import { MODULES } from '../modules-config.js';
 import { renderBadge } from '../badge.js';
+import { esc } from '../utils/escape.js';
 
 const SECTION_CARDS = [
   {
@@ -35,13 +36,13 @@ export function renderModule({ moduleId }) {
   return `
     <section style="padding: var(--spacing-xl);">
       <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
-        <i data-lucide="${mod.icon}" style="width:24px;height:24px;color:var(--color-accent)"></i>
-        <h1 style="font-size: var(--text-heading); font-weight: 600;">${mod.title}</h1>
+        <i data-lucide="${esc(mod.icon.toLowerCase())}" style="width:24px;height:24px;color:var(--color-accent)"></i>
+        <h1 style="font-size: var(--text-heading); font-weight: 600;">${esc(mod.title)}</h1>
       </div>
 
       <div style="border-left: 3px solid var(--color-border); padding-left: var(--spacing-md); margin-bottom: var(--spacing-md); background: var(--color-bg-secondary); padding: var(--spacing-md);">
         <p style="font-size: var(--text-body); color: var(--color-text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--spacing-xs);">Module goal</p>
-        <p style="font-size: var(--text-body);">${mod.description}</p>
+        <p style="font-size: var(--text-body);">${esc(mod.description)}</p>
       </div>
 
       <div style="margin-bottom: var(--spacing-lg);">

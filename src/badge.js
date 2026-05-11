@@ -1,5 +1,6 @@
 // src/badge.js — standalone badge renderer, no circular deps
 // renderBadge is extracted here so views can import it without pulling in main.js
+import { esc } from './utils/escape.js';
 
 let _complianceRefs = null;
 
@@ -16,5 +17,5 @@ export function renderBadge(directiveKey) {
     NIST: 'bg-[var(--color-badge-nist-bg)] text-[var(--color-badge-nist-text)]',
   };
 
-  return `<span class="inline-block rounded px-2 py-0.5 font-mono text-[var(--text-mono)] ${colorClasses[directiveKey] ?? ''}">${shortName}</span>`;
+  return `<span class="inline-block rounded px-2 py-0.5 font-mono text-[var(--text-mono)] ${colorClasses[directiveKey] ?? ''}">${esc(shortName)}</span>`;
 }

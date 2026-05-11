@@ -1,26 +1,27 @@
 // src/sidebar.js
 import { MODULES } from './modules-config.js';
+import { esc } from './utils/escape.js';
 
 export function initSidebar() {
   const sidebarModules = document.getElementById('sidebar-modules');
   if (!sidebarModules) return;
 
   sidebarModules.innerHTML = MODULES.map(mod => `
-    <div class="sidebar-module" data-module-id="${mod.id}" aria-current="false">
-      <a href="#/module/${mod.id}"
-         aria-label="${mod.title}"
+    <div class="sidebar-module" data-module-id="${esc(mod.id)}">
+      <a href="#/module/${esc(mod.id)}"
+         aria-label="${esc(mod.title)}"
          style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-primary); text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: border-color 150ms ease, background 150ms ease;"
          onmouseover="this.style.color='var(--color-accent)'"
          onmouseout="if(!this.closest('.sidebar-module--active'))this.style.color='var(--color-text-primary)'">
-        <i data-lucide="${mod.icon.toLowerCase()}" style="width:20px;height:20px;flex-shrink:0;"></i>
-        <span class="sidebar-label" style="font-size: var(--text-body); font-weight: 400; white-space: nowrap; overflow: hidden;">${mod.title}</span>
+        <i data-lucide="${esc(mod.icon.toLowerCase())}" style="width:20px;height:20px;flex-shrink:0;"></i>
+        <span class="sidebar-label" style="font-size: var(--text-body); font-weight: 400; white-space: nowrap; overflow: hidden;">${esc(mod.title)}</span>
       </a>
       <div class="sidebar-lessons" style="padding-left: calc(20px + var(--spacing-sm) + var(--spacing-md));">
         ${mod.lessons.map(lesson => `
           <span aria-disabled="true"
-                aria-label="${lesson.title} — available in Phase 2"
+                aria-label="${esc(lesson.title)} — available in Phase 2"
                 style="display: block; padding: var(--spacing-xs) var(--spacing-sm); font-size: var(--text-body); color: var(--color-text-muted); opacity: 0.4; pointer-events: none; cursor: default; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            ${lesson.title}
+            ${esc(lesson.title)}
           </span>
         `).join('')}
       </div>

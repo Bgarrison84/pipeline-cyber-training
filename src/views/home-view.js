@@ -1,19 +1,20 @@
 // src/views/home-view.js
 import { MODULES } from '../modules-config.js';
 import { renderBadge } from '../badge.js';
+import { esc } from '../utils/escape.js';
 
 export function renderHome() {
   const cards = MODULES.map(mod => `
     <article class="border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-[var(--spacing-lg)] rounded hover:border-[var(--color-accent)] transition-colors duration-150 cursor-pointer"
              role="link"
              tabindex="0"
-             onclick="location.hash='#/module/${mod.id}'"
-             onkeydown="if(event.key==='Enter')location.hash='#/module/${mod.id}'">
+             onclick="location.hash='#/module/${esc(mod.id)}'"
+             onkeydown="if(event.key==='Enter')location.hash='#/module/${esc(mod.id)}'">
       <div class="flex items-center justify-between">
-        <h2 class="text-[var(--text-heading)] font-semibold">${mod.title}</h2>
+        <h2 class="text-[var(--text-heading)] font-semibold">${esc(mod.title)}</h2>
         <i data-lucide="arrow-right" style="width:16px;height:16px;color:var(--color-text-muted)"></i>
       </div>
-      <p style="font-size: var(--text-body); color: var(--color-text-muted); margin-top: var(--spacing-sm);">${mod.description}</p>
+      <p style="font-size: var(--text-body); color: var(--color-text-muted); margin-top: var(--spacing-sm);">${esc(mod.description)}</p>
       <div style="display: flex; gap: var(--spacing-xs); margin-top: var(--spacing-sm);">
         ${mod.complianceTags.map(tag => renderBadge(tag)).join('')}
       </div>
