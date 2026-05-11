@@ -1,6 +1,6 @@
 // src/views/module-view.js
 import { MODULES } from '../modules-config.js';
-import { renderBadge } from '../main.js';
+import { renderBadge } from '../badge.js';
 
 const SECTION_CARDS = [
   {

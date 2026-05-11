@@ -1,6 +1,6 @@
 // src/views/home-view.js
 import { MODULES } from '../modules-config.js';
-import { renderBadge } from '../main.js';
+import { renderBadge } from '../badge.js';
 
 export function renderHome() {
   const cards = MODULES.map(mod => `
