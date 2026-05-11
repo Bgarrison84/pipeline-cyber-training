@@ -780,22 +780,13 @@ Steps 1-9 can be developed and tested locally (`npm run dev`). Steps 10-12 requi
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Node.js upgrade path for local dev**
-   - What we know: Node 20.13.1 is installed; no version manager detected
-   - What's unclear: Whether `winget upgrade Node.js` or nodejs.org installer is preferred
-   - Recommendation: Wave 0 step — run `winget install OpenJS.NodeJS.LTS` or download from nodejs.org/en/download; use Node 22 LTS
+1. **Node.js upgrade path for local dev** — RESOLVED: Wave 0 Task 1 (01-01-PLAN.md) handles this as a human-action checkpoint: run `winget install OpenJS.NodeJS.LTS` or download from nodejs.org; use Node 22 LTS.
 
-2. **GitHub Pages repository visibility**
-   - What we know: Repo `Bgarrison84/pipeline-cyber-training` does not exist yet
-   - What's unclear: Whether the repo should be public or private (GitHub Pages requires public repo on free plan)
-   - Recommendation: Create as public — required for GitHub Pages on a free GitHub account
+2. **GitHub Pages repository visibility** — RESOLVED: 01-04-PLAN.md Task 1 uses `gh repo create Bgarrison84/pipeline-cyber-training --public` — public required for GitHub Pages on a free account.
 
-3. **Lucide bundling timing**
-   - What we know: UI-SPEC says CDN for Phase 1, bundled in Phase 2
-   - What's unclear: CDN icon loading can cause FOUT (flash of missing icons) on first load
-   - Recommendation: Proceed with CDN per spec; note FOUT risk in plan
+3. **Lucide bundling timing** — RESOLVED: Proceed with CDN per UI-SPEC (01-02-PLAN.md Task 2); FOUT risk noted in plan; bundled import deferred to Phase 2.
 
 ---
 
