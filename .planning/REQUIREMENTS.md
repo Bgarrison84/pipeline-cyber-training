@@ -72,33 +72,33 @@
 
 ## Traceability
 
-*Filled in by roadmap agent.*
+*Filled in by roadmap agent — 2026-05-10.*
 
-| REQ-ID | Phase |
-|--------|-------|
-| SHELL-01 | — |
-| SHELL-02 | — |
-| SHELL-03 | — |
-| SHELL-04 | — |
-| CONT-01 | — |
-| CONT-02 | — |
-| CONT-03 | — |
-| CONT-04 | — |
-| TERM-01 | — |
-| TERM-02 | — |
-| TERM-03 | — |
-| TERM-04 | — |
-| ASSESS-01 | — |
-| ASSESS-02 | — |
-| ASSESS-03 | — |
-| ASSESS-04 | — |
-| MOD-01 | — |
-| MOD-02 | — |
-| MOD-03 | — |
-| MOD-04 | — |
-| MOD-05 | — |
-| DATA-01 | — |
-| DATA-02 | — |
-| DATA-03 | — |
-| DATA-04 | — |
-| DATA-05 | — |
+| REQ-ID | Phase | Status |
+|--------|-------|--------|
+| SHELL-01 | Phase 1 | Pending |
+| SHELL-02 | Phase 1 | Pending |
+| SHELL-03 | Phase 4 | Pending |
+| SHELL-04 | Phase 6 | Pending |
+| CONT-01 | Phase 2 | Pending |
+| CONT-02 | Phase 2 | Pending |
+| CONT-03 | Phase 2 | Pending |
+| CONT-04 | Phase 2 | Pending |
+| TERM-01 | Phase 5 | Pending |
+| TERM-02 | Phase 5 | Pending |
+| TERM-03 | Phase 5 | Pending |
+| TERM-04 | Phase 5 | Pending |
+| ASSESS-01 | Phase 4 | Pending |
+| ASSESS-02 | Phase 6 | Pending |
+| ASSESS-03 | Phase 3 | Pending |
+| ASSESS-04 | Phase 6 | Pending |
+| MOD-01 | Phase 2 | Pending |
+| MOD-02 | Phase 7 | Pending |
+| MOD-03 | Phase 7 | Pending |
+| MOD-04 | Phase 7 | Pending |
+| MOD-05 | Phase 8 | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 7 | Pending |
+| DATA-03 | Phase 7 | Pending |
+| DATA-04 | Phase 3 | Pending |
+| DATA-05 | Phase 3 | Pending |
