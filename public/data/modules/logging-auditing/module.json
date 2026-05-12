@@ -1,0 +1,14 @@
+{
+  "id": "logging-auditing",
+  "title": "Logging & Auditing",
+  "description": "Configure Windows Event Logging and PowerShell script block logging to meet TSA pipeline security directive and NIST SP 800-82 Rev 3 requirements.",
+  "order": 1,
+  "estimatedMinutes": 45,
+  "icon": "BookOpen",
+  "complianceTags": ["TSA", "NIST"],
+  "lessons": [
+    { "id": "intro",          "title": "Introduction to Windows Event Logs" },
+    { "id": "ps-logging",     "title": "Enabling PowerShell Script Block Logging" },
+    { "id": "audit-policies", "title": "Configuring Audit Policies via Group Policy" }
+  ]
+}
