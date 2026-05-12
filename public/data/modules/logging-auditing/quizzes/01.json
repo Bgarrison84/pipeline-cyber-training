@@ -1,0 +1,41 @@
+{
+  "id": "logging-auditing-quiz-01",
+  "moduleId": "logging-auditing",
+  "title": "Logging & Auditing Knowledge Check",
+  "status": "placeholder",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell Event ID captures the full content of executed script blocks?",
+      "complianceControls": ["NIST-AU-12"],
+      "answers": [
+        {
+          "id": "a",
+          "text": "4624",
+          "correct": false,
+          "feedback": "Event ID 4624 is a successful logon event, not script block logging."
+        },
+        {
+          "id": "b",
+          "text": "4104",
+          "correct": true,
+          "feedback": "Correct. Event ID 4104 in the PowerShell/Operational log captures script block content when Script Block Logging is enabled."
+        },
+        {
+          "id": "c",
+          "text": "4688",
+          "correct": false,
+          "feedback": "Event ID 4688 logs process creation, not PowerShell script block content."
+        },
+        {
+          "id": "d",
+          "text": "7045",
+          "correct": false,
+          "feedback": "Event ID 7045 logs new service installation, not PowerShell activity."
+        }
+      ],
+      "explanation": "Script Block Logging (Event ID 4104) captures the full text of all PowerShell script blocks to the Microsoft-Windows-PowerShell/Operational log."
+    }
+  ]
+}

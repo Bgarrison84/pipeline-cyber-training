@@ -1,0 +1,25 @@
+{
+  "id": "logging-auditing-ex-01",
+  "moduleId": "logging-auditing",
+  "title": "Enable Script Block Logging",
+  "status": "placeholder",
+  "description": "Use PowerShell to enable Script Block Logging via the registry on PIPELINE-DC01.",
+  "complianceControls": ["TSA-Monitoring", "NIST-AU-12"],
+  "context": "You are logged into PIPELINE-DC01 as a domain administrator. Script Block Logging is currently disabled.",
+  "steps": [
+    {
+      "id": "step-1",
+      "instruction": "Check whether the ScriptBlockLogging registry key exists.",
+      "hint": "Use Get-Item or Get-ItemProperty with the HKLM: path.",
+      "expectedCommands": [
+        {
+          "pattern": "Get-Item.*ScriptBlockLogging|Get-ItemProperty.*ScriptBlockLogging",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "Get-Item : Cannot find path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging' because it does not exist.\nAt line:1 char:1\n+ Get-Item HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging",
+      "feedbackOnWrong": "Navigate to HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell and check for ScriptBlockLogging."
+    }
+  ]
+}
