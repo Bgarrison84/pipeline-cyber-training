@@ -76,10 +76,18 @@ marked.use({
       const rawText = token.raw || '';
 
       if (rawText.trimStart().startsWith('> [!OT]')) {
-        // Filter out the [!OT] marker paragraph — leave only the body content
-        const bodyTokens = (token.tokens ?? []).filter(
-          t => !(t.type === 'paragraph' && (t.raw ?? '').trim().startsWith('[!OT]'))
-        );
+        // marked lexes `> [!OT]\n> body text` as a single paragraph whose raw
+        // value is "[!OT]\nbody text". Filtering the token removes both the
+        // marker AND the body. Instead, strip only the [!OT] marker line and
+        // re-lex the remainder as inline tokens so the body content is preserved.
+        const bodyTokens = (token.tokens ?? []).map(t => {
+          if (t.type === 'paragraph' && (t.raw ?? '').trim().startsWith('[!OT]')) {
+            const stripped = t.raw.replace(/^\[!OT\]\s*\n?/, '').trim();
+            if (!stripped) return null; // pure marker with no body
+            return { ...t, raw: stripped, text: stripped, tokens: marked.Lexer.lexInline(stripped) };
+          }
+          return t;
+        }).filter(Boolean);
         const inner = marked.parser(bodyTokens);
         return `<aside class="ot-callout" aria-label="OT environment note"><div class="ot-callout-label">IN OT ENVIRONMENTS</div><div class="ot-callout-body">${inner}</div></aside>`;
       }

@@ -48,7 +48,12 @@ export async function handleRoute() {
   if (!app) return;
   const { view, params } = matchRoute(window.location.hash);
   const renderer = viewRenderers[view] ?? viewRenderers['not-found'];
-  app.innerHTML = await renderer(params);
+  const viewHtml = await renderer(params);
+  if (viewHtml !== null) {
+    // null = renderer already owns the DOM (e.g. renderLesson writes directly)
+    // '' or string = router sets innerHTML
+    app.innerHTML = viewHtml;
+  }
   setActiveModule(params.moduleId ?? null);
   if (params.lessonId) {
     setActiveLesson(params.moduleId, params.lessonId);

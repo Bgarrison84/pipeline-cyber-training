@@ -24,14 +24,14 @@ export async function renderLesson({ moduleId, lessonId }) {
   if (!moduleId || !lessonId) {
     const app = document.getElementById('app');
     if (app) app.innerHTML = renderLessonNotFound();
-    return '';
+    return null;
   }
 
   const mod = MODULES.find(m => m.id === moduleId);
   if (!mod) {
     const app = document.getElementById('app');
     if (app) app.innerHTML = renderLessonNotFound();
-    return '';
+    return null;
   }
 
   // Step 1 — Set loading state immediately (synchronous DOM write)
@@ -48,7 +48,7 @@ export async function renderLesson({ moduleId, lessonId }) {
       app.innerHTML = renderLessonError('not-found');
       app.removeAttribute('aria-busy');
     }
-    return '';
+    return null;
   }
 
   // Step 3 — Parse frontmatter + render Markdown
@@ -68,7 +68,7 @@ export async function renderLesson({ moduleId, lessonId }) {
   activateIcons();
   attachCopyHandlers();
 
-  return '';
+  return null;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
