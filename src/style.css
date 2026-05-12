@@ -40,6 +40,220 @@
   --sidebar-width-expanded: 256px;
   --sidebar-width-collapsed: 48px;
   --topbar-height: 48px;
+
+  /* Phase 2: Typography additions */
+  --text-prose-body: 1rem;           /* 16px — lesson body text */
+  --text-prose-h2: 1.25rem;          /* 20px — prose h2 */
+  --text-prose-small: 0.8125rem;     /* 13px — captions, labels */
+
+  /* Phase 2: Code block colors */
+  --color-code-bg: #0d1117;          /* code block container background, GitHub dark */
+  --color-code-header-bg: #161b22;   /* code block header bar */
+  --color-code-header-text: #8b949e; /* language label text */
+  --color-code-border: #30363d;      /* code block border */
+  --code-block-padding-x: 1.25rem;   /* 20px — code block horizontal padding */
+
+  /* Phase 2: OT callout colors */
+  --color-ot-border: #d97706;        /* amber-600 — OT callout left border */
+  --color-ot-bg: rgba(217,119,6,0.08); /* amber tint at 8% */
+  --color-ot-label: #fbbf24;         /* amber-400 — label text */
+  --color-ot-body: #e5e7eb;          /* gray-200 — callout body text */
+
+  /* Phase 2: Lesson layout */
+  --lesson-reading-width: 720px;           /* max-width of prose reading column per D-04 */
+  --color-lesson-active-bg: rgba(249,115,22,0.08); /* active lesson bg per D-11 */
+}
+
+/* Phase 2: Lesson layout */
+.lesson-wrapper {
+  height: 100%;
+  overflow-y: auto;
+  padding: var(--spacing-xl);
+  box-sizing: border-box;
+}
+.lesson-column {
+  max-width: var(--lesson-reading-width);
+  margin: 0 auto;
+}
+@media (max-width: 768px) {
+  .lesson-wrapper { padding: var(--spacing-md); }
+  .lesson-column { max-width: 100%; }
+}
+
+/* Phase 2: Code block */
+.code-block {
+  background: var(--color-code-bg);
+  border: 1px solid var(--color-code-border);
+  border-radius: 6px;
+  margin: var(--spacing-md) 0;
+  overflow: hidden;
+}
+.code-block-header {
+  height: 36px;
+  background: var(--color-code-header-bg);
+  border-bottom: 1px solid var(--color-code-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-md);
+}
+.code-lang-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  color: var(--color-code-header-text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.code-copy-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: var(--color-code-header-text);
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+.code-copy-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--color-text-primary);
+}
+.code-block-body {
+  background: var(--color-code-bg);
+  padding: var(--spacing-md) var(--code-block-padding-x);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+  line-height: 1.6;
+}
+
+/* Phase 2: OT callout */
+.ot-callout {
+  background: var(--color-ot-bg);
+  border-left: 3px solid var(--color-ot-border);
+  border-radius: 0 4px 4px 0;
+  padding: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+.ot-callout-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-prose-small);
+  font-weight: 600;
+  color: var(--color-ot-label);
+  letter-spacing: 0.1em;
+  margin-bottom: var(--spacing-xs);
+}
+.ot-callout-body {
+  font-size: var(--text-prose-body);
+  color: var(--color-ot-body);
+  line-height: 1.6;
+}
+
+/* Phase 2: Sidebar lesson links */
+.sidebar-lesson-link {
+  display: block;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--text-body);
+  font-weight: 400;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  background: transparent;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar-lesson-link:hover {
+  color: var(--color-accent);
+  background: rgba(249,115,22,0.04);
+}
+.sidebar-lesson-link--active {
+  border-left-color: var(--color-accent);
+  background: var(--color-lesson-active-bg);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Phase 2: Loading skeleton */
+@keyframes lesson-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+.lesson-skeleton-line {
+  height: 16px;
+  background: var(--color-bg-secondary);
+  border-radius: 4px;
+  animation: lesson-pulse 1.5s ease-in-out infinite;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Phase 2: Lesson footer */
+.lesson-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: var(--spacing-2xl);
+  border-top: 1px solid var(--color-border);
+  margin-top: var(--spacing-2xl);
+}
+.lesson-nav-btn {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  background: transparent;
+  text-decoration: none;
+  min-width: 140px;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.lesson-nav-btn:hover {
+  background: var(--color-bg-secondary);
+  border-color: var(--color-accent);
+}
+.lesson-nav-direction {
+  font-size: var(--text-prose-small);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.lesson-nav-title {
+  font-size: var(--text-body);
+  color: var(--color-text-primary);
+}
+.lesson-nav-next { text-align: right; }
+
+/* Phase 2: Error state */
+.lesson-error {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-destructive);
+  border-radius: 6px;
+  padding: var(--spacing-lg);
+  max-width: var(--lesson-reading-width);
+  margin: 0 auto;
+}
+
+/* Phase 2: Inline code in prose */
+.lesson-body code {
+  background: rgba(48,54,61,0.6);
+  border-radius: 3px;
+  padding: 2px var(--spacing-xs);
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
+}
+
+/* Phase 2: Compliance bar */
+.compliance-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+  align-items: center;
+  margin-bottom: var(--spacing-lg);
 }
 
 /* Sidebar collapse — toggled on #shell via JS class */
