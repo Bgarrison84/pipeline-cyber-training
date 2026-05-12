@@ -53,7 +53,12 @@ Plans:
   3. Every code block has a working one-click copy-to-clipboard button; copied text matches the raw code exactly
   4. Each lesson displays its TSA SD-02F and/or NIST SP 800-82 Rev 3 control IDs sourced from `compliance-refs.json`, not hardcoded in Markdown prose
   5. Module 1 (Logging & Auditing) is complete: all core lessons authored, at least one quiz placeholder, one terminal exercise placeholder, one scenario placeholder; all map to correct compliance control IDs
-**Plans:** TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 02-01-PLAN.md — npm packages + Lucide CDN removal + Phase 2 CSS tokens + Wave 0 test stubs (Wave 0)
+- [ ] 02-02-PLAN.md — content-loader.js + lesson-view.js stub + router/sidebar/main.js wiring (Wave 1)
+- [ ] 02-03-PLAN.md — full lesson view: compliance bar + loading skeleton + prev/next footer + clipboard handler (Wave 2)
+- [ ] 02-04-PLAN.md — Module 1 content: 3 lesson .md files + quiz/exercise/scenario placeholders (Wave 3)
 **UI hint:** yes
 
 ### Phase 3: Progress Store
@@ -140,7 +145,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
-| 2. Content Loader + Lesson Rendering + Module 1 | 0/? | Not started | - |
+| 2. Content Loader + Lesson Rendering + Module 1 | 0/4 | Not started | - |
 | 3. Progress Store | 0/? | Not started | - |
 | 4. Quiz Engine + Lesson Progress UI | 0/? | Not started | - |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
@@ -153,3 +158,4 @@ Plans:
 *Roadmap created: 2026-05-10*
 *Mode: mvp | Granularity: fine | Coverage: 26/26*
 *Phase 1 planned: 2026-05-11 — 4 plans, 4 waves*
+*Phase 2 planned: 2026-05-11 — 4 plans, 4 waves*
