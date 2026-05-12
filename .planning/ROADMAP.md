@@ -55,10 +55,19 @@ Plans:
   5. Module 1 (Logging & Auditing) is complete: all core lessons authored, at least one quiz placeholder, one terminal exercise placeholder, one scenario placeholder; all map to correct compliance control IDs
 **Plans:** 4 plans
 Plans:
+**Wave 0**
 - [ ] 02-01-PLAN.md — npm packages + Lucide CDN removal + Phase 2 CSS tokens + Wave 0 test stubs (Wave 0)
+**Wave 1** *(blocked on Wave 0 completion)*
 - [ ] 02-02-PLAN.md — content-loader.js + lesson-view.js stub + router/sidebar/main.js wiring (Wave 1)
+**Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 02-03-PLAN.md — full lesson view: compliance bar + loading skeleton + prev/next footer + clipboard handler (Wave 2)
+**Wave 3** *(blocked on Wave 2 completion)*
 - [ ] 02-04-PLAN.md — Module 1 content: 3 lesson .md files + quiz/exercise/scenario placeholders (Wave 3)
+
+Cross-cutting constraints:
+- `esc()` from `src/utils/escape.js` applied to all frontmatter values inserted into innerHTML (T1 — all plans)
+- `import.meta.env.BASE_URL` prefix on all `public/data/` fetches (all plans with fetch calls)
+- No hardcoded TSA version strings in lesson prose — all sourced from `compliance-refs.json` (02-04)
 **UI hint:** yes
 
 ### Phase 3: Progress Store
@@ -145,7 +154,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
-| 2. Content Loader + Lesson Rendering + Module 1 | 0/4 | Not started | - |
+| 2. Content Loader + Lesson Rendering + Module 1 | 0/4 | Ready to execute | - |
 | 3. Progress Store | 0/? | Not started | - |
 | 4. Quiz Engine + Lesson Progress UI | 0/? | Not started | - |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
@@ -158,4 +167,5 @@ Plans:
 *Roadmap created: 2026-05-10*
 *Mode: mvp | Granularity: fine | Coverage: 26/26*
 *Phase 1 planned: 2026-05-11 — 4 plans, 4 waves*
+*Phase 2 planned: 2026-05-11 — 4 plans, 4 waves*
 *Phase 2 planned: 2026-05-11 — 4 plans, 4 waves*
