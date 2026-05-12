@@ -2,12 +2,14 @@
 import { renderHome }     from './views/home-view.js';
 import { renderModule }   from './views/module-view.js';
 import { renderNotFound } from './views/not-found-view.js';
-import { setActiveModule } from './sidebar.js';
+import { renderLesson }   from './views/lesson-view.js';
+import { setActiveModule, setActiveLesson } from './sidebar.js';
+import { activateIcons } from './main.js';
 
 const routes = [
-  { pattern: '#/',                 view: 'home' },
-  { pattern: '#/module/:moduleId', view: 'module' },
-  // Phase 2+ will add: { pattern: '#/lesson/:moduleId/:lessonId', view: 'lesson' }
+  { pattern: '#/',                              view: 'home' },
+  { pattern: '#/module/:moduleId',              view: 'module' },
+  { pattern: '#/lesson/:moduleId/:lessonId',    view: 'lesson' },
 ];
 
 function extractParams(hash, pattern) {
@@ -37,20 +39,22 @@ export function matchRoute(hash) {
 const viewRenderers = {
   home:        (params) => renderHome(params),
   module:      (params) => renderModule(params),
+  lesson:      (params) => renderLesson(params),
   'not-found': (params) => renderNotFound(params),
 };
 
-export function handleRoute() {
+export async function handleRoute() {
   const app = document.getElementById('app');
   if (!app) return;
   const { view, params } = matchRoute(window.location.hash);
   const renderer = viewRenderers[view] ?? viewRenderers['not-found'];
-  app.innerHTML = renderer(params);
+  app.innerHTML = await renderer(params);
   setActiveModule(params.moduleId ?? null);
-  // Activate Lucide icons injected into DOM
-  if (typeof lucide !== 'undefined') {
-    lucide.createIcons();
+  if (params.lessonId) {
+    setActiveLesson(params.moduleId, params.lessonId);
   }
+  // Activate Lucide icons injected into DOM
+  activateIcons();
 }
 
 // hashchange handles all navigations after initial load
