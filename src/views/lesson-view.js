@@ -1,55 +1,249 @@
 // src/views/lesson-view.js
-// Async lesson view renderer — Wave 1 vertical slice implementation.
-// Fetches .md file, parses frontmatter, renders Markdown with Shiki highlighting.
-// Compliance bar and footer nav placeholders are filled in Wave 2 (Plan 02-03).
+// Full lesson view — Wave 2 implementation.
+// Loading skeleton → fetch → parse → render → compliance bar → prev/next footer.
+// Writes directly to #app (async view pattern); returns '' so router no-ops its own innerHTML set.
 
 import { MODULES } from '../modules-config.js';
 import { fetchLesson, parseFrontmatter, renderMarkdown, getLessonNav } from '../content-loader.js';
-import { esc } from '../utils/escape.js';
+import { renderBadge } from '../badge.js';
+import { setActiveLesson } from '../sidebar.js';
 import { activateIcons } from '../main.js';
+import { esc } from '../utils/escape.js';
+
+// ──────────────────────────────────────────────────────────────────────────────
+// renderLesson — main async view renderer
+// Writes to #app directly (does NOT return HTML to the router).
+// ──────────────────────────────────────────────────────────────────────────────
 
 /**
- * Render the lesson view as an HTML string.
+ * Render the lesson view by writing directly to #app.
  * @param {{ moduleId: string, lessonId: string }} params
- * @returns {Promise<string>} HTML string for app.innerHTML
+ * @returns {Promise<string>} Empty string — view takes DOM control itself
  */
 export async function renderLesson({ moduleId, lessonId }) {
-  if (!moduleId || !lessonId) return renderLessonNotFound();
+  if (!moduleId || !lessonId) {
+    const app = document.getElementById('app');
+    if (app) app.innerHTML = renderLessonNotFound();
+    return '';
+  }
 
   const mod = MODULES.find(m => m.id === moduleId);
-  if (!mod) return renderLessonNotFound();
+  if (!mod) {
+    const app = document.getElementById('app');
+    if (app) app.innerHTML = renderLessonNotFound();
+    return '';
+  }
 
+  // Step 1 — Set loading state immediately (synchronous DOM write)
+  const app = document.getElementById('app');
+  if (app) {
+    app.setAttribute('aria-busy', 'true');
+    app.innerHTML = renderLessonLoading();
+  }
+
+  // Step 2 — Fetch lesson Markdown
   const raw = await fetchLesson(moduleId, lessonId);
-  if (raw === null) return renderLessonError('not-found');
+  if (raw === null) {
+    if (app) {
+      app.innerHTML = renderLessonError('not-found');
+      app.removeAttribute('aria-busy');
+    }
+    return '';
+  }
 
+  // Step 3 — Parse frontmatter + render Markdown
   const { meta, body } = parseFrontmatter(raw);
   const html = await renderMarkdown(body);
 
-  return `<div class="lesson-wrapper" aria-busy="false">
+  // Step 4 — Build nav and inject full lesson HTML
+  const nav = getLessonNav(moduleId, lessonId);
+  const lessonHtml = buildLessonHtml(meta, html, nav);
+  if (app) {
+    app.innerHTML = lessonHtml;
+    app.removeAttribute('aria-busy');
+  }
+
+  // Step 5 — Post-render wiring (must happen AFTER innerHTML is set)
+  setActiveLesson(moduleId, lessonId);
+  activateIcons();
+  attachCopyHandlers();
+
+  return '';
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// renderLessonLoading — loading skeleton shown while fetch is in flight
+// ──────────────────────────────────────────────────────────────────────────────
+
+function renderLessonLoading() {
+  return `<div class="lesson-wrapper" aria-busy="true">
+    <div class="lesson-column" style="max-width: var(--lesson-reading-width, 720px); margin: 0 auto; padding: var(--spacing-xl);">
+      <div class="lesson-skeleton-line" style="width: 90%; height: 16px; background: var(--color-bg-secondary, #2a2a2a); border-radius: 4px; margin-bottom: var(--spacing-sm, 8px); animation: lesson-pulse 1.5s ease-in-out infinite;"></div>
+      <div class="lesson-skeleton-line" style="width: 75%; height: 16px; background: var(--color-bg-secondary, #2a2a2a); border-radius: 4px; margin-bottom: var(--spacing-sm, 8px); animation: lesson-pulse 1.5s ease-in-out infinite;"></div>
+      <div class="lesson-skeleton-line" style="width: 55%; height: 16px; background: var(--color-bg-secondary, #2a2a2a); border-radius: 4px; animation: lesson-pulse 1.5s ease-in-out infinite;"></div>
+    </div>
+    <div aria-live="polite" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">Loading lesson…</div>
+  </div>`;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// buildLessonHtml — construct full lesson layout HTML
+// ──────────────────────────────────────────────────────────────────────────────
+
+function buildLessonHtml(meta, bodyHtml, nav) {
+  const complianceTags = Array.isArray(meta.complianceTags) ? meta.complianceTags : [];
+
+  let complianceBarContent = '';
+  if (complianceTags.length > 0) {
+    const badges = complianceTags.map(tag => renderBadge(tag)).join('');
+    complianceBarContent = `
+      <p style="font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-muted); margin-bottom: var(--spacing-xs);">COMPLIANCE CONTROLS</p>
+      <div role="list" aria-label="Compliance controls covered" style="display: flex; flex-wrap: wrap; gap: var(--spacing-xs); align-items: center;">
+        ${badges}
+      </div>`;
+  }
+
+  return `<div class="lesson-wrapper">
     <div class="lesson-column" style="max-width: var(--lesson-reading-width, 720px); margin: 0 auto; padding: var(--spacing-xl);">
       <h1 style="font-size: var(--text-display); font-weight: 600; line-height: 1.2;
                  color: var(--color-text-primary); margin-bottom: var(--spacing-sm);">
         ${esc(meta.title || 'Lesson')}
       </h1>
-      <!-- compliance bar placeholder — Wave 2 fills this in -->
-      <div class="compliance-bar" id="lesson-compliance-bar"></div>
-      <!-- rendered markdown body -->
+      <div class="compliance-bar" style="margin-bottom: var(--spacing-lg);">
+        ${complianceBarContent}
+      </div>
       <article class="lesson-body"
-               style="font-size: var(--text-prose-body, var(--text-body)); font-weight: 400; line-height: 1.7;
+               style="font-size: var(--text-prose-body); font-weight: 400; line-height: 1.7;
                       color: var(--color-text-primary);">
-        ${html}
+        ${bodyHtml}
       </article>
-      <!-- footer placeholder — Wave 2 fills this in -->
-      <nav class="lesson-footer" aria-label="Lesson navigation" id="lesson-footer"></nav>
+      <div aria-live="polite" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;"></div>
+      <nav class="lesson-footer" aria-label="Lesson navigation"
+           style="display: flex; justify-content: space-between; align-items: flex-start;
+                  padding-top: var(--spacing-2xl); border-top: 1px solid var(--color-border);
+                  margin-top: var(--spacing-2xl);">
+        ${buildLessonFooter(nav)}
+      </nav>
     </div>
   </div>`;
 }
 
+// ──────────────────────────────────────────────────────────────────────────────
+// buildLessonFooter — prev/next nav links per UI-SPEC Component 11
+// ──────────────────────────────────────────────────────────────────────────────
+
+function buildLessonFooter(nav) {
+  let prevHtml;
+  if (nav.prev) {
+    const truncated = nav.prev.title.slice(0, 32) + (nav.prev.title.length > 32 ? '…' : '');
+    prevHtml = `<a class="lesson-nav-btn"
+        href="#/lesson/${esc(nav.prev.moduleId)}/${esc(nav.prev.lessonId)}"
+        aria-label="Previous lesson: ${esc(nav.prev.title)}"
+        style="display: inline-flex; flex-direction: column; gap: var(--spacing-xs);
+               padding: var(--spacing-sm); border: 1px solid var(--color-border);
+               border-radius: 4px; text-decoration: none; min-width: 140px;">
+      <span class="lesson-nav-direction" style="font-size: 0.8125rem; color: var(--color-text-muted);
+            text-transform: uppercase; letter-spacing: 0.06em;">← Previous</span>
+      <span class="lesson-nav-title" style="font-size: var(--text-body); font-weight: 400;
+            color: var(--color-text-primary);">${esc(truncated)}</span>
+    </a>`;
+  } else {
+    prevHtml = `<div class="lesson-nav-spacer"></div>`;
+  }
+
+  let nextHtml;
+  if (nav.next) {
+    const truncated = nav.next.title.slice(0, 32) + (nav.next.title.length > 32 ? '…' : '');
+    nextHtml = `<a class="lesson-nav-btn lesson-nav-next"
+        href="#/lesson/${esc(nav.next.moduleId)}/${esc(nav.next.lessonId)}"
+        aria-label="Next lesson: ${esc(nav.next.title)}"
+        style="display: inline-flex; flex-direction: column; gap: var(--spacing-xs);
+               padding: var(--spacing-sm); border: 1px solid var(--color-border);
+               border-radius: 4px; text-decoration: none; min-width: 140px; text-align: right;">
+      <span class="lesson-nav-direction" style="font-size: 0.8125rem; color: var(--color-text-muted);
+            text-transform: uppercase; letter-spacing: 0.06em;">Next →</span>
+      <span class="lesson-nav-title" style="font-size: var(--text-body); font-weight: 400;
+            color: var(--color-text-primary);">${esc(truncated)}</span>
+    </a>`;
+  } else {
+    nextHtml = `<div class="lesson-nav-spacer"></div>`;
+  }
+
+  return prevHtml + nextHtml;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// attachCopyHandlers — event delegation on .lesson-wrapper for copy buttons
+// ──────────────────────────────────────────────────────────────────────────────
+
+function attachCopyHandlers() {
+  document.querySelector('.lesson-wrapper')?.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.code-copy-btn');
+    if (!btn) return;
+    const code = btn.dataset.code ?? '';
+    try {
+      await navigator.clipboard.writeText(code);
+      // Success: swap icon Copy → Check for 2 seconds
+      const icon = btn.querySelector('[data-lucide]');
+      if (icon) {
+        icon.setAttribute('data-lucide', 'check');
+        icon.style.color = '#4ade80';
+        btn.setAttribute('aria-label', 'Copied!');
+        // Re-run createIcons to render the Check icon
+        import('lucide').then(({ createIcons, Check }) => {
+          createIcons({ icons: { Check }, attrs: { 'stroke-width': 2 }, rootNode: btn });
+        });
+      }
+      setTimeout(() => {
+        if (icon) {
+          icon.setAttribute('data-lucide', 'copy');
+          icon.style.color = '';
+          btn.setAttribute('aria-label', 'Copy code to clipboard');
+          import('lucide').then(({ createIcons, Copy }) => {
+            createIcons({ icons: { Copy }, attrs: { 'stroke-width': 2 }, rootNode: btn });
+          });
+        }
+      }, 2000);
+    } catch {
+      // Silent failure per CONTEXT.md — clipboard is optional convenience
+      console.warn('Clipboard write failed');
+    }
+  });
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Static error states — no moduleId/lessonId injection (T-02-07 security)
+// ──────────────────────────────────────────────────────────────────────────────
+
 function renderLessonNotFound() {
-  // Static text only — never inject moduleId/lessonId (hash-derived) into innerHTML
-  return `<section style="padding: var(--spacing-xl);"><p style="color: var(--color-text-muted);">Lesson not found. Use the sidebar to select a lesson.</p></section>`;
+  return `<section style="padding: var(--spacing-xl);">
+    <p style="font-size: var(--text-body); color: var(--color-text-muted);">
+      Lesson not found. Use the sidebar to select a lesson.
+    </p>
+  </section>`;
 }
 
 function renderLessonError(type) {
-  return `<section style="padding: var(--spacing-xl);"><div class="lesson-error" role="alert"><p style="font-weight: 600; color: var(--color-text-primary); margin-bottom: var(--spacing-sm);">Lesson content could not be loaded</p><p style="color: var(--color-text-muted);">${type === 'not-found' ? 'This lesson file was not found. It may still be in development.' : 'Could not connect. Check your network connection and reload the page.'}</p><a href="" onclick="window.location.reload();return false;" style="color: var(--color-accent); font-weight: 600;">Reload page</a></div></section>`;
+  const message = type === 'not-found'
+    ? 'This lesson file was not found. It may still be in development.'
+    : 'Could not connect. Check your network connection and reload the page.';
+  return `<section style="padding: var(--spacing-xl);">
+    <div class="lesson-error" role="alert"
+         style="background: var(--color-bg-secondary); border: 1px solid var(--color-destructive);
+                border-radius: 6px; padding: var(--spacing-lg); max-width: var(--lesson-reading-width, 720px); margin: 0 auto;">
+      <div style="display: flex; align-items: center; gap: var(--spacing-sm); margin-bottom: var(--spacing-sm);">
+        <i data-lucide="alert-circle" style="width:20px;height:20px;color:var(--color-destructive);flex-shrink:0;"></i>
+        <p style="font-size: var(--text-body); font-weight: 600; color: var(--color-text-primary); margin: 0;">
+          Lesson content could not be loaded
+        </p>
+      </div>
+      <p style="font-size: var(--text-body); color: var(--color-text-muted); margin-bottom: var(--spacing-sm);">
+        ${message}
+      </p>
+      <a href="" onclick="window.location.reload();return false;"
+         style="font-size: var(--text-body); font-weight: 600; color: var(--color-accent); text-underline-offset: 3px;">
+        Reload page
+      </a>
+    </div>
+  </section>`;
 }
