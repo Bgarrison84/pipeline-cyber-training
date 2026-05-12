@@ -1,0 +1,30 @@
+{
+  "id": "logging-auditing-scenario-01",
+  "moduleId": "logging-auditing",
+  "title": "Investigating a Suspicious Login on PIPELINE-DC01",
+  "status": "placeholder",
+  "complianceControls": ["TSA-Monitoring", "NIST-AU-2"],
+  "narrative": "Your SIEM alerts you to 47 failed logon attempts on PIPELINE-DC01 over the past 10 minutes, followed by one successful logon from an unknown workstation at 03:42 UTC.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "title": "Initial Triage",
+      "type": "decision",
+      "prompt": "What is your first action?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Immediately disable the account that successfully logged in.",
+          "outcome": "Disabling the account stops the attacker but also alerts them and destroys evidence of ongoing activity. Triage first.",
+          "correct": false
+        },
+        {
+          "id": "opt-b",
+          "text": "Query the Security event log on PIPELINE-DC01 for Event IDs 4624 and 4625 around the incident window.",
+          "outcome": "Correct. Reviewing the event log first establishes the timeline and source IP before you take any containment action.",
+          "correct": true
+        }
+      ]
+    }
+  ]
+}
