@@ -20,4 +20,10 @@ describe('matchRoute', () => {
   it('handles empty hash as home', () => {
     expect(matchRoute('').view).toBe('home')
   })
+  it('matches lesson route and extracts moduleId and lessonId', () => {
+    expect(matchRoute('#/lesson/logging-auditing/intro')).toEqual({
+      view: 'lesson',
+      params: { moduleId: 'logging-auditing', lessonId: 'intro' }
+    })
+  })
 })
