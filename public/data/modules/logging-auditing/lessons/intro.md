@@ -9,16 +9,16 @@ complianceControls: [TSA-Monitoring, NIST-AU-2, NIST-AU-3]
 
 ## What Are Windows Event Logs?
 
-Windows Event Logs are the primary audit trail for Windows-based systems in pipeline IT and OT environments. Every significant system action — user logons, privilege use, process launches, and policy changes — is recorded in the event log. The current TSA pipeline security directive requires pipeline operators to maintain audit logs for security-relevant events as part of a continuous cybersecurity monitoring program.
+Windows Event Logs are the primary audit trail for Windows-based systems in pipeline IT and OT environments. Every significant system action — user logons, privilege use, process launches, and policy changes — is recorded here. The current TSA pipeline security directive requires pipeline operators to maintain audit logs for security-relevant events as part of a continuous cybersecurity monitoring program.
 
-Windows organizes logs into separate channels, each covering a different area:
+Windows organizes logs into separate channels:
 
-- **Security** — Authentication events, privilege use, object access, and account management. This is the most compliance-relevant channel.
-- **System** — Operating system events: service starts and stops, driver loads, hardware errors.
-- **Application** — Application-level events written by installed software.
-- **Microsoft-Windows-PowerShell/Operational** — PowerShell script block activity. Required for detecting unauthorized code execution.
+- **Security** — Authentication events, privilege use, object access. The most compliance-relevant channel.
+- **System** — OS events: service starts/stops, driver loads, hardware errors.
+- **Application** — Application-level events from installed software.
+- **Microsoft-Windows-PowerShell/Operational** — PowerShell script block activity; required for detecting unauthorized code execution.
 
-For compliance monitoring, the **Security** channel and the **PowerShell/Operational** channel are your primary sources. Both feed directly into TSA-Monitoring and NIST-AU-2 audit requirements.
+For compliance monitoring, the **Security** channel and the **PowerShell/Operational** channel are your primary sources, feeding TSA-Monitoring and NIST-AU-2 requirements.
 
 ## Querying the Security Event Log
 
@@ -49,7 +49,7 @@ Get-EventLog -LogName Security -Newest 10
 ```
 
 > [!OT]
-> In OT environments — including HMI stations, SCADA servers, and engineering workstations — event log collection differs significantly from IT. Many OT systems lack domain connectivity and do not have Windows Event Log Forwarding (WELF) configured. In these environments, logs must be collected through alternate means: USB-based log export (using `wevtutil epl Security C:\export\security.evtx`) or a push-based SIEM agent installed directly on the OT host. Some older HMI platforms may not support SIEM agents at all. NIST AU-3 still applies regardless of collection method: every exported log must contain sufficient detail — event ID, timestamp, source, and message. Document your collection method in your security baseline.
+> In OT environments — HMI stations, SCADA servers, engineering workstations — event log collection differs from IT. Many OT systems lack domain connectivity and do not have Windows Event Log Forwarding configured. Logs must be collected via USB export (`wevtutil epl Security C:\export\security.evtx`) or a push-based SIEM agent installed directly on the OT host. NIST AU-3 still applies: every exported log must contain sufficient detail — event ID, timestamp, source, and message. Document your collection method in your security baseline.
 
 ## Key Event IDs for Compliance Monitoring
 
@@ -63,10 +63,8 @@ These Event IDs in the Security channel are directly relevant to TSA monitoring 
 | 4672 | Special Privilege Logon | Fires on every admin logon — required for privileged account monitoring |
 | 4688 | Process Creation | Records every process launch; required to detect unauthorized PowerShell execution |
 
-Event ID 4688 is particularly important: when combined with PowerShell/Operational logging (covered in Lesson 2), it creates a complete chain of custody for any script execution on a monitored system.
+Event ID 4688 is particularly important: combined with PowerShell/Operational logging (Lesson 2), it creates a full chain of custody for any script execution on a monitored system.
 
-> **NERC CIP scope note:** NERC CIP governs electric utilities; pipeline operators follow TSA directives — referenced here as a maturity benchmark. The NERC CIP-007 R5 requirement for event logging is structurally similar to the TSA continuous monitoring mandate and NIST AU-2. If your organization uses NERC CIP as a compliance benchmark, the Windows event IDs above satisfy CIP-007 R5 audit requirements as well.
+> **NERC CIP scope note:** NERC CIP governs electric utilities; pipeline operators follow TSA directives — referenced here as a maturity benchmark. CIP-007 R5 event logging requirements are structurally similar to the TSA monitoring mandate and NIST AU-2.
 
-## Next Steps
-
-With the Security event log queryable, the next lesson covers enabling PowerShell Script Block Logging — which populates the PowerShell/Operational channel with full script content for every PS command executed on your systems.
+The next lesson covers enabling PowerShell Script Block Logging, which populates the PowerShell/Operational channel with full script content for every PS command executed on your systems.

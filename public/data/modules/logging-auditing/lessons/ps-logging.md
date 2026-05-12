@@ -11,13 +11,13 @@ complianceControls: [TSA-Monitoring, NIST-AU-12, NIST-CM-6]
 
 PowerShell Script Block Logging captures the full content of every PowerShell script block executed on the system — including commands entered interactively, scripts loaded from disk, and encoded or obfuscated commands after they are decoded. This is critical for detecting unauthorized code execution, a requirement under the current TSA pipeline security directive's cybersecurity monitoring mandate.
 
-Script blocks are the fundamental unit of PowerShell execution. Every function, loop, conditional, and command is compiled into a script block before it runs. Enabling Script Block Logging means that complete, decoded script text is written to the **Microsoft-Windows-PowerShell/Operational** log as **Event ID 4104** — regardless of whether the script was obfuscated or base64-encoded before execution.
+Every function, loop, and command is compiled into a script block before it runs. Enabling Script Block Logging writes complete, decoded script text to the **Microsoft-Windows-PowerShell/Operational** log as **Event ID 4104** — regardless of whether the script was obfuscated or base64-encoded.
 
-Adversaries frequently use PowerShell for lateral movement, privilege escalation, and data exfiltration in pipeline IT environments. Script Block Logging is the single highest-value control for detecting this activity post-compromise.
+Adversaries frequently use PowerShell for lateral movement and privilege escalation in pipeline IT environments. Script Block Logging is the single highest-value control for detecting this activity post-compromise.
 
 ## Checking Whether Logging Is Enabled
 
-Script Block Logging is configured via a registry key. Check whether the key exists before making changes:
+Script Block Logging is configured via a registry key. Check its current state on PIPELINE-DC01 before making changes:
 
 ```powershell
 # NIST CM-6: Verify current registry configuration state on PIPELINE-DC01
@@ -26,11 +26,11 @@ Get-ItemProperty -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Scr
     -ErrorAction SilentlyContinue
 ```
 
-If the command returns no output or an error, the `ScriptBlockLogging` key does not exist and logging is off. If it returns a property named `EnableScriptBlockLogging` with a value of `1`, logging is already active.
+No output or an error means the `ScriptBlockLogging` key does not exist and logging is off. A returned `EnableScriptBlockLogging` value of `1` means logging is already active.
 
 ## Creating the Registry Key
 
-If the registry path does not exist, create it. The `-Force` flag creates all required parent keys automatically:
+If the path does not exist, create it with `-Force` (creates all parent keys automatically):
 
 ```powershell
 # Create the ScriptBlockLogging registry key (and parent path if needed)
@@ -39,26 +39,26 @@ New-Item -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlock
     -Force
 ```
 
-This command requires Administrator privileges. Run PowerShell as Administrator on PIPELINE-DC01 before executing this and the next command.
+Run PowerShell as Administrator on PIPELINE-DC01 before executing this and the following command.
 
 ## Enabling Logging
 
-With the key in place, set the `EnableScriptBlockLogging` value to `1`:
+With the key in place, set `EnableScriptBlockLogging` to `1`:
 
 ```powershell
 # NIST AU-12: Enable script block logging — all PS script blocks are now written to Event ID 4104
-# Setting takes effect immediately for new PS sessions; existing sessions are unaffected until restart
+# Setting takes effect for new PS sessions; existing sessions are unaffected until restarted
 Set-ItemProperty `
     -Path 'HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging' `
     -Name EnableScriptBlockLogging `
     -Value 1
 ```
 
-The change takes effect for any new PowerShell session started after this command runs. Running PowerShell sessions — including the one you used to set the registry value — are not retroactively logged. Restart any long-running PS remoting sessions or scheduled task runners for coverage to be complete.
+The change applies to new PowerShell sessions only. Restart any long-running PS remoting sessions or scheduled task runners for complete coverage.
 
 ## Verifying Logging Is Active
 
-Confirm logging is operational by querying the PowerShell/Operational log for Event ID 4104. After enabling the registry key, run any PS command in a new session, then query for it:
+After enabling the registry key, run any PS command in a new session, then query for Event ID 4104:
 
 ```powershell
 # NIST AU-12: Confirm Event ID 4104 entries are being generated
@@ -71,13 +71,13 @@ Get-WinEvent -LogName 'Microsoft-Windows-PowerShell/Operational' -MaxEvents 5 |
 If Event ID 4104 entries appear, Script Block Logging is active and recording all PS activity on PIPELINE-DC01.
 
 > [!OT]
-> In air-gapped OT environments without a domain controller, Group Policy cannot distribute registry settings across workstations. Apply the registry changes manually on each OT workstation using the PS commands above. For environments where PowerShell remoting is available on the OT LAN (10.0.0.0/24), you can use `Invoke-Command -ComputerName <host> -ScriptBlock { ... }` to apply the registry change remotely from a jump server. On machines where PS remoting is not configured, deploy a startup script via the local machine's Group Policy Editor (`gpedit.msc`). NIST CM-6 (Configuration Settings) requires documenting the registry state as a configuration baseline — record which hosts have Script Block Logging enabled and the date of configuration.
+> In air-gapped OT environments without a domain controller, Group Policy cannot distribute registry settings. Apply the registry changes manually on each OT workstation using the PS commands above. Where PowerShell remoting is available on the OT LAN (10.0.0.0/24), use `Invoke-Command -ComputerName <host> -ScriptBlock { ... }` from a jump server. On machines without PS remoting, deploy a startup script via the local machine's Group Policy Editor (`gpedit.msc`). NIST CM-6 requires documenting the registry state as a configuration baseline — record which hosts have Script Block Logging enabled and the date of configuration.
 
 ## Additional Logging Types
 
-Two other PS logging mechanisms exist alongside Script Block Logging:
+Two other PS logging mechanisms complement Script Block Logging:
 
-- **Module Logging** (`EnableModuleLogging` in `HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging`): Logs pipeline output and module imports. Less targeted than Script Block Logging because it captures output rather than source code.
-- **Transcription Logging** (`EnableTranscripting` in `HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription`): Writes input/output of each PS session to a text file. Useful for human review but creates large file volumes on busy systems.
+- **Module Logging** (`EnableModuleLogging`): Logs pipeline output and module imports. Lower value than Script Block Logging for detection purposes.
+- **Transcription Logging** (`EnableTranscripting`): Writes PS session input/output to a text file. High volume on busy systems.
 
-Enable Script Block Logging first — it captures decoded payloads and is the highest-value control. Add Module Logging and Transcription Logging based on your SIEM capacity and storage budget.
+Enable Script Block Logging first — it captures decoded payloads and provides the highest detection value. Add the others based on SIEM capacity.
