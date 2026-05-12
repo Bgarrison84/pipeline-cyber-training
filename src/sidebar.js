@@ -51,7 +51,7 @@ export async function initSidebar() {
   const toggleBtn = document.getElementById('sidebar-toggle');
   let isCollapsed = false;
 
-  if (toggleBtn) {
+  if (toggleBtn && shell) {
     toggleBtn.addEventListener('click', () => {
       isCollapsed = !isCollapsed;
       shell.classList.toggle('sidebar-collapsed', isCollapsed);

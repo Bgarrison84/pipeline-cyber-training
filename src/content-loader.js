@@ -11,15 +11,16 @@ import { MODULES } from './modules-config.js';
 // Shiki singleton
 // ──────────────────────────────────────────────────────────────────────────────
 
-let _highlighter = null;
+let _highlighterPromise = null;
 
-export async function getHighlighter() {
-  if (_highlighter) return _highlighter;
-  _highlighter = await createHighlighter({
-    themes: ['github-dark'],
-    langs: ['powershell'],
-  });
-  return _highlighter;
+export function getHighlighter() {
+  if (!_highlighterPromise) {
+    _highlighterPromise = createHighlighter({
+      themes: ['github-dark'],
+      langs: ['powershell'],
+    });
+  }
+  return _highlighterPromise;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -109,6 +110,7 @@ marked.use({
  * @returns {{ meta: object, body: string }}
  */
 export function parseFrontmatter(raw) {
+  if (typeof raw !== 'string') return { meta: {}, body: String(raw ?? '') };
   const DELIMITER = '---';
   const lines = raw.split('\n');
 
@@ -132,11 +134,11 @@ export function parseFrontmatter(raw) {
     const val = line.slice(colon + 1).trim();
 
     if (val.startsWith('[') && val.endsWith(']')) {
-      // Array: `[a, b, c]`
-      meta[key] = val
-        .slice(1, -1)
-        .split(',')
-        .map(s => s.trim().replace(/^['"]|['"]$/g, ''));
+      // Array: `[a, b, c]` — guard against `[]` parsing as `['']`
+      const inner = val.slice(1, -1).trim();
+      meta[key] = inner === ''
+        ? []
+        : inner.split(',').map(s => s.trim().replace(/^['"]|['"]$/g, ''));
     } else {
       meta[key] = val.replace(/^['"]|['"]$/g, '');
     }
