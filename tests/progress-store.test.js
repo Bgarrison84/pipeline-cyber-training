@@ -460,7 +460,8 @@ describe('exportProgress', () => {
     expect(mockAnchor.download).toMatch(/^pipeline-cyber-training-progress-\d{4}-\d{2}-\d{2}\.json$/)
   })
 
-  it('calls URL.revokeObjectURL after click', () => {
+  it('calls URL.revokeObjectURL after click (deferred via setTimeout)', () => {
+    vi.useFakeTimers()
     vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:mock-url')
     const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {})
     const mockAnchor = { href: '', download: '', click: vi.fn() }
@@ -468,7 +469,11 @@ describe('exportProgress', () => {
 
     progressStore.exportProgress()
 
+    // revokeObjectURL is deferred via setTimeout(fn, 100) — not called synchronously
+    expect(revokeObjectURLSpy).not.toHaveBeenCalled()
+    vi.advanceTimersByTime(100)
     expect(revokeObjectURLSpy).toHaveBeenCalledWith('blob:mock-url')
+    vi.useRealTimers()
   })
 })
 

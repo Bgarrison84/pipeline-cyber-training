@@ -103,8 +103,8 @@ function _loadFromStorage() {
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (typeof parsed.schemaVersion !== 'number') return null;
-    if (parsed.schemaVersion < CURRENT_VERSION) return migrate(parsed);
-    return parsed;
+    if (parsed.schemaVersion > CURRENT_VERSION) return null; // treat as unrecognizable (CR-02/WR-05)
+    return migrate(parsed); // always fill in missing keys (WR-05)
   } catch {
     return null;
   }
@@ -272,7 +272,7 @@ function exportProgress() {
   a.href = url;
   a.download = 'pipeline-cyber-training-progress-' + date + '.json';
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
 }
 
 /**
@@ -292,6 +292,13 @@ async function importProgress(file) {
       return { ok: false, error: 'Not a valid progress file (missing schemaVersion).' };
     }
 
+    if (parsed.schemaVersion > CURRENT_VERSION) {
+      return {
+        ok: false,
+        error: `This progress file was saved by a newer version of the app (schema v${parsed.schemaVersion}). Please update the app before importing.`,
+      };
+    }
+
     const hasKnownKeys = ['lessons', 'quizzes', 'exercises', 'scenarios'].some(
       k => k in parsed
     );
@@ -299,7 +306,7 @@ async function importProgress(file) {
       return { ok: false, error: 'File structure unrecognizable.' };
     }
 
-    const migrated = parsed.schemaVersion < CURRENT_VERSION ? migrate(parsed) : parsed;
+    const migrated = migrate(parsed);
     _store = migrated;
     _persist();
     return { ok: true };
@@ -319,6 +326,8 @@ function resetProgress() {
   } catch {
     // ignore removal errors
   }
+  // Re-probe: removing the key may have freed enough quota to re-enable storage.
+  _storageAvailable = probeStorage();
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
