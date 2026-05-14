@@ -27,7 +27,7 @@
 
 - [ ] **ASSESS-01**: Each lesson includes multiple-choice quiz questions with per-answer explanatory feedback (not just correct/incorrect)
 - [ ] **ASSESS-02**: Scenario exercises walk learners through realistic compliance incidents with branching decision points and outcome explanations
-- [ ] **ASSESS-03**: LocalStorage saves the learner's exact progress; returning learners resume at the lesson and step they left
+- [x] **ASSESS-03**: LocalStorage saves the learner's exact progress; returning learners resume at the lesson and step they left
 - [ ] **ASSESS-04**: Learner can generate a printable completion summary labeled as a training log artifact (explicitly not a compliance certification)
 
 ### Modules (v1 Skeleton — all 5 present)
@@ -43,8 +43,8 @@
 - [ ] **DATA-01**: TSA directive version strings (e.g. "SD-02F") are stored in a single `data/compliance-refs.json` file — never hardcoded in lesson content
 - [ ] **DATA-02**: NERC CIP content is framed explicitly as a reference benchmark for pipeline operators, not a binding requirement (NERC CIP is an electric utility standard)
 - [ ] **DATA-03**: OT/IT distinctions are explicitly called out in every dual-use lesson, particularly in Patch Management (OT patch SLAs differ fundamentally from IT)
-- [ ] **DATA-04**: LocalStorage schema includes a `schemaVersion` key; app handles `QuotaExceededError` gracefully without silent data loss
-- [ ] **DATA-05**: Learner can export their progress data as a JSON file for backup or self-hosted migration
+- [x] **DATA-04**: LocalStorage schema includes a `schemaVersion` key; app handles `QuotaExceededError` gracefully without silent data loss
+- [x] **DATA-05**: Learner can export their progress data as a JSON file for backup or self-hosted migration
 
 ---
 
@@ -90,7 +90,7 @@
 | TERM-04 | Phase 5 | Pending |
 | ASSESS-01 | Phase 4 | Pending |
 | ASSESS-02 | Phase 6 | Pending |
-| ASSESS-03 | Phase 3 | Pending |
+| ASSESS-03 | Phase 3 | ✓ Shipped |
 | ASSESS-04 | Phase 6 | Pending |
 | MOD-01 | Phase 2 | ✓ Shipped |
 | MOD-02 | Phase 7 | Pending |
@@ -100,5 +100,5 @@
 | DATA-01 | Phase 1 | ✓ Shipped |
 | DATA-02 | Phase 7 | Pending |
 | DATA-03 | Phase 7 | Pending |
-| DATA-04 | Phase 3 | Pending |
-| DATA-05 | Phase 3 | Pending |
+| DATA-04 | Phase 3 | ✓ Shipped |
+| DATA-05 | Phase 3 | ✓ Shipped |

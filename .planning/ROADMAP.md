@@ -12,7 +12,7 @@
 
 - [x] **Phase 1: App Shell + Build Pipeline + Deploy** - Navigable static site with hash routing, Vite build, and live GitHub Pages deployment
 - [x] **Phase 2: Content Loader + Lesson Rendering + Module 1** - Markdown fetch pipeline, syntax-highlighted code blocks, and first complete module authored
-- [ ] **Phase 3: Progress Store** - localStorage persistence with schema versioning, quota handling, and data export
+- [x] **Phase 3: Progress Store** - localStorage persistence with schema versioning, quota handling, and data export
 - [ ] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars
 - [ ] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system
 - [ ] **Phase 6: Scenario Engine + Compliance Index + Completion Summary** - Branching scenario exercises, compliance control index page, and printable training log
@@ -83,10 +83,10 @@ Cross-cutting constraints:
 **Plans:** 3 plans
 Plans:
 **Wave 1**
-- [ ] 03-01-PLAN.md — progress-store.js core module + full Vitest test suite (Wave 1)
+- [x] 03-01-PLAN.md — progress-store.js core module + full Vitest test suite (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 03-02-PLAN.md — main.js + router.js wiring: progressStore.init() sequential + lastVisited auto-resume (Wave 2)
-- [ ] 03-03-PLAN.md — sidebar.js footer: export/import controls + lesson-view.js: markVisited + storage warning (Wave 2, parallel with 03-02)
+- [x] 03-02-PLAN.md — main.js + router.js wiring: progressStore.init() sequential + lastVisited auto-resume (Wave 2)
+- [x] 03-03-PLAN.md — sidebar.js footer: export/import controls + lesson-view.js: markVisited + storage warning (Wave 2, parallel with 03-02)
 
 ### Phase 4: Quiz Engine + Lesson Progress UI
 **Goal:** Learners can test their knowledge after each lesson, receive explanatory feedback, and see their overall progress at a glance
@@ -161,7 +161,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
-| 3. Progress Store | 0/3 | In progress | - |
+| 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
 | 4. Quiz Engine + Lesson Progress UI | 0/? | Not started | - |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
