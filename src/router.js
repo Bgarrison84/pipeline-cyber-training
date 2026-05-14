@@ -5,6 +5,7 @@ import { renderNotFound } from './views/not-found-view.js';
 import { renderLesson }   from './views/lesson-view.js';
 import { setActiveModule, setActiveLesson } from './sidebar.js';
 import { activateIcons } from './main.js';
+import { progressStore } from './progress-store.js';
 
 const routes = [
   { pattern: '#/',                              view: 'home' },
@@ -46,6 +47,14 @@ const viewRenderers = {
 export async function handleRoute() {
   const app = document.getElementById('app');
   if (!app) return;
+  const isInitialLoad = !window.location.hash || window.location.hash === '#/';
+  if (isInitialLoad) {
+    const last = progressStore.getLastVisited();
+    if (last?.moduleId && last?.lessonId) {
+      window.location.hash = '#/lesson/' + last.moduleId + '/' + last.lessonId;
+      return; // hashchange event fires handleRoute() again with new hash
+    }
+  }
   const { view, params } = matchRoute(window.location.hash);
   const renderer = viewRenderers[view] ?? viewRenderers['not-found'];
   const viewHtml = await renderer(params);
