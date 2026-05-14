@@ -2,11 +2,10 @@
 import { MODULES } from './modules-config.js';
 import { esc } from './utils/escape.js';
 import { checkLessonAvailability } from './content-loader.js';
-import { activateIcons } from './main.js';
+import { activateIcons } from './utils/icons.js';
 import { progressStore } from './progress-store.js';
-import { handleRoute } from './router.js';
 
-export async function initSidebar() {
+export async function initSidebar({ onImportSuccess } = {}) {
   const sidebarModules = document.getElementById('sidebar-modules');
   if (!sidebarModules) return;
 
@@ -111,11 +110,13 @@ export async function initSidebar() {
     fileInput.addEventListener('change', async (e) => {
       const file = e.target.files?.[0];
       if (!file) return;
+      // Clear any prior error message before attempting import
+      const errEl = document.getElementById('import-error-msg');
+      if (errEl) errEl.textContent = '';
       const result = await progressStore.importProgress(file);
       if (result.ok) {
-        await handleRoute();
+        if (onImportSuccess) await onImportSuccess();
       } else {
-        const errEl = document.getElementById('import-error-msg');
         if (errEl) errEl.textContent = result.error ?? 'Import failed.';
       }
       e.target.value = '';

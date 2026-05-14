@@ -58,8 +58,8 @@ vi.mock('../src/content-loader.js', () => ({
   loadComplianceRefs: vi.fn().mockResolvedValue(undefined),
 }))
 
-// Mock main.js activateIcons
-vi.mock('../src/main.js', () => ({
+// Mock utils/icons.js — activateIcons is now imported from here by sidebar.js and lesson-view.js
+vi.mock('../src/utils/icons.js', () => ({
   activateIcons: vi.fn(),
 }))
 
@@ -186,9 +186,10 @@ describe('sidebar.js — export/import footer (Task 1)', () => {
     expect(progressStoreMock.importProgress).toHaveBeenCalledWith(fakeFile)
   })
 
-  it('on successful import, handleRoute() is called', async () => {
+  it('on successful import, onImportSuccess callback is called', async () => {
     progressStoreMock.importProgress.mockResolvedValue({ ok: true })
-    await initSidebar()
+    // Pass handleRouteMock as onImportSuccess so the sidebar can invoke it
+    await initSidebar({ onImportSuccess: handleRouteMock })
     const fileInput = document.getElementById('import-file-input')
     expect(fileInput).not.toBeNull()
     const fakeFile = new File(

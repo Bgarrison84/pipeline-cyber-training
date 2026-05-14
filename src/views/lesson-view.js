@@ -7,7 +7,7 @@ import { MODULES } from '../modules-config.js';
 import { fetchLesson, parseFrontmatter, renderMarkdown, getLessonNav } from '../content-loader.js';
 import { renderBadge } from '../badge.js';
 import { setActiveLesson } from '../sidebar.js';
-import { activateIcons } from '../main.js';
+import { activateIcons } from '../utils/icons.js';
 import { esc } from '../utils/escape.js';
 import { progressStore } from '../progress-store.js';
 

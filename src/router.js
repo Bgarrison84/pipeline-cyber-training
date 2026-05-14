@@ -4,7 +4,7 @@ import { renderModule }   from './views/module-view.js';
 import { renderNotFound } from './views/not-found-view.js';
 import { renderLesson }   from './views/lesson-view.js';
 import { setActiveModule, setActiveLesson } from './sidebar.js';
-import { activateIcons } from './main.js';
+import { activateIcons } from './utils/icons.js';
 import { progressStore } from './progress-store.js';
 
 const routes = [
@@ -44,15 +44,24 @@ const viewRenderers = {
   'not-found': (params) => renderNotFound(params),
 };
 
+let _handledInitialLoad = false;
+
+export function _resetInitialLoadForTesting() {
+  _handledInitialLoad = false;
+}
+
 export async function handleRoute() {
   const app = document.getElementById('app');
   if (!app) return;
-  const isInitialLoad = !window.location.hash || window.location.hash === '#/';
-  if (isInitialLoad) {
-    const last = progressStore.getLastVisited();
-    if (last?.moduleId && last?.lessonId) {
-      window.location.hash = '#/lesson/' + last.moduleId + '/' + last.lessonId;
-      return; // hashchange event fires handleRoute() again with new hash
+  if (!_handledInitialLoad) {
+    _handledInitialLoad = true;
+    const isEmpty = !window.location.hash || window.location.hash === '#/';
+    if (isEmpty) {
+      const last = progressStore.getLastVisited();
+      if (last?.moduleId && last?.lessonId) {
+        window.location.hash = '#/lesson/' + last.moduleId + '/' + last.lessonId;
+        return; // hashchange event fires handleRoute() again with new hash
+      }
     }
   }
   const { view, params } = matchRoute(window.location.hash);

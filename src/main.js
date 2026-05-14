@@ -3,16 +3,9 @@ import { handleRoute } from './router.js';
 import { initSidebar } from './sidebar.js';
 import { setComplianceRefs, renderBadge } from './badge.js';
 import { progressStore } from './progress-store.js';
-import { createIcons, BookOpen, Shield, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle } from 'lucide';
 import './style.css';
 
 export { renderBadge };
-
-export function activateIcons() {
-  createIcons({
-    icons: { BookOpen, Shield, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle },
-  });
-}
 
 let complianceRefs = null;
 
@@ -36,7 +29,7 @@ export function getComplianceRefs() {
 async function init() {
   await loadComplianceRefs();
   await progressStore.init();
-  await Promise.all([handleRoute(), initSidebar()]);
+  await Promise.all([handleRoute(), initSidebar({ onImportSuccess: handleRoute })]);
 }
 
 init();

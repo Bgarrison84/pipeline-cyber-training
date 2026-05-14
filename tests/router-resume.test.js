@@ -21,6 +21,10 @@ describe('handleRoute() isInitialLoad redirect', () => {
     progressStore.resetProgress()
     localStorage.clear()
     await progressStore.init()
+
+    // Reset the module-level _handledInitialLoad guard between tests
+    const { _resetInitialLoadForTesting } = await import('../src/router.js')
+    _resetInitialLoadForTesting()
   })
 
   afterEach(() => {
