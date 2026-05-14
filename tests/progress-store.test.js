@@ -49,39 +49,49 @@ describe('init — blank schema written on first load', () => {
 // storage fallback
 // ──────────────────────────────────────────────────────────────────────────────
 describe('storage fallback', () => {
+  // Use a mock localStorage that throws on setItem to simulate QuotaExceededError.
+  // vi.stubGlobal is more reliable than vi.spyOn in happy-dom across multiple tests.
+  let originalLocalStorage
+
+  beforeEach(() => {
+    // Save real localStorage and replace with a version that throws on setItem
+    originalLocalStorage = globalThis.localStorage
+    const store = {}
+    const failingStorage = {
+      setItem(_key, _value) {
+        throw new DOMException('QuotaExceededError', 'QuotaExceededError')
+      },
+      getItem(key) { return store[key] ?? null },
+      removeItem(key) { delete store[key] },
+      clear() { for (const k of Object.keys(store)) delete store[k] },
+      get length() { return Object.keys(store).length },
+      key(i) { return Object.keys(store)[i] ?? null },
+    }
+    vi.stubGlobal('localStorage', failingStorage)
+  })
+
   afterEach(() => {
-    vi.restoreAllMocks()
+    vi.unstubAllGlobals()
     progressStore.resetProgress()
-    localStorage.clear()
+    // After restoring localStorage, also clear the real localStorage
+    originalLocalStorage.clear()
   })
 
   it('init() resolves without throwing when setItem throws QuotaExceededError', async () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new DOMException('QuotaExceededError', 'QuotaExceededError')
-    })
     await expect(progressStore.init()).resolves.not.toThrow()
   })
 
   it('isStorageAvailable() returns false when setItem throws', async () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new DOMException('QuotaExceededError', 'QuotaExceededError')
-    })
     await progressStore.init()
     expect(progressStore.isStorageAvailable()).toBe(false)
   })
 
   it('markVisited() does not throw in fallback mode', async () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new DOMException('QuotaExceededError', 'QuotaExceededError')
-    })
     await progressStore.init()
     expect(() => progressStore.markVisited('logging-auditing', 'intro')).not.toThrow()
   })
 
   it('getLessonProgress().visited is true after markVisited() in fallback mode', async () => {
-    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
-      throw new DOMException('QuotaExceededError', 'QuotaExceededError')
-    })
     await progressStore.init()
     progressStore.markVisited('logging-auditing', 'intro')
     expect(progressStore.getLessonProgress('logging-auditing', 'intro').visited).toBe(true)
