@@ -96,6 +96,15 @@ None — all public API methods are fully implemented and tested.
 
 No new network endpoints, auth paths, file access patterns, or schema changes at trust boundaries introduced beyond the plan's threat model. The `importProgress()` implementation satisfies T-03-01 (JSON.parse wrapped in try/catch + schemaVersion type check + known-keys check). T-03-04 (prototype pollution) is mitigated by `JSON.parse` safe defaults. T-03-02 mitigated via comment + consumers must use `esc()`.
 
-## Self-Check
+## Self-Check: PASSED
 
-To be appended after commit.
+- src/progress-store.js: FOUND
+- tests/progress-store.test.js: FOUND
+- .planning/phases/03-progress-store/03-01-SUMMARY.md: FOUND
+- commit e96da50 (RED): FOUND
+- commit 8c4fc36 (GREEN): FOUND
+- commit 2dc02ae (SUMMARY): FOUND
+- localStorage in main.js: 0
+- localStorage in router.js: 0
+- localStorage in sidebar.js: 0
+- localStorage in lesson-view.js: 0
