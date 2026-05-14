@@ -11,7 +11,7 @@
 ## Phases
 
 - [x] **Phase 1: App Shell + Build Pipeline + Deploy** - Navigable static site with hash routing, Vite build, and live GitHub Pages deployment
-- [ ] **Phase 2: Content Loader + Lesson Rendering + Module 1** - Markdown fetch pipeline, syntax-highlighted code blocks, and first complete module authored
+- [x] **Phase 2: Content Loader + Lesson Rendering + Module 1** - Markdown fetch pipeline, syntax-highlighted code blocks, and first complete module authored
 - [ ] **Phase 3: Progress Store** - localStorage persistence with schema versioning, quota handling, and data export
 - [ ] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars
 - [ ] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system
@@ -56,13 +56,13 @@ Plans:
 **Plans:** 4 plans
 Plans:
 **Wave 0**
-- [ ] 02-01-PLAN.md — npm packages + Lucide CDN removal + Phase 2 CSS tokens + Wave 0 test stubs (Wave 0)
+- [x] 02-01-PLAN.md — npm packages + Lucide CDN removal + Phase 2 CSS tokens + Wave 0 test stubs (Wave 0)
 **Wave 1** *(blocked on Wave 0 completion)*
-- [ ] 02-02-PLAN.md — content-loader.js + lesson-view.js stub + router/sidebar/main.js wiring (Wave 1)
+- [x] 02-02-PLAN.md — content-loader.js + lesson-view.js stub + router/sidebar/main.js wiring (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 02-03-PLAN.md — full lesson view: compliance bar + loading skeleton + prev/next footer + clipboard handler (Wave 2)
+- [x] 02-03-PLAN.md — full lesson view: compliance bar + loading skeleton + prev/next footer + clipboard handler (Wave 2)
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 02-04-PLAN.md — Module 1 content: 3 lesson .md files + quiz/exercise/scenario placeholders (Wave 3)
+- [x] 02-04-PLAN.md — Module 1 content: 3 lesson .md files + quiz/exercise/scenario placeholders (Wave 3)
 
 Cross-cutting constraints:
 - `esc()` from `src/utils/escape.js` applied to all frontmatter values inserted into innerHTML (T1 — all plans)
@@ -154,7 +154,7 @@ Cross-cutting constraints:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
-| 2. Content Loader + Lesson Rendering + Module 1 | 0/4 | Ready to execute | - |
+| 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
 | 3. Progress Store | 0/? | Not started | - |
 | 4. Quiz Engine + Lesson Progress UI | 0/? | Not started | - |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |

@@ -11,10 +11,10 @@
 
 ### Content & Lessons
 
-- [ ] **CONT-01**: Lessons are authored in Markdown files and rendered in-browser without a build step
-- [ ] **CONT-02**: PowerShell code blocks render with full Shiki syntax highlighting (PS 5.1 grammar)
-- [ ] **CONT-03**: Every code block has a one-click copy-to-clipboard button
-- [ ] **CONT-04**: Each lesson displays the TSA and/or NIST control IDs it covers, sourced from a shared compliance-refs data file
+- [x] **CONT-01**: Lessons are authored in Markdown files and rendered in-browser without a build step
+- [x] **CONT-02**: PowerShell code blocks render with full Shiki syntax highlighting (PS 5.1 grammar)
+- [x] **CONT-03**: Every code block has a one-click copy-to-clipboard button
+- [x] **CONT-04**: Each lesson displays the TSA and/or NIST control IDs it covers, sourced from a shared compliance-refs data file
 
 ### Simulated PowerShell Terminal
 
@@ -32,7 +32,7 @@
 
 ### Modules (v1 Skeleton — all 5 present)
 
-- [ ] **MOD-01**: Logging & Auditing — core lessons, at least one quiz, one terminal exercise, one scenario; maps to TSA and NIST logging controls
+- [x] **MOD-01**: Logging & Auditing — core lessons, at least one quiz, one terminal exercise, one scenario; maps to TSA and NIST logging controls
 - [ ] **MOD-02**: Network Hardening — core lessons, at least one quiz, one terminal exercise, one scenario; covers firewall rules, network segmentation, port scanning via PS
 - [ ] **MOD-03**: Account & Access Management — core lessons, at least one quiz, one terminal exercise, one scenario; covers AD, least privilege, service accounts, password policies
 - [ ] **MOD-04**: Incident Response — core lessons, at least one quiz, one terminal exercise, one scenario; covers anomaly detection, system isolation, evidence collection via PS
@@ -80,10 +80,10 @@
 | SHELL-02 | Phase 1 | ✓ Shipped |
 | SHELL-03 | Phase 4 | Pending |
 | SHELL-04 | Phase 6 | Pending |
-| CONT-01 | Phase 2 | Pending |
-| CONT-02 | Phase 2 | Pending |
-| CONT-03 | Phase 2 | Pending |
-| CONT-04 | Phase 2 | Pending |
+| CONT-01 | Phase 2 | ✓ Shipped |
+| CONT-02 | Phase 2 | ✓ Shipped |
+| CONT-03 | Phase 2 | ✓ Shipped |
+| CONT-04 | Phase 2 | ✓ Shipped |
 | TERM-01 | Phase 5 | Pending |
 | TERM-02 | Phase 5 | Pending |
 | TERM-03 | Phase 5 | Pending |
@@ -92,7 +92,7 @@
 | ASSESS-02 | Phase 6 | Pending |
 | ASSESS-03 | Phase 3 | Pending |
 | ASSESS-04 | Phase 6 | Pending |
-| MOD-01 | Phase 2 | Pending |
+| MOD-01 | Phase 2 | ✓ Shipped |
 | MOD-02 | Phase 7 | Pending |
 | MOD-03 | Phase 7 | Pending |
 | MOD-04 | Phase 7 | Pending |
