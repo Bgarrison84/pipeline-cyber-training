@@ -106,6 +106,11 @@ Plans:
 - [ ] 04-02-PLAN.md — quiz-engine.js full implementation + lesson-view.js wiring (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 04-03-PLAN.md — sidebar.js progress bars + refreshSidebarProgress + module-view.js lesson status list (Wave 2)
+
+Cross-cutting constraints:
+- `esc()` from `src/utils/escape.js` applied to all quiz text (stem, answers, feedback, explanation) before innerHTML insertion (all plans)
+- `import.meta.env.BASE_URL` prefix on quiz JSON fetch (04-02)
+- All localStorage access exclusively through `progressStore` — no direct localStorage calls (all plans)
 **UI hint:** yes
 
 ### Phase 5: Simulated PowerShell Terminal + Exercise View
@@ -169,7 +174,7 @@ Plans:
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
-| 4. Quiz Engine + Lesson Progress UI | 0/3 | Not started | - |
+| 4. Quiz Engine + Lesson Progress UI | 0/3 | Ready to execute | - |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
