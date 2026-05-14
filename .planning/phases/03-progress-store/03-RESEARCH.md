@@ -638,22 +638,13 @@ if (!progressStore.isStorageAvailable()) {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Re-render mechanism after import**
-   - What we know: CONTEXT.md says "triggers a page re-render" without specifying `reload()` vs `handleRoute()`
-   - What's unclear: In fallback mode (storage unavailable), `reload()` would lose the just-imported in-memory state
-   - Recommendation: Use `handleRoute()` by default; the planner should make this explicit in the task
+1. **Re-render mechanism after import** — RESOLVED: Use `handleRoute()` (not `window.location.reload()`). In fallback mode, reload would lose the just-imported in-memory state. Plan 03-03 Task 1 implements `if (result.ok) { await handleRoute(); }`.
 
-2. **`_migrate` export for testing**
-   - What we know: The migration runner needs to be testable without a real localStorage
-   - What's unclear: Whether to export it as `_migrate` (underscore-prefixed semi-private) or via a separate `migrateForTesting` name
-   - Recommendation: Export as `export { migrate as _migrateForTesting }` — documents its test-only intent
+2. **`_migrate` export for testing** — RESOLVED: Export as `export { migrate as _migrateForTesting }` — underscore prefix documents test-only intent. Plan 03-01 Task 2 implements this named export.
 
-3. **`setLastVisited` caller**
-   - What we know: CONTEXT.md says router reads `lastVisited` on load; `markVisited` is called by lesson-view
-   - What's unclear: Whether `setLastVisited` is called by lesson-view (alongside `markVisited`) or by the router (after route match)
-   - Recommendation: lesson-view calls both `markVisited` AND `setLastVisited` — keeps all progress writes in one place
+3. **`setLastVisited` caller** — RESOLVED: lesson-view.js calls both `markVisited(moduleId, lessonId)` AND `setLastVisited(moduleId, lessonId)` after each lesson render. Keeps all progress writes in lesson-view; router only reads. Plan 03-03 Task 2 implements this.
 
 ---
 
