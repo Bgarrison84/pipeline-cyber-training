@@ -9,6 +9,7 @@ import { renderBadge } from '../badge.js';
 import { setActiveLesson } from '../sidebar.js';
 import { activateIcons } from '../main.js';
 import { esc } from '../utils/escape.js';
+import { progressStore } from '../progress-store.js';
 
 // ──────────────────────────────────────────────────────────────────────────────
 // renderLesson — main async view renderer
@@ -64,6 +65,20 @@ export async function renderLesson({ moduleId, lessonId }) {
   }
 
   // Step 5 — Post-render wiring (must happen AFTER innerHTML is set)
+  // Record lesson visited state and last position (D-03, D-10)
+  progressStore.markVisited(moduleId, lessonId);
+  progressStore.setLastVisited(moduleId, lessonId);
+
+  // Show storage warning when storage is unavailable (D-10, SC-3)
+  if (!progressStore.isStorageAvailable()) {
+    const warningDiv = document.createElement('div');
+    warningDiv.className = 'storage-warning';
+    warningDiv.setAttribute('role', 'alert');
+    warningDiv.innerHTML = '<p style="font-size: var(--text-body); color: var(--color-text-muted); margin: 0 0 var(--spacing-sm) 0;">Progress cannot be saved — storage is unavailable (private browsing or quota full). Your progress this session will be lost when you close the tab.</p>';
+    const lessonColumn = document.querySelector('.lesson-column');
+    if (lessonColumn) lessonColumn.prepend(warningDiv);
+  }
+
   setActiveLesson(moduleId, lessonId);
   activateIcons();
   attachCopyHandlers();

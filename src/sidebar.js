@@ -3,6 +3,8 @@ import { MODULES } from './modules-config.js';
 import { esc } from './utils/escape.js';
 import { checkLessonAvailability } from './content-loader.js';
 import { activateIcons } from './main.js';
+import { progressStore } from './progress-store.js';
+import { handleRoute } from './router.js';
 
 export async function initSidebar() {
   const sidebarModules = document.getElementById('sidebar-modules');
@@ -63,6 +65,60 @@ export async function initSidebar() {
         el.style.width    = isCollapsed ? '0' : '';
         el.style.overflow = isCollapsed ? 'hidden' : '';
       });
+    });
+  }
+
+  // Progress footer — export/import controls (D-12, D-13, D-14)
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar || !toggleBtn) return;
+
+  const footer = document.createElement('div');
+  footer.id = 'sidebar-progress-footer';
+  footer.innerHTML = `
+    <div style="padding: var(--spacing-sm) var(--spacing-md); border-top: 1px solid var(--color-border);">
+      <button id="btn-export-progress"
+              style="font-size: var(--text-body); color: var(--color-text-muted); background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px;">
+        Export my progress
+      </button>
+      <span style="color: var(--color-text-muted); margin: 0 var(--spacing-xs);">&#183;</span>
+      <button id="btn-import-progress"
+              style="font-size: var(--text-body); color: var(--color-text-muted); background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline; text-underline-offset: 3px;">
+        Import progress
+      </button>
+      <input id="import-file-input" type="file" accept=".json" style="display: none;" />
+      <span id="import-error-msg"
+            style="display: block; font-size: var(--text-body); color: var(--color-destructive); margin-top: var(--spacing-xs);"></span>
+    </div>
+  `;
+
+  // Insert BEFORE toggle button — NOT appendChild (Pitfall 5: insertBefore)
+  sidebar.insertBefore(footer, toggleBtn);
+
+  // Wire event listeners (null-guarded per WR-04)
+  const exportBtn = document.getElementById('btn-export-progress');
+  const importBtn = document.getElementById('btn-import-progress');
+  const fileInput = document.getElementById('import-file-input');
+
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => progressStore.exportProgress());
+  }
+
+  if (importBtn) {
+    importBtn.addEventListener('click', () => fileInput?.click());
+  }
+
+  if (fileInput) {
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const result = await progressStore.importProgress(file);
+      if (result.ok) {
+        await handleRoute();
+      } else {
+        const errEl = document.getElementById('import-error-msg');
+        if (errEl) errEl.textContent = result.error ?? 'Import failed.';
+      }
+      e.target.value = '';
     });
   }
 }
