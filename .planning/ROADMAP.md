@@ -80,7 +80,13 @@ Cross-cutting constraints:
   2. The localStorage schema contains a `schemaVersion` key from the first write; the app reads this on load and handles version mismatches without corrupting data
   3. Attempting to write progress when localStorage is full (or in a private browsing context) shows a visible warning rather than silently failing or throwing an uncaught exception
   4. Clicking "Export my progress" downloads a valid JSON file containing all stored progress data that could be re-imported in a future version
-**Plans:** TBD
+**Plans:** 3 plans
+Plans:
+**Wave 1**
+- [ ] 03-01-PLAN.md — progress-store.js core module + full Vitest test suite (Wave 1)
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 03-02-PLAN.md — main.js + router.js wiring: progressStore.init() sequential + lastVisited auto-resume (Wave 2)
+- [ ] 03-03-PLAN.md — sidebar.js footer: export/import controls + lesson-view.js: markVisited + storage warning (Wave 2, parallel with 03-02)
 
 ### Phase 4: Quiz Engine + Lesson Progress UI
 **Goal:** Learners can test their knowledge after each lesson, receive explanatory feedback, and see their overall progress at a glance
@@ -155,7 +161,7 @@ Cross-cutting constraints:
 |-------|----------------|--------|-----------|
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
-| 3. Progress Store | 0/? | Not started | - |
+| 3. Progress Store | 0/3 | In progress | - |
 | 4. Quiz Engine + Lesson Progress UI | 0/? | Not started | - |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
@@ -168,4 +174,4 @@ Cross-cutting constraints:
 *Mode: mvp | Granularity: fine | Coverage: 26/26*
 *Phase 1 planned: 2026-05-11 — 4 plans, 4 waves*
 *Phase 2 planned: 2026-05-11 — 4 plans, 4 waves*
-*Phase 2 planned: 2026-05-11 — 4 plans, 4 waves*
+*Phase 3 planned: 2026-05-14 — 3 plans, 2 waves*
