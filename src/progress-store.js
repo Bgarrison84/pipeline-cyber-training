@@ -226,6 +226,7 @@ function saveScenario(moduleId, scenarioId) {
  * @returns {{ visited: boolean, completed: boolean }}
  */
 function getLessonProgress(moduleId, lessonId) {
+  if (!_store) return { visited: false, completed: false };
   return _store.lessons[moduleId + '/' + lessonId] ?? { visited: false, completed: false };
 }
 
@@ -236,6 +237,7 @@ function getLessonProgress(moduleId, lessonId) {
  * @returns {{ score: number, total: number, attemptedAt: string }|null}
  */
 function getQuizScore(moduleId, quizId) {
+  if (!_store) return null;
   return _store.quizzes[moduleId + '/' + quizId] ?? null;
 }
 
@@ -246,6 +248,7 @@ function getQuizScore(moduleId, quizId) {
  * @returns {{ completed: boolean, completedAt: string }|null}
  */
 function getExerciseCompletion(moduleId, exerciseId) {
+  if (!_store) return null;
   return _store.exercises[moduleId + '/' + exerciseId] ?? null;
 }
 
@@ -256,6 +259,7 @@ function getExerciseCompletion(moduleId, exerciseId) {
  * @returns {{ completed: boolean, completedAt: string }|null}
  */
 function getScenarioCompletion(moduleId, scenarioId) {
+  if (!_store) return null;
   return _store.scenarios[moduleId + '/' + scenarioId] ?? null;
 }
 
