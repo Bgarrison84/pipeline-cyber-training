@@ -55,7 +55,7 @@ export async function renderQuiz(moduleId, quizId, lessonColumn, lessonId) {
   activateIcons();
 
   if (prior === null) {
-    attachQuizHandlers(section, moduleId, quizId, quiz, resolvedLessonId);
+    attachQuizHandlers(section, moduleId, quizId, quiz, resolvedLessonId, lessonColumn);
   }
 
   return section;
@@ -160,7 +160,7 @@ function buildRevisitHtml(quiz, prior) {
 // attachQuizHandlers — event delegation on section for answer clicks
 // ──────────────────────────────────────────────────────────────────────────────
 
-function attachQuizHandlers(section, moduleId, quizId, quiz, lessonId) {
+function attachQuizHandlers(section, moduleId, quizId, quiz, lessonId, lessonColumn) {
   const totalQuestions = quiz.questions.length;
   let answeredCount = 0;
   let score = 0;
@@ -237,7 +237,7 @@ function attachQuizHandlers(section, moduleId, quizId, quiz, lessonId) {
       completionP.style.color = score === totalQuestions ? '#22c55e' : 'var(--color-text-muted)';
       completionP.textContent = `Quiz complete — ${score}/${totalQuestions} correct`;
       completionBanner.appendChild(completionP);
-      section.appendChild(completionBanner);
+      lessonColumn.appendChild(completionBanner);
     }
   });
 }
