@@ -127,7 +127,7 @@ Cross-cutting constraints:
 **Plans:** 4 plans
 Plans:
 **Wave 0**
-- [ ] 05-01-PLAN.md — RED test stubs (terminal-engine + exercise-view) + 01.json upgrade to 3-step schema + modules-config exerciseId field + router/quiz-engine test additions (Wave 0)
+- [x] 05-01-PLAN.md — RED test stubs (terminal-engine + exercise-view) + 01.json upgrade to 3-step schema + modules-config exerciseId field + router/quiz-engine test additions (Wave 0) ✓ 2026-05-15
 **Wave 1** *(blocked on Wave 0 completion)*
 - [ ] 05-02-PLAN.md — src/terminal-engine.js createTerminal factory: DOM construction, Enter/history key handler, appendOutput, disable, setPrompt, focus API (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
