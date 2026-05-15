@@ -1,8 +1,5 @@
 // tests/quiz-engine.test.js
-// Phase 04 Plan 01 — RED test stubs covering ASSESS-01 and SHELL-03 behaviors.
-// src/quiz-engine.js does not exist yet (Wave 1 creates it).
-// All test bodies throw new Error('RED') — they must stay failing until
-// Wave 1 implements renderQuiz() and computeModuleProgress() in quiz-engine.js.
+// Phase 04 Plan 02 — GREEN tests covering ASSESS-01 and SHELL-03 behaviors.
 // happy-dom environment (vitest.config.js: environment: 'happy-dom')
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -49,15 +46,15 @@ vi.mock('../src/modules-config.js', () => ({
   ],
 }))
 
+// Mock sidebar.js to break circular dependency in tests
+vi.mock('../src/sidebar.js', () => ({
+  initSidebar: vi.fn().mockResolvedValue(undefined),
+  setActiveModule: vi.fn(),
+  setActiveLesson: vi.fn(),
+  refreshSidebarProgress: vi.fn(),
+}))
+
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-
-// ──────────────────────────────────────────────────────────────────────────────
-// RED gate helper — all test bodies call this until Wave 1 implements quiz-engine
-// ──────────────────────────────────────────────────────────────────────────────
-
-function RED(description) {
-  throw new Error('RED: ' + description + ' — src/quiz-engine.js not yet implemented (Wave 1)')
-}
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Test data
@@ -84,7 +81,12 @@ const QUIZ_JSON = {
   ],
 }
 
-beforeEach(() => {
+let progressStoreMock
+let activateIconsMock
+let renderQuiz
+let computeModuleProgress
+
+beforeEach(async () => {
   document.body.innerHTML = `
     <div id="app">
       <div class="lesson-wrapper">
@@ -96,6 +98,18 @@ beforeEach(() => {
     ok: true,
     json: vi.fn().mockResolvedValue(QUIZ_JSON),
   }))
+
+  const psModule = await import('../src/progress-store.js')
+  progressStoreMock = psModule.progressStore
+  progressStoreMock.getQuizScore.mockReturnValue(null)  // first-visit mode by default
+  progressStoreMock.getLessonProgress.mockReturnValue({ visited: false, completed: false })
+
+  const iconsModule = await import('../src/utils/icons.js')
+  activateIconsMock = iconsModule.activateIcons
+
+  const qeModule = await import('../src/quiz-engine.js')
+  renderQuiz = qeModule.renderQuiz
+  computeModuleProgress = qeModule.computeModuleProgress
 })
 
 afterEach(() => {
@@ -108,20 +122,30 @@ afterEach(() => {
 // ──────────────────────────────────────────────────────────────────────────────
 
 describe('renderQuiz — first-visit mode', () => {
-  it('injects a .quiz-section element into .lesson-column', () => {
-    RED('renderQuiz first-visit: .quiz-section injection')
+  it('injects a .quiz-section element into .lesson-column', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    const section = lessonColumn.querySelector('.quiz-section')
+    expect(section).not.toBeNull()
   })
 
-  it('question stem text appears in the DOM', () => {
-    RED('renderQuiz first-visit: question stem in DOM')
+  it('question stem text appears in the DOM', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    expect(lessonColumn.textContent).toContain('Which Event ID captures script block content?')
   })
 
-  it('answer buttons (.quiz-answer-btn) are present in the DOM', () => {
-    RED('renderQuiz first-visit: .quiz-answer-btn buttons present')
+  it('answer buttons (.quiz-answer-btn) are present in the DOM', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    const btns = lessonColumn.querySelectorAll('.quiz-answer-btn')
+    expect(btns.length).toBeGreaterThan(0)
   })
 
-  it('activateIcons() is called once after quiz HTML is injected', () => {
-    RED('renderQuiz first-visit: activateIcons() called after inject')
+  it('activateIcons() is called once after quiz HTML is injected', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    expect(activateIconsMock).toHaveBeenCalledTimes(1)
   })
 })
 
@@ -130,20 +154,52 @@ describe('renderQuiz — first-visit mode', () => {
 // ──────────────────────────────────────────────────────────────────────────────
 
 describe('renderQuiz — answer click behavior', () => {
-  it('clicking a .quiz-answer-btn sets data-answered="true" on the parent .quiz-question-card', () => {
-    RED('renderQuiz click: data-answered set on card')
+  it('clicking a .quiz-answer-btn sets data-answered="true" on the parent .quiz-question-card', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    const btn = lessonColumn.querySelector('.quiz-answer-btn')
+    btn.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    const card = lessonColumn.querySelector('.quiz-question-card')
+    expect(card.dataset.answered).toBe('true')
   })
 
-  it('all answer buttons on that question get disabled after a click', () => {
-    RED('renderQuiz click: all buttons disabled after answer')
+  it('all answer buttons on that question get disabled after a click', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    const btn = lessonColumn.querySelector('.quiz-answer-btn')
+    btn.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    const card = lessonColumn.querySelector('.quiz-question-card')
+    const allBtns = card.querySelectorAll('.quiz-answer-btn')
+    allBtns.forEach(b => {
+      expect(b.style.pointerEvents).toBe('none')
+    })
   })
 
-  it('the clicked answer feedback text appears in the DOM', () => {
-    RED('renderQuiz click: feedback text appears')
+  it('the clicked answer feedback text appears in the DOM', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    // Click the first answer (id='a')
+    const btnA = lessonColumn.querySelector('.quiz-answer-btn[data-answer-id="a"]')
+    btnA.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    const feedback = lessonColumn.querySelector('.quiz-answer-feedback[data-for-answer="a"]')
+    expect(feedback).not.toBeNull()
+    expect(feedback.style.display).not.toBe('none')
+    expect(feedback.textContent).toContain('That is a logon event.')
   })
 
-  it('the question explanation appears in the DOM after any answer click', () => {
-    RED('renderQuiz click: explanation appears after answer')
+  it('the question explanation appears in the DOM after any answer click', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    const btn = lessonColumn.querySelector('.quiz-answer-btn')
+    btn.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    const explanation = lessonColumn.querySelector('.quiz-explanation')
+    expect(explanation).not.toBeNull()
+    expect(explanation.style.display).not.toBe('none')
+    expect(explanation.textContent).toContain('Event ID 4104 captures PowerShell script block content.')
   })
 })
 
@@ -152,12 +208,27 @@ describe('renderQuiz — answer click behavior', () => {
 // ──────────────────────────────────────────────────────────────────────────────
 
 describe('renderQuiz — score save', () => {
-  it('progressStore.saveQuiz() is called with (moduleId, quizId, {score, total}) when last question is answered', () => {
-    RED('renderQuiz score save: saveQuiz() called with correct args')
+  it('progressStore.saveQuiz() is called with (moduleId, quizId, {score, total}) when last question is answered', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    // Answer the only question (the quiz has 1 question)
+    const btn = lessonColumn.querySelector('.quiz-answer-btn')
+    btn.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(progressStoreMock.saveQuiz).toHaveBeenCalledWith(
+      'logging-auditing',
+      '01',
+      expect.objectContaining({ total: 1 })
+    )
   })
 
-  it('progressStore.markLessonCompleted() is called when all questions are answered', () => {
-    RED('renderQuiz score save: markLessonCompleted() called')
+  it('progressStore.markLessonCompleted() is called when all questions are answered', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    const btn = lessonColumn.querySelector('.quiz-answer-btn')
+    btn.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(progressStoreMock.markLessonCompleted).toHaveBeenCalledWith('logging-auditing', 'audit-policies')
   })
 })
 
@@ -166,16 +237,38 @@ describe('renderQuiz — score save', () => {
 // ──────────────────────────────────────────────────────────────────────────────
 
 describe('renderQuiz — revisit mode', () => {
-  it('rendered DOM contains the text "Your last attempt:" when prior score exists', () => {
-    RED('renderQuiz revisit: "Your last attempt:" banner text')
+  beforeEach(() => {
+    // Set prior quiz score to simulate revisit mode
+    progressStoreMock.getQuizScore.mockReturnValue({
+      score: 1,
+      total: 1,
+      attemptedAt: '2026-05-15T12:00:00Z',
+    })
   })
 
-  it('rendered DOM contains the score "1/1" when prior score is {score:1, total:1}', () => {
-    RED('renderQuiz revisit: score "1/1" displayed')
+  it('rendered DOM contains the text "Your last attempt:" when prior score exists', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    expect(lessonColumn.textContent).toContain('Your last attempt:')
   })
 
-  it('clicking answer buttons in revisit mode does not call saveQuiz', () => {
-    RED('renderQuiz revisit: no saveQuiz on click')
+  it('rendered DOM contains the score "1/1" when prior score is {score:1, total:1}', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    expect(lessonColumn.textContent).toContain('1/1')
+  })
+
+  it('clicking answer buttons in revisit mode does not call saveQuiz', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+    // Try to click an answer button — in revisit mode they should have pointer-events:none
+    // but we can dispatch a click event directly to the section to verify no saveQuiz call
+    const section = lessonColumn.querySelector('.quiz-section')
+    const btn = section.querySelector('.quiz-answer-btn')
+    // Dispatch click — event delegation will run but should find data-answered="true" on card
+    if (btn) btn.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    expect(progressStoreMock.saveQuiz).not.toHaveBeenCalled()
   })
 })
 
@@ -184,15 +277,53 @@ describe('renderQuiz — revisit mode', () => {
 // ──────────────────────────────────────────────────────────────────────────────
 
 describe('computeModuleProgress', () => {
-  it('returns {pct:0, complete:false} when all lessons are unvisited and no quiz score exists', () => {
-    RED('computeModuleProgress: pct:0 for all-unvisited module')
+  it('returns {pct:0, complete:false} when all lessons are unvisited and no quiz score exists', async () => {
+    // progressStoreMock.getQuizScore returns null (no score)
+    // progressStoreMock.getLessonProgress returns {visited:false}
+    const mod = {
+      id: 'logging-auditing',
+      lessons: [
+        { id: 'intro' },
+        { id: 'audit-policies', quizId: '01' },
+      ],
+    }
+    const result = computeModuleProgress(mod)
+    expect(result.pct).toBe(0)
+    expect(result.complete).toBe(false)
   })
 
-  it('returns {pct:100, complete:true} when the quiz-having lesson has a score', () => {
-    RED('computeModuleProgress: pct:100 when quiz passed and quiz-less lesson visited')
+  it('returns {pct:100, complete:true} when the quiz-having lesson has a score', async () => {
+    // Both lessons complete: intro visited, audit-policies quiz passed
+    progressStoreMock.getLessonProgress.mockReturnValue({ visited: true, completed: true })
+    progressStoreMock.getQuizScore.mockReturnValue({ score: 1, total: 1, attemptedAt: '2026-05-15T12:00:00Z' })
+    const mod = {
+      id: 'logging-auditing',
+      lessons: [
+        { id: 'intro' },
+        { id: 'audit-policies', quizId: '01' },
+      ],
+    }
+    const result = computeModuleProgress(mod)
+    expect(result.pct).toBe(100)
+    expect(result.complete).toBe(true)
   })
 
-  it('returns {pct:50, complete:false} when quiz-less intro is visited but quiz-having audit-policies has no score', () => {
-    RED('computeModuleProgress: pct:50 for partial completion (quiz-less visited, quiz not passed)')
+  it('returns {pct:50, complete:false} when quiz-less intro is visited but quiz-having audit-policies has no score', async () => {
+    // intro: visited=true (counts); audit-policies: getQuizScore=null (doesn't count)
+    progressStoreMock.getLessonProgress.mockImplementation((moduleId, lessonId) => {
+      if (lessonId === 'intro') return { visited: true, completed: false }
+      return { visited: false, completed: false }
+    })
+    progressStoreMock.getQuizScore.mockReturnValue(null)
+    const mod = {
+      id: 'logging-auditing',
+      lessons: [
+        { id: 'intro' },
+        { id: 'audit-policies', quizId: '01' },
+      ],
+    }
+    const result = computeModuleProgress(mod)
+    expect(result.pct).toBe(50)
+    expect(result.complete).toBe(false)
   })
 })
