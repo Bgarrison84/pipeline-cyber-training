@@ -27,8 +27,6 @@ export async function initSidebar({ onImportSuccess } = {}) {
       <a href="#/module/${esc(mod.id)}"
          aria-label="${esc(mod.title)}"
          style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-primary); text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: border-color 150ms ease, background 150ms ease;"
-         onmouseover="this.style.color='var(--color-accent)'"
-         onmouseout="if(!this.closest('.sidebar-module--active'))this.style.color='var(--color-text-primary)'">
         <i data-lucide="${esc(mod.icon.toLowerCase())}" style="width:20px;height:20px;flex-shrink:0;"></i>
         <span class="sidebar-label" style="font-size: var(--text-body); font-weight: 400; white-space: nowrap; overflow: hidden;">${esc(mod.title)}</span>
       </a>
@@ -47,6 +45,18 @@ export async function initSidebar({ onImportSuccess } = {}) {
 
   // Activate Lucide icons in sidebar
   activateIcons();
+
+  // Attach hover listeners to module title links (replaces inline onmouseover/onmouseout)
+  sidebarModules.querySelectorAll('.sidebar-module a').forEach(link => {
+    link.addEventListener('mouseover', () => {
+      link.style.color = 'var(--color-accent)';
+    });
+    link.addEventListener('mouseout', () => {
+      if (!link.closest('.sidebar-module--active')) {
+        link.style.color = 'var(--color-text-primary)';
+      }
+    });
+  });
 
   // Inject progress bars below each module title link
   MODULES.forEach(mod => {
