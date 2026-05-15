@@ -3,6 +3,7 @@ import { renderHome }     from './views/home-view.js';
 import { renderModule }   from './views/module-view.js';
 import { renderNotFound } from './views/not-found-view.js';
 import { renderLesson }   from './views/lesson-view.js';
+import { renderExercise } from './views/exercise-view.js';
 import { setActiveModule, setActiveLesson } from './sidebar.js';
 import { activateIcons } from './utils/icons.js';
 import { progressStore } from './progress-store.js';
@@ -11,6 +12,7 @@ const routes = [
   { pattern: '#/',                              view: 'home' },
   { pattern: '#/module/:moduleId',              view: 'module' },
   { pattern: '#/lesson/:moduleId/:lessonId',    view: 'lesson' },
+  { pattern: '#/exercise/:moduleId/:exerciseId', view: 'exercise' },
 ];
 
 function extractParams(hash, pattern) {
@@ -41,6 +43,7 @@ const viewRenderers = {
   home:        (params) => renderHome(params),
   module:      (params) => renderModule(params),
   lesson:      (params) => renderLesson(params),
+  exercise:    (params) => renderExercise(params),
   'not-found': (params) => renderNotFound(params),
 };
 
