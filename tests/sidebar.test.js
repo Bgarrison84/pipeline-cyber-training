@@ -9,7 +9,11 @@
 // ──────────────────────────────────────────────────────────────────────────────
 
 // Capture mock references for reuse in tests
-const _computeModuleProgressMock = vi.fn().mockReturnValue({ pct: 0, complete: false })
+// vi.hoisted() ensures the mock fn is available in vi.mock() factory closures
+// even after Vitest hoists vi.mock() calls to the top of the file at transform time
+const { _computeModuleProgressMock } = vi.hoisted(() => ({
+  _computeModuleProgressMock: vi.fn().mockReturnValue({ pct: 0, complete: false }),
+}))
 
 vi.mock('../src/progress-store.js', () => ({
   progressStore: {
