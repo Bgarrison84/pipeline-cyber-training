@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-last_updated: "2026-05-15T17:11:19.009Z"
+last_updated: "2026-05-15T17:26:25.673Z"
 progress:
   total_phases: 8
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 14
-  completed_plans: 12
-  percent: 86
+  completed_plans: 14
+  percent: 100
 ---
 
 # State — Pipeline Cyber Training
@@ -25,12 +25,12 @@ progress:
 ## Current Position
 
 **Phase:** 4 — Quiz Engine + Lesson Progress UI
-**Plan:** 2 of 3 complete (Wave 0 + Wave 1 done, Wave 2 next)
-**Status:** Executing
+**Plan:** 3 of 3 complete (Wave 0 + Wave 1 + Wave 2 all done)
+**Status:** Complete — checkpoint:human-verify pending for 04-03
 **Blocker:** None
 
 ```
-Progress: [█████████░] 86%
+Progress: [██████████] 100%
                           ^
                         Here
 ```
@@ -44,7 +44,7 @@ Progress: [█████████░] 86%
 | 1 | App Shell + Build Pipeline + Deploy | ✓ Complete |
 | 2 | Content Loader + Lesson Rendering + Module 1 | ✓ Complete |
 | 3 | Progress Store | ✓ Complete |
-| 4 | Quiz Engine + Lesson Progress UI | Ready to execute (3 plans) |
+| 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (3 plans — checkpoint:human-verify pending) |
 | 5 | Simulated PowerShell Terminal + Exercise View | Not started |
 | 6 | Scenario Engine + Compliance Index + Completion Summary | Not started |
 | 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | Not started |
@@ -54,9 +54,9 @@ Progress: [█████████░] 86%
 
 ## Performance Metrics
 
-**Phases complete:** 3/8
-**Plans complete:** 13/14
-**Requirements shipped:** 12/26 (SHELL-01, SHELL-02, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05, ASSESS-01)
+**Phases complete:** 4/8
+**Plans complete:** 14/14
+**Requirements shipped:** 13/26 (SHELL-01, SHELL-02, SHELL-03, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05, ASSESS-01)
 
 ---
 
@@ -75,6 +75,7 @@ Progress: [█████████░] 86%
 | schemaVersion: 1 in localStorage from day one | Migration runner depends on this key always being present |
 | Vite mock pattern for non-existent modules in tests | Use pre-captured vi.fn() references before vi.mock() factories — avoids vite:import-analysis static resolution failure on non-existent files |
 | Dynamic import('./sidebar.js') in quiz-engine.js | Breaks the quiz-engine ↔ sidebar circular dependency at module evaluation time |
+| vi.hoisted() required for Vitest mock variable captures | When the module under test has static imports of the mocked module, vi.hoisted() lifts the variable into the hoisting zone alongside the mock factory |
 
 ### Critical Compliance Constraints
 
@@ -105,8 +106,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-15 — Phase 4 Plan 02 complete (quiz-engine.js implementation + lesson-view.js wiring)
-**Next action:** Execute 04-03-PLAN.md (Wave 2 — sidebar progress bars + module-view lesson status)
+**Last updated:** 2026-05-15 — Phase 4 Plan 03 complete (sidebar progress bars + module-view lesson status — checkpoint:human-verify pending)
+**Next action:** Human verification of Phase 4 UI in browser, then proceed to Phase 5 (Terminal Engine)
 
 ---
 

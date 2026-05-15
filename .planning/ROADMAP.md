@@ -13,7 +13,7 @@
 - [x] **Phase 1: App Shell + Build Pipeline + Deploy** - Navigable static site with hash routing, Vite build, and live GitHub Pages deployment
 - [x] **Phase 2: Content Loader + Lesson Rendering + Module 1** - Markdown fetch pipeline, syntax-highlighted code blocks, and first complete module authored
 - [x] **Phase 3: Progress Store** - localStorage persistence with schema versioning, quota handling, and data export
-- [ ] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars
+- [x] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars (completed 2026-05-15)
 - [ ] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system
 - [ ] **Phase 6: Scenario Engine + Compliance Index + Completion Summary** - Branching scenario exercises, compliance control index page, and printable training log
 - [ ] **Phase 7: Core Module Content (MOD-02, MOD-03, MOD-04)** - Network Hardening, Account & Access Management, and Incident Response modules fully populated with OT/IT distinctions
@@ -98,14 +98,14 @@ Plans:
   2. A completed quiz score is saved to the Progress Store and displayed the next time the learner visits that lesson ("You scored 3/4 on your last attempt")
   3. The sidebar and module overview page show visual progress bars reflecting the percentage of lessons and quizzes completed for each module
   4. A learner who has completed all content in a module sees that module marked as complete in the navigation
-**Plans:** 3 plans
+**Plans:** 3/3 plans complete
 Plans:
 **Wave 0**
 - [x] 04-01-PLAN.md — icons.js + modules-config.js + audit-policies.md + quiz JSON cleanup + RED test scaffolds (Wave 0)
 **Wave 1** *(blocked on Wave 0 completion)*
 - [x] 04-02-PLAN.md — quiz-engine.js full implementation + lesson-view.js wiring (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 04-03-PLAN.md — sidebar.js progress bars + refreshSidebarProgress + module-view.js lesson status list (Wave 2)
+- [x] 04-03-PLAN.md — sidebar.js progress bars + refreshSidebarProgress + module-view.js lesson status list (Wave 2)
 
 Cross-cutting constraints:
 - `esc()` from `src/utils/escape.js` applied to all quiz text (stem, answers, feedback, explanation) before innerHTML insertion (all plans)
@@ -174,7 +174,7 @@ Cross-cutting constraints:
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
-| 4. Quiz Engine + Lesson Progress UI | 2/3 | Executing | - |
+| 4. Quiz Engine + Lesson Progress UI | 3/3 | Complete   | 2026-05-15 |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
