@@ -25,7 +25,7 @@ progress:
 ## Current Position
 
 **Phase:** 5 — Simulated PowerShell Terminal + Exercise View
-**Plan:** 05-01 complete (1 of 4 plans — Wave 0 RED scaffolds + data prerequisites done)
+**Plan:** 05-02 complete (2 of 4 plans — Wave 1 terminal-engine.js implementation done)
 **Status:** Executing
 **Blocker:** None
 
@@ -55,9 +55,9 @@ Progress: [✓1][✓2][✓3][✓4][5→][ 6 ][ 7 ][ 8 ]
 ## Performance Metrics
 
 **Phases complete:** 4/8
-**Plans complete:** 15/18 (05-01 complete)
+**Plans complete:** 16/18 (05-02 complete)
 **Requirements shipped:** 13/26 (SHELL-01, SHELL-02, SHELL-03, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05, ASSESS-01)
-**Phase 5 progress:** TERM-01, TERM-02, TERM-03, TERM-04 — RED tests written; implementation in plans 02-04
+**Phase 5 progress:** TERM-01, TERM-02, TERM-03, TERM-04 — terminal-engine.js complete (13/13 GREEN); exercise-view + integration wiring in plans 03-04
 
 ---
 
@@ -108,8 +108,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-15 — Phase 5 Plan 01 complete (Wave 0 RED scaffolds, 01.json upgrade, modules-config exerciseId)
-**Next action:** Execute 05-02-PLAN.md (Wave 1 — terminal-engine.js implementation)
+**Last updated:** 2026-05-15 — Phase 5 Plan 02 complete (Wave 1 — createTerminal factory, all 13 terminal-engine tests GREEN)
+**Next action:** Execute 05-03-PLAN.md (Wave 2 — exercise-view.js + router wiring)
 
 ---
 

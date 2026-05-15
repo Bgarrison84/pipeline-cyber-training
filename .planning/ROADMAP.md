@@ -129,7 +129,7 @@ Plans:
 **Wave 0**
 - [x] 05-01-PLAN.md — RED test stubs (terminal-engine + exercise-view) + 01.json upgrade to 3-step schema + modules-config exerciseId field + router/quiz-engine test additions (Wave 0) ✓ 2026-05-15
 **Wave 1** *(blocked on Wave 0 completion)*
-- [ ] 05-02-PLAN.md — src/terminal-engine.js createTerminal factory: DOM construction, Enter/history key handler, appendOutput, disable, setPrompt, focus API (Wave 1)
+- [x] 05-02-PLAN.md — src/terminal-engine.js createTerminal factory: DOM construction, Enter/history key handler, appendOutput, disable, setPrompt, focus API (Wave 1) ✓ 2026-05-15
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 05-03-PLAN.md — src/views/exercise-view.js renderExercise + src/router.js exercise route: full step progression, hint display, completion flow, re-visit state (Wave 2)
 **Wave 3** *(blocked on Wave 2 completion)*
@@ -191,7 +191,7 @@ Cross-cutting constraints:
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
 | 4. Quiz Engine + Lesson Progress UI | 3/3 | ✓ Complete | 2026-05-15 |
-| 5. Simulated PowerShell Terminal + Exercise View | 0/4 | Planned | - |
+| 5. Simulated PowerShell Terminal + Exercise View | 2/4 | In progress | - |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
 | 8. Patch Management Module (MOD-05) | 0/? | Not started | - |
