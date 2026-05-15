@@ -327,3 +327,115 @@ describe('computeModuleProgress', () => {
     expect(result.complete).toBe(false)
   })
 })
+
+// ──────────────────────────────────────────────────────────────────────────────
+// renderQuiz — multi-question partial credit (IN-03)
+// ──────────────────────────────────────────────────────────────────────────────
+
+const QUIZ_3Q = {
+  id: 'logging-auditing-quiz-01',
+  moduleId: 'logging-auditing',
+  title: 'Logging & Auditing Knowledge Check',
+  questions: [
+    {
+      id: 'q-01',
+      type: 'multiple-choice',
+      stem: 'Which Event ID captures script block content?',
+      complianceControls: ['NIST-AU-12'],
+      answers: [
+        { id: 'a', text: '4624', correct: false, feedback: 'That is a logon event.' },
+        { id: 'b', text: '4104', correct: true,  feedback: 'Correct. 4104 captures script blocks.' },
+        { id: 'c', text: '4688', correct: false, feedback: 'That is process creation.' },
+        { id: 'd', text: '7045', correct: false, feedback: 'That is service installation.' },
+      ],
+      explanation: 'Event ID 4104 captures PowerShell script block content.',
+    },
+    {
+      id: 'q-02',
+      type: 'multiple-choice',
+      stem: "Which cmdlet retrieves Security event log entries filtered by Event ID?",
+      complianceControls: ['NIST-AU-6'],
+      answers: [
+        { id: 'a', text: "Get-WinEvent -FilterHashtable @{LogName='Security';Id=4624}", correct: true, feedback: 'Correct. Get-WinEvent with a filter hashtable is efficient.' },
+        { id: 'b', text: 'Get-EventLog -LogName Security -EventId 4624', correct: false, feedback: 'Less efficient than Get-WinEvent with a filter hashtable.' },
+        { id: 'c', text: 'Search-EventLog -Id 4624', correct: false, feedback: 'Search-EventLog is not a valid PowerShell cmdlet.' },
+        { id: 'd', text: 'Read-EventLog -Source Security -EventId 4624', correct: false, feedback: 'Read-EventLog is not a valid PowerShell cmdlet.' },
+      ],
+      explanation: 'Get-WinEvent with -FilterHashtable is the preferred method in PowerShell 5.1.',
+    },
+    {
+      id: 'q-03',
+      type: 'multiple-choice',
+      stem: 'Under TSA SD-02F, what is the minimum log retention period for OT systems?',
+      complianceControls: ['TSA-SD-02F'],
+      answers: [
+        { id: 'a', text: '30 days', correct: false, feedback: '30 days is insufficient.' },
+        { id: 'b', text: '90 days', correct: false, feedback: '90 days does not meet TSA SD-02F.' },
+        { id: 'c', text: '12 months', correct: true, feedback: 'Correct. TSA SD-02F requires 12 months minimum.' },
+        { id: 'd', text: '7 years', correct: false, feedback: '7 years is a SOX financial standard, not TSA.' },
+      ],
+      explanation: 'TSA SD-02F mandates a 12-month minimum retention period for cybersecurity event logs.',
+    },
+  ],
+}
+
+describe('renderQuiz — partial credit with multi-question quiz (IN-03)', () => {
+  beforeEach(() => {
+    // Override global fetch mock to return the 3-question fixture
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue(QUIZ_3Q),
+    }))
+    progressStoreMock.getQuizScore.mockReturnValue(null)
+  })
+
+  it('saveQuiz is called with { score: 1, total: 3 } when only q-01 is answered correctly', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+
+    // Answer q-01 correctly (id 'b' is correct)
+    const cards = lessonColumn.querySelectorAll('.quiz-question-card')
+    expect(cards.length).toBe(3)
+
+    const btnB_q01 = cards[0].querySelector('.quiz-answer-btn[data-answer-id="b"]')
+    btnB_q01.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Answer q-02 incorrectly (id 'b' is wrong for q-02)
+    const btnB_q02 = cards[1].querySelector('.quiz-answer-btn[data-answer-id="b"]')
+    btnB_q02.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Answer q-03 incorrectly (id 'a' is wrong for q-03)
+    const btnA_q03 = cards[2].querySelector('.quiz-answer-btn[data-answer-id="a"]')
+    btnA_q03.click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(progressStoreMock.saveQuiz).toHaveBeenCalledWith(
+      'logging-auditing',
+      '01',
+      expect.objectContaining({ score: 1, total: 3 })
+    )
+  })
+
+  it('completion banner text reads "Quiz complete — 1/3 correct" when score < totalQuestions', async () => {
+    const lessonColumn = document.querySelector('.lesson-column')
+    await renderQuiz('logging-auditing', '01', lessonColumn, 'audit-policies')
+
+    const cards = lessonColumn.querySelectorAll('.quiz-question-card')
+
+    // Answer q-01 correctly
+    cards[0].querySelector('.quiz-answer-btn[data-answer-id="b"]').click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Answer q-02 incorrectly
+    cards[1].querySelector('.quiz-answer-btn[data-answer-id="b"]').click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    // Answer q-03 incorrectly
+    cards[2].querySelector('.quiz-answer-btn[data-answer-id="a"]').click()
+    await new Promise(resolve => setTimeout(resolve, 0))
+
+    expect(lessonColumn.textContent).toContain('Quiz complete — 1/3 correct')
+  })
+})

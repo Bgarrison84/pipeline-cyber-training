@@ -7,7 +7,9 @@
       "id": "q-01",
       "type": "multiple-choice",
       "stem": "Which PowerShell Event ID captures the full content of executed script blocks?",
-      "complianceControls": ["NIST-AU-12"],
+      "complianceControls": [
+        "NIST-AU-12"
+      ],
       "answers": [
         {
           "id": "a",
@@ -35,6 +37,76 @@
         }
       ],
       "explanation": "Script Block Logging (Event ID 4104) captures the full text of all PowerShell script blocks to the Microsoft-Windows-PowerShell/Operational log."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell cmdlet retrieves Windows Security event log entries filtered by Event ID?",
+      "complianceControls": [
+        "NIST-AU-6"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-WinEvent -FilterHashtable @{LogName='Security';Id=4624}",
+          "correct": true,
+          "feedback": "Correct. Get-WinEvent with a filter hashtable is the recommended approach for querying specific event IDs efficiently."
+        },
+        {
+          "id": "b",
+          "text": "Get-EventLog -LogName Security -EventId 4624",
+          "correct": false,
+          "feedback": "Get-EventLog can filter by event ID via -InstanceId, but Get-WinEvent with a filter hashtable is more efficient and is not deprecated in PS 5.1."
+        },
+        {
+          "id": "c",
+          "text": "Search-EventLog -Id 4624",
+          "correct": false,
+          "feedback": "Search-EventLog is not a valid PowerShell cmdlet."
+        },
+        {
+          "id": "d",
+          "text": "Read-EventLog -Source Security -EventId 4624",
+          "correct": false,
+          "feedback": "Read-EventLog is not a valid PowerShell cmdlet."
+        }
+      ],
+      "explanation": "Get-WinEvent with -FilterHashtable is the preferred method in PowerShell 5.1 for querying event logs by ID. It is significantly faster than Get-EventLog on large logs because filtering happens at the provider level."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "Under TSA SD-02F, what is the minimum retention period for cybersecurity event logs on pipeline OT systems?",
+      "complianceControls": [
+        "TSA-SD-02F"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "30 days",
+          "correct": false,
+          "feedback": "30 days is insufficient. TSA SD-02F requires a longer retention period to support incident investigations."
+        },
+        {
+          "id": "b",
+          "text": "90 days",
+          "correct": false,
+          "feedback": "90 days is a common IT benchmark but does not meet the TSA SD-02F requirement for pipeline operators."
+        },
+        {
+          "id": "c",
+          "text": "12 months",
+          "correct": true,
+          "feedback": "Correct. TSA SD-02F requires pipeline operators to retain cybersecurity event logs for a minimum of 12 months to support investigations and compliance audits."
+        },
+        {
+          "id": "d",
+          "text": "7 years",
+          "correct": false,
+          "feedback": "7 years is a financial records standard (SOX), not a TSA cybersecurity log retention requirement."
+        }
+      ],
+      "explanation": "TSA SD-02F mandates a 12-month minimum retention period for cybersecurity event logs. Operators should store logs in a tamper-resistant location separate from the OT network to ensure they are available for post-incident analysis."
     }
   ]
 }
