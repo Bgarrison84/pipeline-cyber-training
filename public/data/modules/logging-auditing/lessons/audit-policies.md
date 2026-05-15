@@ -5,6 +5,7 @@ moduleId: logging-auditing
 order: 3
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-Monitoring, NIST-AU-12, NIST-AU-2]
+quizId: '01'
 ---
 
 ## Why Audit Policies Matter

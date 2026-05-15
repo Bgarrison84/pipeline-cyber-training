@@ -15,7 +15,7 @@ export const MODULES = [
     lessons: [
       { id: 'intro',          title: 'Introduction to Windows Event Logs' },
       { id: 'ps-logging',     title: 'Enabling PowerShell Script Block Logging' },
-      { id: 'audit-policies', title: 'Configuring Audit Policies via Group Policy' },
+      { id: 'audit-policies', title: 'Configuring Audit Policies via Group Policy', quizId: '01' },
     ],
     complianceTags: ['TSA', 'NIST'],
   },

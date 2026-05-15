@@ -14,10 +14,12 @@ import {
   Copy,
   Check,
   AlertCircle,
+  CheckCircle,
+  XCircle,
 } from 'lucide';
 
 export function activateIcons() {
   createIcons({
-    icons: { BookOpen, Shield, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle },
+    icons: { BookOpen, Shield, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle, CheckCircle, XCircle },
   });
 }
