@@ -51,6 +51,8 @@ export async function renderQuiz(moduleId, quizId, lessonColumn, lessonId) {
     section.innerHTML = buildFirstVisitHtml(quiz);
   }
 
+  const existingQuiz = lessonColumn.querySelector('.quiz-section');
+  if (existingQuiz) existingQuiz.remove();
   lessonColumn.appendChild(section);
   activateIcons();
 
