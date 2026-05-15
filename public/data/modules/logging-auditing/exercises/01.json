@@ -2,7 +2,6 @@
   "id": "logging-auditing-ex-01",
   "moduleId": "logging-auditing",
   "title": "Enable Script Block Logging",
-  "status": "placeholder",
   "description": "Use PowerShell to enable Script Block Logging via the registry on PIPELINE-DC01.",
   "complianceControls": ["TSA-Monitoring", "NIST-AU-12"],
   "context": "You are logged into PIPELINE-DC01 as a domain administrator. Script Block Logging is currently disabled.",
@@ -10,16 +9,66 @@
     {
       "id": "step-1",
       "instruction": "Check whether the ScriptBlockLogging registry key exists.",
-      "hint": "Use Get-Item or Get-ItemProperty with the HKLM: path.",
+      "hint": "Use Get-Item or Get-ItemProperty with the HKLM: path to check for the ScriptBlockLogging key.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-Item\\s+HKLM:\\\\SOFTWARE\\\\Policies|gci.*HKLM",
+          "hint": "Close — try Get-ItemProperty instead of Get-Item for reading registry values."
+        },
+        {
+          "pattern": "regedit|reg\\s+query",
+          "hint": "In PowerShell, use Get-ItemProperty with the HKLM: provider path rather than regedit or reg.exe."
+        }
+      ],
       "expectedCommands": [
         {
-          "pattern": "Get-Item.*ScriptBlockLogging|Get-ItemProperty.*ScriptBlockLogging",
+          "pattern": "Get-ItemProperty.*ScriptBlockLogging|Get-Item.*ScriptBlockLogging",
           "matchType": "regex",
           "caseSensitive": false
         }
       ],
-      "successOutput": "Get-Item : Cannot find path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging' because it does not exist.\nAt line:1 char:1\n+ Get-Item HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging",
-      "feedbackOnWrong": "Navigate to HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell and check for ScriptBlockLogging."
+      "successOutput": "Get-ItemProperty : Cannot find path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging' because it does not exist.\nAt line:1 char:1\n+ Get-ItemProperty HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n    + CategoryInfo          : ObjectNotFound: (HKLM:\\SOFTWARE\\P...kBlockLogging:String) [Get-ItemProperty], ItemNotFoundException\n    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetItemPropertyCommand",
+      "feedbackOnWrong": "Navigate to HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell and check for the ScriptBlockLogging subkey using Get-ItemProperty."
+    },
+    {
+      "id": "step-2",
+      "instruction": "Create the ScriptBlockLogging registry key under the PowerShell policy path.",
+      "hint": "Use New-Item to create the registry key at HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging.",
+      "hintPatterns": [
+        {
+          "pattern": "Set-ItemProperty.*ScriptBlockLogging",
+          "hint": "The key does not exist yet — use New-Item to create it first, then Set-ItemProperty to set the value."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "New-Item.*ScriptBlockLogging",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "    Hive: HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\n\nName                           Property\n----                           --------\nScriptBlockLogging",
+      "feedbackOnWrong": "Use New-Item -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging' -Force to create the key."
+    },
+    {
+      "id": "step-3",
+      "instruction": "Enable Script Block Logging by setting EnableScriptBlockLogging to 1.",
+      "hint": "Use Set-ItemProperty with -Name EnableScriptBlockLogging -Value 1 on the key you just created.",
+      "hintPatterns": [
+        {
+          "pattern": "New-ItemProperty.*EnableScriptBlockLogging",
+          "hint": "Close — Set-ItemProperty works on existing registry keys. Since you just created the key, use Set-ItemProperty -Name EnableScriptBlockLogging -Value 1."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Set-ItemProperty.*EnableScriptBlockLogging.*1|Set-ItemProperty.*1.*EnableScriptBlockLogging",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "EnableScriptBlockLogging : 1\nPSPath                   : Microsoft.PowerShell.Core\\Registry::HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging\nPSParentPath             : Microsoft.PowerShell.Core\\Registry::HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\nPSChildName              : ScriptBlockLogging\nPSDrive                  : HKLM\nPSProvider               : Microsoft.PowerShell.Core\\Registry",
+      "feedbackOnWrong": "Use Set-ItemProperty -Path 'HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging' -Name 'EnableScriptBlockLogging' -Value 1."
     }
   ]
 }

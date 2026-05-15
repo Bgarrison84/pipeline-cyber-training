@@ -26,4 +26,10 @@ describe('matchRoute', () => {
       params: { moduleId: 'logging-auditing', lessonId: 'intro' }
     })
   })
+  it('matches exercise route and extracts moduleId and exerciseId', () => {
+    expect(matchRoute('#/exercise/logging-auditing/01')).toEqual({
+      view: 'exercise',
+      params: { moduleId: 'logging-auditing', exerciseId: '01' }
+    })
+  })
 })

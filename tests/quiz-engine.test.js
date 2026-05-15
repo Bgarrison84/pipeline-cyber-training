@@ -326,6 +326,34 @@ describe('computeModuleProgress', () => {
     expect(result.pct).toBe(50)
     expect(result.complete).toBe(false)
   })
+
+  it('exercise-backed lesson with non-null completion counts as complete', async () => {
+    // FAILS (RED): computeModuleProgress has no else-if exerciseId branch yet
+    progressStoreMock.getExerciseCompletion.mockReturnValue({ completed: true, completedAt: '2026-05-15T10:00:00Z' })
+    const mod = {
+      id: 'logging-auditing',
+      lessons: [
+        { id: 'ps-logging', exerciseId: '01' },
+      ],
+    }
+    const result = computeModuleProgress(mod)
+    expect(result.pct).toBe(100)
+    expect(result.complete).toBe(true)
+  })
+
+  it('exercise-backed lesson with null completion does not count', async () => {
+    // FAILS (RED): computeModuleProgress has no else-if exerciseId branch yet
+    progressStoreMock.getExerciseCompletion.mockReturnValue(null)
+    const mod = {
+      id: 'logging-auditing',
+      lessons: [
+        { id: 'ps-logging', exerciseId: '01' },
+      ],
+    }
+    const result = computeModuleProgress(mod)
+    expect(result.pct).toBe(0)
+    expect(result.complete).toBe(false)
+  })
 })
 
 // ──────────────────────────────────────────────────────────────────────────────
