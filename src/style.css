@@ -284,3 +284,9 @@
   outline: 3px solid #f97316;
   outline-offset: 2px;
 }
+
+/* Phase 5: Terminal cursor blink */
+@keyframes terminal-cursor-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}

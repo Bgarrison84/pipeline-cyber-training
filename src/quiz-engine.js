@@ -251,8 +251,9 @@ function attachQuizHandlers(section, moduleId, quizId, quiz, lessonId, lessonCol
 /**
  * Compute module completion progress using the D-07 formula.
  * - Lessons with quizId: complete when getQuizScore returns non-null
- * - Lessons without quizId: complete when getLessonProgress().visited is true
- * @param {{ id: string, lessons: Array<{id: string, quizId?: string}> }} mod
+ * - Lessons with exerciseId: complete when getExerciseCompletion returns non-null
+ * - Lessons without quizId or exerciseId: complete when getLessonProgress().visited is true
+ * @param {{ id: string, lessons: Array<{id: string, quizId?: string, exerciseId?: string}> }} mod
  * @returns {{ numerator: number, denominator: number, pct: number, complete: boolean }}
  */
 export function computeModuleProgress(mod) {
@@ -265,6 +266,10 @@ export function computeModuleProgress(mod) {
       // Quiz-backed lesson: counts as complete only when quiz is passed
       const quizScore = progressStore.getQuizScore(mod.id, lesson.quizId);
       if (quizScore !== null) numerator++;
+    } else if (lesson.exerciseId) {
+      // Exercise-backed lesson: counts as complete when exercise saved
+      const ex = progressStore.getExerciseCompletion(mod.id, lesson.exerciseId);
+      if (ex !== null) numerator++;
     } else {
       // Quiz-less lesson: counts as complete when visited
       const progress = progressStore.getLessonProgress(mod.id, lesson.id);

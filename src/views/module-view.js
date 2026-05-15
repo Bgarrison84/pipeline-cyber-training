@@ -39,13 +39,28 @@ export function renderModule({ moduleId }) {
 
   const { pct } = computeModuleProgress(mod);
 
-  const lessonRows = mod.lessons.map(lesson => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:var(--spacing-sm) var(--spacing-md);border:1px solid var(--color-border);border-radius:4px;margin-bottom:var(--spacing-xs);background:var(--color-bg-secondary);">
-      <a href="#/lesson/${esc(mod.id)}/${esc(lesson.id)}"
-         style="color:var(--color-text-primary);text-decoration:none;font-size:var(--text-body);">${esc(lesson.title)}</a>
-      ${lessonStatusBadge(mod, lesson)}
+  const lessonRows = mod.lessons.map(lesson => {
+    const exerciseDone = lesson.exerciseId
+      ? progressStore.getExerciseCompletion(mod.id, lesson.exerciseId) !== null
+      : false;
+    return `
+    <div style="padding:var(--spacing-sm) var(--spacing-md);border:1px solid var(--color-border);border-radius:4px;margin-bottom:var(--spacing-xs);background:var(--color-bg-secondary);">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <a href="#/lesson/${esc(mod.id)}/${esc(lesson.id)}"
+           style="color:var(--color-text-primary);text-decoration:none;font-size:var(--text-body);">${esc(lesson.title)}</a>
+        ${lessonStatusBadge(mod, lesson)}
+      </div>
+      ${lesson.exerciseId ? `
+        <a href="#/exercise/${esc(mod.id)}/${esc(lesson.exerciseId)}"
+           style="display:inline-flex;align-items:center;gap:var(--spacing-xs);font-size:var(--text-body);font-weight:600;text-decoration:none;padding:var(--spacing-xs) 0;color:${exerciseDone ? '#22c55e' : 'var(--color-accent)'};">
+          <i data-lucide="${exerciseDone ? 'check-circle' : 'terminal'}"
+             style="width:14px;height:14px;color:${exerciseDone ? '#22c55e' : 'var(--color-accent)'};flex-shrink:0;"></i>
+          ${exerciseDone ? 'Exercise complete — revisit →' : 'Start Exercise →'}
+        </a>
+      ` : ''}
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   return `
     <section style="padding: var(--spacing-xl);">
