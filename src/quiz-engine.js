@@ -229,11 +229,14 @@ function attachQuizHandlers(section, moduleId, quizId, quiz, lessonId) {
       import('./sidebar.js').then(m => m.refreshSidebarProgress(moduleId));
 
       // Render completion banner
-      const bannerColor = score === totalQuestions ? '#22c55e' : 'var(--color-text-muted)';
       const completionBanner = document.createElement('div');
       completionBanner.className = 'quiz-completion-banner';
       completionBanner.style.cssText = 'padding: var(--spacing-md); margin-top: var(--spacing-lg); text-align: center;';
-      completionBanner.innerHTML = `<p style="font-size: var(--text-body); font-weight: 600; color: ${bannerColor}; margin: 0;">Quiz complete — ${score}/${totalQuestions} correct</p>`;
+      const completionP = document.createElement('p');
+      completionP.style.cssText = 'font-size: var(--text-body); font-weight: 600; margin: 0;';
+      completionP.style.color = score === totalQuestions ? '#22c55e' : 'var(--color-text-muted)';
+      completionP.textContent = `Quiz complete — ${score}/${totalQuestions} correct`;
+      completionBanner.appendChild(completionP);
       section.appendChild(completionBanner);
     }
   });
