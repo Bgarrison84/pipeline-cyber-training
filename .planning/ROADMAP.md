@@ -103,7 +103,7 @@ Plans:
 **Wave 0**
 - [x] 04-01-PLAN.md — icons.js + modules-config.js + audit-policies.md + quiz JSON cleanup + RED test scaffolds (Wave 0)
 **Wave 1** *(blocked on Wave 0 completion)*
-- [ ] 04-02-PLAN.md — quiz-engine.js full implementation + lesson-view.js wiring (Wave 1)
+- [x] 04-02-PLAN.md — quiz-engine.js full implementation + lesson-view.js wiring (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 04-03-PLAN.md — sidebar.js progress bars + refreshSidebarProgress + module-view.js lesson status list (Wave 2)
 
@@ -174,7 +174,7 @@ Cross-cutting constraints:
 | 1. App Shell + Build Pipeline + Deploy | 4/4 | ✓ Complete | 2026-05-11 |
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
-| 4. Quiz Engine + Lesson Progress UI | 1/3 | Executing | - |
+| 4. Quiz Engine + Lesson Progress UI | 2/3 | Executing | - |
 | 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |

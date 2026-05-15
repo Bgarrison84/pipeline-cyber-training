@@ -25,7 +25,7 @@ progress:
 ## Current Position
 
 **Phase:** 4 — Quiz Engine + Lesson Progress UI
-**Plan:** 1 of 3 complete (Wave 0 done, Wave 1 next)
+**Plan:** 2 of 3 complete (Wave 0 + Wave 1 done, Wave 2 next)
 **Status:** Executing
 **Blocker:** None
 
@@ -55,8 +55,8 @@ Progress: [█████████░] 86%
 ## Performance Metrics
 
 **Phases complete:** 3/8
-**Plans complete:** 12/14
-**Requirements shipped:** 11/26 (SHELL-01, SHELL-02, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05)
+**Plans complete:** 13/14
+**Requirements shipped:** 12/26 (SHELL-01, SHELL-02, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05, ASSESS-01)
 
 ---
 
@@ -74,6 +74,7 @@ Progress: [█████████░] 86%
 | data/compliance-refs.json for all version strings | TSA directive version strings must never be hardcoded; one-line edit on revision |
 | schemaVersion: 1 in localStorage from day one | Migration runner depends on this key always being present |
 | Vite mock pattern for non-existent modules in tests | Use pre-captured vi.fn() references before vi.mock() factories — avoids vite:import-analysis static resolution failure on non-existent files |
+| Dynamic import('./sidebar.js') in quiz-engine.js | Breaks the quiz-engine ↔ sidebar circular dependency at module evaluation time |
 
 ### Critical Compliance Constraints
 
@@ -104,8 +105,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-15 — Phase 4 Plan 01 complete (Wave 0 prerequisites + RED test scaffolds)
-**Next action:** Execute 04-02-PLAN.md (Wave 1 — quiz-engine.js implementation + lesson-view.js wiring)
+**Last updated:** 2026-05-15 — Phase 4 Plan 02 complete (quiz-engine.js implementation + lesson-view.js wiring)
+**Next action:** Execute 04-03-PLAN.md (Wave 2 — sidebar progress bars + module-view lesson status)
 
 ---
 
