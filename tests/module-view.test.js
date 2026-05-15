@@ -7,11 +7,13 @@
 // happy-dom environment (vitest.config.js: environment: 'happy-dom')
 
 // ──────────────────────────────────────────────────────────────────────────────
-// Mock reference captures — defined before vi.mock() calls so they are accessible
-// in the factory closures and in test bodies
+// Mock reference captures — vi.hoisted() ensures these are available in vi.mock()
+// factory closures even after Vitest hoists vi.mock() calls to the top of the file
 // ──────────────────────────────────────────────────────────────────────────────
 
-const _computeModuleProgressMock = vi.fn().mockReturnValue({ pct: 0, complete: false, numerator: 0, denominator: 2 })
+const { _computeModuleProgressMock } = vi.hoisted(() => ({
+  _computeModuleProgressMock: vi.fn().mockReturnValue({ pct: 0, complete: false, numerator: 0, denominator: 2 }),
+}))
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Mocks — must be declared before module imports that depend on them
