@@ -218,9 +218,10 @@ function attachCopyHandlers() {
         });
       }
       setTimeout(() => {
-        if (icon) {
-          icon.setAttribute('data-lucide', 'copy');
-          icon.style.color = '';
+        const liveIcon = btn.querySelector('[data-lucide], svg');
+        if (liveIcon) {
+          liveIcon.setAttribute('data-lucide', 'copy');
+          liveIcon.style.color = '';
           btn.setAttribute('aria-label', 'Copy code to clipboard');
           import('lucide').then(({ createIcons, Copy }) => {
             createIcons({ icons: { Copy }, attrs: { 'stroke-width': 2 }, rootNode: btn });
