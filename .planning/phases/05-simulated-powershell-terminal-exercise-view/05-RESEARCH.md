@@ -840,17 +840,13 @@ const lessonId = lesson?.id ?? exerciseId;  // fallback: use exerciseId as lesso
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Which lesson gets `exerciseId: '01'`?**
-   - What we know: `audit-policies` has `quizId: '01'`. The exercise `01.json` describes "Enable Script Block Logging" which is the topic of the `ps-logging` lesson.
-   - What's unclear: Was the exercise originally authored for `audit-policies` or `ps-logging`?
-   - Recommendation: Assign `exerciseId: '01'` to `ps-logging`. If the planner disagrees, document the formula for lessons with both `quizId` and `exerciseId`.
+   - RESOLVED: Assigned to `ps-logging` lesson (not `audit-policies`) per research recommendation. 05-01 Task 2 implements this.
 
 2. **Step-level resume deferred — confirm 1 step is survivable at launch?**
-   - What we know: Phase 3 deferred step-level resume. Phase 5 CONTEXT.md Deferred confirms "deferred indefinitely for 1-step exercises."
-   - What's unclear: Upgrading `01.json` to 3 steps means a learner who completes step 1–2 and closes the browser restarts from step 1 on return.
-   - Recommendation: Accept this for Phase 5. Exercise completion (all 3 steps) is still saved; partial completion is not. This is acceptable for a training tool.
+   - RESOLVED: Accepted for Phase 5. Exercise completion (all 3 steps) is saved; partial completion is not. Acceptable for a training tool. Explicitly listed in CONTEXT.md Deferred.
 
 ---
 
