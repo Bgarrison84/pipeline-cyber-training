@@ -4,6 +4,7 @@ import { esc } from './utils/escape.js';
 import { checkLessonAvailability } from './content-loader.js';
 import { activateIcons } from './utils/icons.js';
 import { progressStore } from './progress-store.js';
+import { computeModuleProgress } from './quiz-engine.js';
 
 export async function initSidebar({ onImportSuccess } = {}) {
   const sidebarModules = document.getElementById('sidebar-modules');
@@ -45,6 +46,38 @@ export async function initSidebar({ onImportSuccess } = {}) {
   `).join('');
 
   // Activate Lucide icons in sidebar
+  activateIcons();
+
+  // Inject progress bars below each module title link
+  MODULES.forEach(mod => {
+    const moduleEl = sidebarModules.querySelector(
+      '.sidebar-module[data-module-id="' + CSS.escape(mod.id) + '"]'
+    );
+    if (!moduleEl) return;
+
+    const { pct, complete } = computeModuleProgress(mod);
+
+    const bar = document.createElement('div');
+    bar.className = 'sidebar-progress-bar';
+    bar.style.cssText = 'height:4px;background:var(--color-bg-secondary);margin:0 var(--spacing-md) var(--spacing-xs);border-radius:2px;overflow:hidden;';
+    bar.innerHTML = '<div style="height:100%;width:' + pct + '%;background:var(--color-accent);transition:width 300ms ease;"></div>';
+
+    const titleLink = moduleEl.querySelector('a');
+    if (titleLink) titleLink.after(bar);
+
+    if (complete) {
+      const titleSpan = titleLink ? titleLink.querySelector('.sidebar-label') : null;
+      if (titleSpan && !titleSpan.querySelector('[data-lucide="check-circle"]')) {
+        const icon = document.createElement('i');
+        icon.setAttribute('data-lucide', 'check-circle');
+        icon.style.cssText = 'width:16px;height:16px;color:var(--color-accent);vertical-align:middle;margin-left:var(--spacing-xs);';
+        titleSpan.appendChild(icon);
+      }
+      if (titleLink) titleLink.style.color = 'var(--color-accent)';
+    }
+  });
+
+  // Re-activate Lucide icons to render any injected check-circle icons
   activateIcons();
 
   // Collapse toggle
@@ -176,4 +209,37 @@ export function setActiveLesson(moduleId, lessonId) {
       link.classList.remove('sidebar-lesson-link--active');
     }
   });
+}
+
+export function refreshSidebarProgress(moduleId) {
+  const sidebarModules = document.getElementById('sidebar-modules');
+  if (!sidebarModules) return;
+
+  const mod = MODULES.find(m => m.id === moduleId);
+  if (!mod) return;
+
+  const moduleEl = sidebarModules.querySelector(
+    '.sidebar-module[data-module-id="' + CSS.escape(moduleId) + '"]'
+  );
+  if (!moduleEl) return;
+
+  const { pct, complete } = computeModuleProgress(mod);
+
+  const barInner = moduleEl.querySelector('.sidebar-progress-bar div');
+  if (barInner) barInner.style.width = pct + '%';
+
+  if (complete) {
+    const titleLink = moduleEl.querySelector('a');
+    if (titleLink) {
+      const titleSpan = titleLink.querySelector('.sidebar-label');
+      if (titleSpan && !titleSpan.querySelector('[data-lucide="check-circle"]')) {
+        const icon = document.createElement('i');
+        icon.setAttribute('data-lucide', 'check-circle');
+        icon.style.cssText = 'width:16px;height:16px;color:var(--color-accent);vertical-align:middle;margin-left:var(--spacing-xs);';
+        titleSpan.appendChild(icon);
+        activateIcons();
+      }
+      titleLink.style.color = 'var(--color-accent)';
+    }
+  }
 }
