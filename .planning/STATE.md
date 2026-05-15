@@ -26,7 +26,7 @@ progress:
 
 **Phase:** 4 — Quiz Engine + Lesson Progress UI
 **Plan:** 3 of 3 complete (Wave 0 + Wave 1 + Wave 2 all done)
-**Status:** Complete — checkpoint:human-verify pending for 04-03
+**Status:** Complete — checkpoint:human-verify approved for 04-03
 **Blocker:** None
 
 ```
@@ -44,7 +44,7 @@ Progress: [██████████] 100%
 | 1 | App Shell + Build Pipeline + Deploy | ✓ Complete |
 | 2 | Content Loader + Lesson Rendering + Module 1 | ✓ Complete |
 | 3 | Progress Store | ✓ Complete |
-| 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (3 plans — checkpoint:human-verify pending) |
+| 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (3 plans — checkpoint:human-verify approved) |
 | 5 | Simulated PowerShell Terminal + Exercise View | Not started |
 | 6 | Scenario Engine + Compliance Index + Completion Summary | Not started |
 | 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | Not started |
@@ -106,8 +106,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-15 — Phase 4 Plan 03 complete (sidebar progress bars + module-view lesson status — checkpoint:human-verify pending)
-**Next action:** Human verification of Phase 4 UI in browser, then proceed to Phase 5 (Terminal Engine)
+**Last updated:** 2026-05-15 — Phase 4 Plan 03 complete (sidebar progress bars + module-view lesson status — checkpoint:human-verify approved)
+**Next action:** Proceed to Phase 5 (Terminal Engine)
 
 ---
 

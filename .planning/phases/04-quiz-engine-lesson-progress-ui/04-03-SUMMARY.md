@@ -44,7 +44,7 @@ metrics:
 
 # Phase 4 Plan 03: Sidebar Progress Bars + Module-View Lesson Status Summary
 
-Sidebar 4px progress bars with live quiz-completion refresh, module-overview progress bar, and per-lesson status badges — delivering SHELL-03. All 117 automated tests GREEN. Human checkpoint pending.
+Sidebar 4px progress bars with live quiz-completion refresh, module-overview progress bar, and per-lesson status badges — delivering SHELL-03. All 117 automated tests GREEN. Human checkpoint approved.
 
 ## What Was Built
 
@@ -116,7 +116,7 @@ Full suite GREEN — sidebar progress bar tests (5), module-view tests (6), plus
 4. `grep "SECTION_CARDS" src/views/module-view.js` → nothing (removed)
 5. `grep -c "computeModuleProgress" src/views/module-view.js` → 2 (import + usage)
 6. `grep "async.*renderModule\|renderModule.*async" src/views/module-view.js` → nothing (synchronous)
-7. Human checkpoint Task 3: PENDING (not yet verified in browser)
+7. Human checkpoint Task 3: APPROVED — all visual verifications passed in browser
 
 ## Known Stubs
 
