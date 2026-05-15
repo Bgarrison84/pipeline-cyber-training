@@ -24,15 +24,15 @@ progress:
 
 ## Current Position
 
-**Phase:** 4 — Quiz Engine + Lesson Progress UI
-**Plan:** 3 of 3 complete (Wave 0 + Wave 1 + Wave 2 all done)
-**Status:** Complete — checkpoint:human-verify approved for 04-03
+**Phase:** 5 — Simulated PowerShell Terminal + Exercise View
+**Plan:** Ready to discuss/plan (Phase 4 complete)
+**Status:** Ready to plan
 **Blocker:** None
 
 ```
-Progress: [██████████] 100%
-                          ^
-                        Here
+Progress: [✓1][✓2][✓3][✓4][ 5 ][ 6 ][ 7 ][ 8 ]
+                               ^
+                             Here
 ```
 
 ---
@@ -106,8 +106,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-15 — Phase 4 Plan 03 complete (sidebar progress bars + module-view lesson status — checkpoint:human-verify approved)
-**Next action:** Proceed to Phase 5 (Terminal Engine)
+**Last updated:** 2026-05-15 — Phase 4 fully complete (3 plans, all verified — ASSESS-01 + SHELL-03 shipped)
+**Next action:** Run `/gsd-discuss-phase 5` to start Terminal Engine phase
 
 ---
 

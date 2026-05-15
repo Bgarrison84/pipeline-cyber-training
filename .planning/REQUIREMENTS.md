@@ -78,7 +78,7 @@
 |--------|-------|--------|
 | SHELL-01 | Phase 1 | ✓ Shipped |
 | SHELL-02 | Phase 1 | ✓ Shipped |
-| SHELL-03 | Phase 4 | Complete |
+| SHELL-03 | Phase 4 | ✓ Shipped |
 | SHELL-04 | Phase 6 | Pending |
 | CONT-01 | Phase 2 | ✓ Shipped |
 | CONT-02 | Phase 2 | ✓ Shipped |
@@ -88,7 +88,7 @@
 | TERM-02 | Phase 5 | Pending |
 | TERM-03 | Phase 5 | Pending |
 | TERM-04 | Phase 5 | Pending |
-| ASSESS-01 | Phase 4 | Complete |
+| ASSESS-01 | Phase 4 | ✓ Shipped |
 | ASSESS-02 | Phase 6 | Pending |
 | ASSESS-03 | Phase 3 | ✓ Shipped |
 | ASSESS-04 | Phase 6 | Pending |

@@ -12,7 +12,8 @@ An IT/OT admin who completes a module should be able to perform the covered comp
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] **ASSESS-01** (Phase 4): Multiple-choice quizzes with per-answer explanatory feedback, score persistence, revisit mode — validated in production (GitHub Pages)
+- [x] **SHELL-03** (Phase 4): Sidebar 4px progress bars with live update after quiz submission; module-view progress bar + lesson status badges (quiz-passed / visited / unvisited) — validated in production
 
 ### Active
 
@@ -74,5 +75,9 @@ This document evolves at phase transitions and milestone boundaries.
 3. Audit Out of Scope — reasons still valid?
 4. Update Context with current state
 
+## Current State
+
+Phase 4 complete (2026-05-15). Quiz engine and progress UI live on GitHub Pages. Next: Phase 5 — Simulated PowerShell Terminal + Exercise View.
+
 ---
-*Last updated: 2026-05-10 after initialization*
+*Last updated: 2026-05-15 after Phase 4 completion*
