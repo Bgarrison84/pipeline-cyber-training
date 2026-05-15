@@ -6,7 +6,7 @@
 
 - [ ] **SHELL-01**: User can navigate between all 5 modules and their lessons via a persistent sidebar or top navigation menu
 - [ ] **SHELL-02**: Every module and lesson has a unique, linkable URL using hash-based routing (e.g. `#/module/logging-auditing/lesson/1`)
-- [ ] **SHELL-03**: Visual progress bars show completion state at both lesson and module level
+- [x] **SHELL-03**: Visual progress bars show completion state at both lesson and module level
 - [ ] **SHELL-04**: Compliance index page maps control IDs (TSA SD-02F, NIST SP 800-82 Rev 3) to every lesson and exercise that covers them
 
 ### Content & Lessons
@@ -25,7 +25,7 @@
 
 ### Assessment & Progress
 
-- [ ] **ASSESS-01**: Each lesson includes multiple-choice quiz questions with per-answer explanatory feedback (not just correct/incorrect)
+- [x] **ASSESS-01**: Each lesson includes multiple-choice quiz questions with per-answer explanatory feedback (not just correct/incorrect)
 - [ ] **ASSESS-02**: Scenario exercises walk learners through realistic compliance incidents with branching decision points and outcome explanations
 - [x] **ASSESS-03**: LocalStorage saves the learner's exact progress; returning learners resume at the lesson and step they left
 - [ ] **ASSESS-04**: Learner can generate a printable completion summary labeled as a training log artifact (explicitly not a compliance certification)
@@ -78,7 +78,7 @@
 |--------|-------|--------|
 | SHELL-01 | Phase 1 | ✓ Shipped |
 | SHELL-02 | Phase 1 | ✓ Shipped |
-| SHELL-03 | Phase 4 | Pending |
+| SHELL-03 | Phase 4 | Complete |
 | SHELL-04 | Phase 6 | Pending |
 | CONT-01 | Phase 2 | ✓ Shipped |
 | CONT-02 | Phase 2 | ✓ Shipped |
@@ -88,7 +88,7 @@
 | TERM-02 | Phase 5 | Pending |
 | TERM-03 | Phase 5 | Pending |
 | TERM-04 | Phase 5 | Pending |
-| ASSESS-01 | Phase 4 | Pending |
+| ASSESS-01 | Phase 4 | Complete |
 | ASSESS-02 | Phase 6 | Pending |
 | ASSESS-03 | Phase 3 | ✓ Shipped |
 | ASSESS-04 | Phase 6 | Pending |
