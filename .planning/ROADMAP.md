@@ -124,7 +124,23 @@ Cross-cutting constraints:
   3. Typing an unrecognized command returns a helpful error; the terminal never throws an uncaught JS exception regardless of input
   4. The terminal UI displays a persistent visible label identifying it as a simulator (e.g. "PS SIMULATOR — commands do not run on any real system") at all times during an exercise
   5. Completing all steps of a terminal exercise records completion to the Progress Store; re-opening the exercise shows the learner's prior completion state
-**Plans:** TBD
+**Plans:** 4 plans
+Plans:
+**Wave 0**
+- [ ] 05-01-PLAN.md — RED test stubs (terminal-engine + exercise-view) + 01.json upgrade to 3-step schema + modules-config exerciseId field + router/quiz-engine test additions (Wave 0)
+**Wave 1** *(blocked on Wave 0 completion)*
+- [ ] 05-02-PLAN.md — src/terminal-engine.js createTerminal factory: DOM construction, Enter/history key handler, appendOutput, disable, setPrompt, focus API (Wave 1)
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 05-03-PLAN.md — src/views/exercise-view.js renderExercise + src/router.js exercise route: full step progression, hint display, completion flow, re-visit state (Wave 2)
+**Wave 3** *(blocked on Wave 2 completion)*
+- [ ] 05-04-PLAN.md — module-view exercise link buttons + computeModuleProgress exerciseId branch + style.css cursor blink keyframe + human verify checkpoint (Wave 3)
+
+Cross-cutting constraints:
+- `esc()` applied to all exercise JSON strings (title, description, context, instruction, hint, feedbackOnWrong) before innerHTML insertion (all plans)
+- `textContent` used for terminal output lines — never innerHTML (RESEARCH.md Pitfall 1)
+- `import.meta.env.BASE_URL` prefix on exercise JSON fetch (05-03)
+- All localStorage access through `progressStore` — no direct localStorage calls (all plans)
+- Dynamic import of sidebar.js in completeExercise() — no static import (circular dep prevention)
 **UI hint:** yes
 
 ### Phase 6: Scenario Engine + Compliance Index + Completion Summary
@@ -175,7 +191,7 @@ Cross-cutting constraints:
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
 | 4. Quiz Engine + Lesson Progress UI | 3/3 | ✓ Complete | 2026-05-15 |
-| 5. Simulated PowerShell Terminal + Exercise View | 0/? | Not started | - |
+| 5. Simulated PowerShell Terminal + Exercise View | 0/4 | Planned | - |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
 | 8. Patch Management Module (MOD-05) | 0/? | Not started | - |
@@ -188,3 +204,4 @@ Cross-cutting constraints:
 *Phase 2 planned: 2026-05-11 — 4 plans, 4 waves*
 *Phase 3 planned: 2026-05-14 — 3 plans, 2 waves*
 *Phase 4 planned: 2026-05-14 — 3 plans, 3 waves*
+*Phase 5 planned: 2026-05-15 — 4 plans, 4 waves*
