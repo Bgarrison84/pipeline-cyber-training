@@ -20,7 +20,7 @@ import { renderQuiz } from '../quiz-engine.js';
 /**
  * Render the lesson view by writing directly to #app.
  * @param {{ moduleId: string, lessonId: string }} params
- * @returns {Promise<string>} Empty string — view takes DOM control itself
+ * @returns {Promise<null>} null — view writes directly to #app
  */
 export async function renderLesson({ moduleId, lessonId }) {
   if (!moduleId || !lessonId) {
