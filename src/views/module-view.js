@@ -54,8 +54,8 @@ export function renderModule({ moduleId }) {
         <h1 style="font-size: var(--text-heading); font-weight: 600;">${esc(mod.title)}</h1>
       </div>
 
-      <div style="border-left: 3px solid var(--color-border); padding-left: var(--spacing-md); margin-bottom: var(--spacing-md); background: var(--color-bg-secondary); padding: var(--spacing-md);">
-        <p style="font-size: var(--text-body); color: var(--color-text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--spacing-xs);">Module goal</p>
+      <div style="border-left: 3px solid var(--color-border); margin-bottom: var(--spacing-md); background: var(--color-bg-secondary); padding: var(--spacing-md);">
+        <p style="color: var(--color-text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--spacing-xs);">Module goal</p>
         <p style="font-size: var(--text-body);">${esc(mod.description)}</p>
       </div>
 
