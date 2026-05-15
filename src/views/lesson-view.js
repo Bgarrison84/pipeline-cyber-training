@@ -10,6 +10,7 @@ import { setActiveLesson } from '../sidebar.js';
 import { activateIcons } from '../utils/icons.js';
 import { esc } from '../utils/escape.js';
 import { progressStore } from '../progress-store.js';
+import { renderQuiz } from '../quiz-engine.js';
 
 // ──────────────────────────────────────────────────────────────────────────────
 // renderLesson — main async view renderer
@@ -82,6 +83,13 @@ export async function renderLesson({ moduleId, lessonId }) {
   setActiveLesson(moduleId, lessonId);
   activateIcons();
   attachCopyHandlers();
+
+  if (meta.quizId) {
+    const lessonColumn = document.querySelector('.lesson-column');
+    if (lessonColumn) {
+      await renderQuiz(moduleId, meta.quizId, lessonColumn, lessonId);
+    }
+  }
 
   return null;
 }
