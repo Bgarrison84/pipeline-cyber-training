@@ -153,7 +153,25 @@ Cross-cutting constraints:
   2. Completing all branches of a scenario records completion and outcome data to the Progress Store
   3. The compliance index page lists every TSA SD-02F and NIST SP 800-82 Rev 3 control ID covered by the platform, with links to every lesson and exercise tagged to each control
   4. A learner who has completed at least one module can open a printable completion summary that displays their name (self-entered), module name, date, quiz scores, and control IDs covered; the UI explicitly labels it a "training log artifact" not a compliance certification
-**Plans:** TBD
+**Plans:** 4 plans
+Plans:
+**Wave 0**
+- [ ] 06-01-PLAN.md — RED test stubs (scenario-view, compliance-index-view, completion-summary-view) + 01.json full scenario + compliance-index.json manifest (Wave 0)
+**Wave 1** *(blocked on Wave 0 completion)*
+- [ ] 06-02-PLAN.md — src/views/scenario-view.js: renderScenario async renderer, decision-tree flow, completion saving (Wave 1)
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 06-03-PLAN.md — src/views/compliance-index-view.js + router.js 3 new routes + modules-config.js scenarioId + module-view.js scenario links + quiz-engine.js scenarioId branch (Wave 2)
+**Wave 3** *(blocked on Wave 2 completion)*
+- [ ] 06-04-PLAN.md — src/views/completion-summary-view.js + style.css @media print + human verify checkpoint (Wave 3)
+
+Cross-cutting constraints:
+- `esc()` applied to all scenario JSON strings (title, narrative, phase.title, phase.prompt, option.text, option.outcome) before innerHTML insertion (all plans)
+- `safePath()` applied to moduleId and scenarioId URL segments before fetch URL construction (06-02)
+- `safePath()` applied to item.moduleId and item.contentId before compliance index href construction (06-03)
+- `import.meta.env.BASE_URL` prefix on all fetch calls (06-02, 06-03)
+- All localStorage access through `progressStore` — no direct localStorage calls (all plans)
+- Dynamic import of sidebar.js in completeScenario() — no static import (circular dep prevention) (06-02)
+- Learner name in completion summary stored in JS variable only — not persisted to localStorage (06-04)
 **UI hint:** yes
 
 ### Phase 7: Core Module Content (MOD-02, MOD-03, MOD-04)
@@ -192,7 +210,7 @@ Cross-cutting constraints:
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
 | 4. Quiz Engine + Lesson Progress UI | 3/3 | ✓ Complete | 2026-05-15 |
 | 5. Simulated PowerShell Terminal + Exercise View | 4/4 | ✓ Complete | 2026-05-15 |
-| 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
+| 6. Scenario Engine + Compliance Index + Completion Summary | 0/4 | In progress | - |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
 | 8. Patch Management Module (MOD-05) | 0/? | Not started | - |
 
@@ -205,3 +223,4 @@ Cross-cutting constraints:
 *Phase 3 planned: 2026-05-14 — 3 plans, 2 waves*
 *Phase 4 planned: 2026-05-14 — 3 plans, 3 waves*
 *Phase 5 planned: 2026-05-15 — 4 plans, 4 waves*
+*Phase 6 planned: 2026-05-15 — 4 plans, 4 waves*
