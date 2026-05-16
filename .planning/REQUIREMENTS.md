@@ -84,10 +84,10 @@
 | CONT-02 | Phase 2 | ✓ Shipped |
 | CONT-03 | Phase 2 | ✓ Shipped |
 | CONT-04 | Phase 2 | ✓ Shipped |
-| TERM-01 | Phase 5 | Pending |
-| TERM-02 | Phase 5 | Pending |
-| TERM-03 | Phase 5 | Pending |
-| TERM-04 | Phase 5 | Pending |
+| TERM-01 | Phase 5 | ✓ Shipped |
+| TERM-02 | Phase 5 | ✓ Shipped |
+| TERM-03 | Phase 5 | ✓ Shipped |
+| TERM-04 | Phase 5 | ✓ Shipped |
 | ASSESS-01 | Phase 4 | ✓ Shipped |
 | ASSESS-02 | Phase 6 | Pending |
 | ASSESS-03 | Phase 3 | ✓ Shipped |
