@@ -13,7 +13,7 @@ export const MODULES = [
     order: 1,
     estimatedMinutes: 45,
     lessons: [
-      { id: 'intro',          title: 'Introduction to Windows Event Logs' },
+      { id: 'intro',          title: 'Introduction to Windows Event Logs', scenarioId: '01' },
       { id: 'ps-logging',     title: 'Enabling PowerShell Script Block Logging', exerciseId: '01' },
       { id: 'audit-policies', title: 'Configuring Audit Policies via Group Policy', quizId: '01' },
     ],

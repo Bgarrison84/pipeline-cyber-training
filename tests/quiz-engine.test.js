@@ -354,6 +354,32 @@ describe('computeModuleProgress', () => {
     expect(result.pct).toBe(0)
     expect(result.complete).toBe(false)
   })
+
+  it('scenario-backed lesson with non-null completion counts as complete', async () => {
+    progressStoreMock.getScenarioCompletion.mockReturnValue({ completed: true, completedAt: '2026-05-16T10:00:00Z' })
+    const mod = {
+      id: 'logging-auditing',
+      lessons: [
+        { id: 'intro', scenarioId: '01' },
+      ],
+    }
+    const result = computeModuleProgress(mod)
+    expect(result.pct).toBe(100)
+    expect(result.complete).toBe(true)
+  })
+
+  it('scenario-backed lesson with null completion does not count', async () => {
+    progressStoreMock.getScenarioCompletion.mockReturnValue(null)
+    const mod = {
+      id: 'logging-auditing',
+      lessons: [
+        { id: 'intro', scenarioId: '01' },
+      ],
+    }
+    const result = computeModuleProgress(mod)
+    expect(result.pct).toBe(0)
+    expect(result.complete).toBe(false)
+  })
 })
 
 // ──────────────────────────────────────────────────────────────────────────────

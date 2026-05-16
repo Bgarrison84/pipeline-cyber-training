@@ -58,6 +58,17 @@ export function renderModule({ moduleId }) {
           ${exerciseDone ? 'Exercise complete — revisit →' : 'Start Exercise →'}
         </a>
       ` : ''}
+      ${lesson.scenarioId ? (() => {
+        const scenarioDone = progressStore.getScenarioCompletion(mod.id, lesson.scenarioId) !== null;
+        return `
+        <a href="#/scenario/${esc(mod.id)}/${esc(lesson.scenarioId)}"
+           style="display:inline-flex;align-items:center;gap:var(--spacing-xs);font-size:var(--text-body);font-weight:600;text-decoration:none;padding:var(--spacing-xs) 0;color:${scenarioDone ? '#22c55e' : 'var(--color-accent)'};">
+          <i data-lucide="${scenarioDone ? 'check-circle' : 'git-branch'}"
+             style="width:14px;height:14px;color:${scenarioDone ? '#22c55e' : 'var(--color-accent)'};flex-shrink:0;"></i>
+          ${scenarioDone ? 'Scenario complete — revisit →' : 'Start Scenario →'}
+        </a>
+        `;
+      })() : ''}
     </div>
   `;
   }).join('');
