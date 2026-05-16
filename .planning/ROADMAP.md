@@ -156,7 +156,7 @@ Cross-cutting constraints:
 **Plans:** 4 plans
 Plans:
 **Wave 0**
-- [ ] 06-01-PLAN.md — RED test stubs (scenario-view, compliance-index-view, completion-summary-view) + 01.json full scenario + compliance-index.json manifest (Wave 0)
+- [x] 06-01-PLAN.md — RED test stubs (scenario-view, compliance-index-view, completion-summary-view) + 01.json full scenario + compliance-index.json manifest (Wave 0)
 **Wave 1** *(blocked on Wave 0 completion)*
 - [ ] 06-02-PLAN.md — src/views/scenario-view.js: renderScenario async renderer, decision-tree flow, completion saving (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
