@@ -114,6 +114,29 @@ export async function initSidebar({ onImportSuccess } = {}) {
   const sidebar = document.getElementById('sidebar');
   if (!sidebar || !toggleBtn) return;
 
+  const navLinks = document.createElement('div');
+  navLinks.id = 'sidebar-nav-links';
+  navLinks.innerHTML = `
+    <div style="padding: var(--spacing-xs) var(--spacing-md); border-top: 1px solid var(--color-border);">
+      <a href="#/compliance-index"
+         style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-xs) 0; font-size: var(--text-body); color: var(--color-text-muted); text-decoration: none;"
+         onmouseover="this.style.color='var(--color-accent)'"
+         onmouseout="this.style.color='var(--color-text-muted)'">
+        <i data-lucide="shield-check" style="width:15px;height:15px;flex-shrink:0;"></i>
+        <span class="sidebar-label">Compliance Index</span>
+      </a>
+      <a href="#/completion-summary"
+         style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-xs) 0; font-size: var(--text-body); color: var(--color-text-muted); text-decoration: none;"
+         onmouseover="this.style.color='var(--color-accent)'"
+         onmouseout="this.style.color='var(--color-text-muted)'">
+        <i data-lucide="printer" style="width:15px;height:15px;flex-shrink:0;"></i>
+        <span class="sidebar-label">Training Log</span>
+      </a>
+    </div>
+  `;
+  sidebar.insertBefore(navLinks, toggleBtn);
+  activateIcons();
+
   const footer = document.createElement('div');
   footer.id = 'sidebar-progress-footer';
   footer.innerHTML = `

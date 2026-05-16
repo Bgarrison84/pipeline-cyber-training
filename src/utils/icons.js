@@ -7,6 +7,7 @@ import {
   createIcons,
   BookOpen,
   Shield,
+  ShieldCheck,
   Users,
   AlertTriangle,
   Wrench,
@@ -19,10 +20,14 @@ import {
   Terminal,
   Circle,
   Monitor,
+  HelpCircle,
+  GitBranch,
+  FileX,
+  Printer,
 } from 'lucide';
 
 export function activateIcons() {
   createIcons({
-    icons: { BookOpen, Shield, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle, CheckCircle, XCircle, Terminal, Circle, Monitor },
+    icons: { BookOpen, Shield, ShieldCheck, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle, CheckCircle, XCircle, Terminal, Circle, Monitor, HelpCircle, GitBranch, FileX, Printer },
   });
 }
