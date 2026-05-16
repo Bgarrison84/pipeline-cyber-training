@@ -15,7 +15,7 @@
 - [x] **Phase 3: Progress Store** - localStorage persistence with schema versioning, quota handling, and data export
 - [x] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars (completed 2026-05-15)
 - [x] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system (completed 2026-05-15)
-- [ ] **Phase 6: Scenario Engine + Compliance Index + Completion Summary** - Branching scenario exercises, compliance control index page, and printable training log
+- [x] **Phase 6: Scenario Engine + Compliance Index + Completion Summary** - Branching scenario exercises, compliance control index page, and printable training log (completed 2026-05-16)
 - [ ] **Phase 7: Core Module Content (MOD-02, MOD-03, MOD-04)** - Network Hardening, Account & Access Management, and Incident Response modules fully populated with OT/IT distinctions
 - [ ] **Phase 8: Patch Management Module (MOD-05)** - Full Patch Management module with separate IT and OT/ICS sub-sections, compliance reporting exercises
 
@@ -162,7 +162,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 - [x] 06-03-PLAN.md — src/views/compliance-index-view.js + router.js 3 new routes + modules-config.js scenarioId + module-view.js scenario links + quiz-engine.js scenarioId branch (Wave 2)
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 06-04-PLAN.md — src/views/completion-summary-view.js + style.css @media print + human verify checkpoint (Wave 3)
+- [x] 06-04-PLAN.md — src/views/completion-summary-view.js + style.css @media print + human verify checkpoint (Wave 3)
 
 Cross-cutting constraints:
 - `esc()` applied to all scenario JSON strings (title, narrative, phase.title, phase.prompt, option.text, option.outcome) before innerHTML insertion (all plans)
@@ -210,7 +210,7 @@ Cross-cutting constraints:
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
 | 4. Quiz Engine + Lesson Progress UI | 3/3 | ✓ Complete | 2026-05-15 |
 | 5. Simulated PowerShell Terminal + Exercise View | 4/4 | ✓ Complete | 2026-05-15 |
-| 6. Scenario Engine + Compliance Index + Completion Summary | 0/4 | In progress | - |
+| 6. Scenario Engine + Compliance Index + Completion Summary | 4/4 | ✓ Complete | 2026-05-16 |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
 | 8. Patch Management Module (MOD-05) | 0/? | Not started | - |
 
