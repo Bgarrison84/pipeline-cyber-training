@@ -16,10 +16,13 @@ import {
   AlertCircle,
   CheckCircle,
   XCircle,
+  Terminal,
+  Circle,
+  Monitor,
 } from 'lucide';
 
 export function activateIcons() {
   createIcons({
-    icons: { BookOpen, Shield, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle, CheckCircle, XCircle },
+    icons: { BookOpen, Shield, Users, AlertTriangle, Wrench, ChevronLeft, Copy, Check, AlertCircle, CheckCircle, XCircle, Terminal, Circle, Monitor },
   });
 }
