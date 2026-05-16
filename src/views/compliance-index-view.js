@@ -86,7 +86,7 @@ function renderComplianceIndexEmpty() {
 // ──────────────────────────────────────────────────────────────────────────────
 
 function buildControlSectionHtml(control) {
-  const itemsHtml = control.items.map(item => {
+  const itemsHtml = (control.items ?? []).map(item => {
     const icon = iconForType(item.type);
     const href = buildHref(item.type, item.moduleId, item.contentId);
     return `
