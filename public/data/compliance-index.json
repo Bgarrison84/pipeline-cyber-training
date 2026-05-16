@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "_comment": "UPDATE CONTRACT: Add an entry to this file whenever a lesson, exercise, or scenario adds complianceControls. See CLAUDE.md.",
+  "controls": [
+    {
+      "id": "TSA-Monitoring",
+      "label": "TSA SD-02F — Continuous Monitoring",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "logging-auditing",
+          "contentId": "intro",
+          "title": "Introduction to Windows Event Logs"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "logging-auditing",
+          "contentId": "ps-logging",
+          "title": "Enabling PowerShell Script Block Logging"
+        },
+        {
+          "type": "exercise",
+          "moduleId": "logging-auditing",
+          "contentId": "01",
+          "title": "Enable Script Block Logging"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "logging-auditing",
+          "contentId": "01",
+          "title": "Investigating a Suspicious Login"
+        }
+      ]
+    },
+    {
+      "id": "NIST-AU-2",
+      "label": "NIST SP 800-82 Rev 3 — AU-2: Event Logging",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "logging-auditing",
+          "contentId": "intro",
+          "title": "Introduction to Windows Event Logs"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "logging-auditing",
+          "contentId": "audit-policies",
+          "title": "Configuring Audit Policies via Group Policy"
+        }
+      ]
+    }
+  ]
+}
