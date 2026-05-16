@@ -51,6 +51,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { renderExercise } from '../src/views/exercise-view.js'
 import { progressStore } from '../src/progress-store.js'
 import { createTerminal } from '../src/terminal-engine.js'
+import { refreshSidebarProgress } from '../src/sidebar.js'
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Test fixture — 2-step exercise (simpler than 3-step for progression testing)
@@ -214,6 +215,18 @@ describe('renderExercise — step progression (correct command on last step)', (
     // Complete step 2 (last step)
     commandHandler('New-Item -Path HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging')
     expect(progressStoreMock.markLessonCompleted).toHaveBeenCalledWith('logging-auditing', 'ps-logging')
+  })
+
+  it('correct command on last step: refreshSidebarProgress called with moduleId (WR-04)', async () => {
+    await renderExercise({ moduleId: 'logging-auditing', exerciseId: '01' })
+    const commandHandler = createTerminalMock.mock.calls[0][1]
+    // Complete step 1
+    commandHandler('Get-ItemProperty HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging')
+    // Complete step 2 (last step — triggers completeExercise() and the dynamic import)
+    commandHandler('New-Item -Path HKLM:\\SOFTWARE\\Policies\\Microsoft\\Windows\\PowerShell\\ScriptBlockLogging')
+    // Flush microtask queue so the dynamic import .then() callback resolves
+    await Promise.resolve()
+    expect(refreshSidebarProgress).toHaveBeenCalledWith('logging-auditing')
   })
 })
 

@@ -12,6 +12,16 @@ import { MODULES } from '../modules-config.js';
 // NOTE: sidebar.js is always imported dynamically (never static) — prevents circular dep.
 
 // ──────────────────────────────────────────────────────────────────────────────
+// safePath — allowlist validator for URL path segments (prevents path traversal)
+// Only allows alphanumeric characters, hyphens, and underscores.
+// ──────────────────────────────────────────────────────────────────────────────
+
+function safePath(segment) {
+  if (!/^[a-zA-Z0-9_-]+$/.test(segment)) throw new Error('Invalid path segment: ' + segment);
+  return segment;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // renderExercise — main async view renderer
 // Writes to #app directly (does NOT return HTML to the router).
 // ──────────────────────────────────────────────────────────────────────────────
@@ -30,7 +40,13 @@ export async function renderExercise({ moduleId, exerciseId }) {
   app.innerHTML = renderExerciseLoading();
 
   // Step 3 — Fetch exercise JSON
-  const url = import.meta.env.BASE_URL + 'data/modules/' + moduleId + '/exercises/' + exerciseId + '.json';
+  let url;
+  try {
+    url = import.meta.env.BASE_URL + 'data/modules/' + safePath(moduleId) + '/exercises/' + safePath(exerciseId) + '.json';
+  } catch {
+    app.innerHTML = renderExerciseError(moduleId);
+    return null;
+  }
   let exercise;
   try {
     const res = await fetch(url);
@@ -79,6 +95,12 @@ export async function renderExercise({ moduleId, exerciseId }) {
   // Step 10 — Step state
   let currentStepIndex = 0;
   const steps = exercise.steps ?? [];
+
+  // Guard: treat exercises with no steps as invalid — disable terminal immediately
+  if (steps.length === 0) {
+    if (terminal) terminal.disable();
+    return null;
+  }
 
   // Step 11 — Re-visit mode
   if (priorCompletion) {

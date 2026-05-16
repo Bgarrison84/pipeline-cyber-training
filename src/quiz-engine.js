@@ -9,6 +9,16 @@ import { progressStore } from './progress-store.js';
 import { MODULES } from './modules-config.js';
 
 // ──────────────────────────────────────────────────────────────────────────────
+// safePath — allowlist validator for URL path segments (prevents path traversal)
+// Only allows alphanumeric characters, hyphens, and underscores.
+// ──────────────────────────────────────────────────────────────────────────────
+
+function safePath(segment) {
+  if (!/^[a-zA-Z0-9_-]+$/.test(segment)) throw new Error('Invalid path segment: ' + segment);
+  return segment;
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 // renderQuiz — fetch quiz JSON, determine mode, render, wire handlers
 // ──────────────────────────────────────────────────────────────────────────────
 
@@ -27,7 +37,12 @@ export async function renderQuiz(moduleId, quizId, lessonColumn, lessonId) {
   const resolvedLessonId = lessonId || quizId;
 
   // Fetch quiz JSON
-  const url = import.meta.env.BASE_URL + 'data/modules/' + moduleId + '/quizzes/' + quizId + '.json';
+  let url;
+  try {
+    url = import.meta.env.BASE_URL + 'data/modules/' + safePath(moduleId) + '/quizzes/' + safePath(quizId) + '.json';
+  } catch {
+    return null;
+  }
   let quiz;
   try {
     const res = await fetch(url);

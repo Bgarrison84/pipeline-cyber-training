@@ -17,5 +17,6 @@ export function renderBadge(directiveKey) {
     NIST: 'bg-[var(--color-badge-nist-bg)] text-[var(--color-badge-nist-text)]',
   };
 
-  return `<span class="inline-block rounded px-2 py-0.5 font-mono text-[var(--text-mono)] ${colorClasses[directiveKey] ?? ''}">${esc(shortName)}</span>`;
+  const safeClasses = colorClasses[directiveKey] ?? '';
+  return `<span class="inline-block rounded px-2 py-0.5 font-mono text-[var(--text-mono)] ${esc(safeClasses)}">${esc(shortName)}</span>`;
 }

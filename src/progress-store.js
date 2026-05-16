@@ -173,6 +173,7 @@ function markLessonCompleted(moduleId, lessonId) {
   const key = moduleId + '/' + lessonId;
   _store.lessons[key] = {
     ...(_store.lessons[key] ?? { visited: false, completed: false }),
+    visited: true,   // completing implies having been there
     completed: true,
   };
   _persist();
