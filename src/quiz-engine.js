@@ -285,6 +285,10 @@ export function computeModuleProgress(mod) {
       // Exercise-backed lesson: counts as complete when exercise saved
       const ex = progressStore.getExerciseCompletion(mod.id, lesson.exerciseId);
       if (ex !== null) numerator++;
+    } else if (lesson.scenarioId) {
+      // Scenario-backed lesson: counts as complete when scenario saved
+      const sc = progressStore.getScenarioCompletion(mod.id, lesson.scenarioId);
+      if (sc !== null) numerator++;
     } else {
       // Quiz-less lesson: counts as complete when visited
       const progress = progressStore.getLessonProgress(mod.id, lesson.id);

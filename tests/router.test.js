@@ -32,4 +32,22 @@ describe('matchRoute', () => {
       params: { moduleId: 'logging-auditing', exerciseId: '01' }
     })
   })
+  it('matches scenario route and extracts moduleId and scenarioId', () => {
+    expect(matchRoute('#/scenario/logging-auditing/01')).toEqual({
+      view: 'scenario',
+      params: { moduleId: 'logging-auditing', scenarioId: '01' }
+    })
+  })
+  it('matches compliance-index route with no params', () => {
+    expect(matchRoute('#/compliance-index')).toEqual({
+      view: 'compliance-index',
+      params: {}
+    })
+  })
+  it('matches completion-summary route with no params', () => {
+    expect(matchRoute('#/completion-summary')).toEqual({
+      view: 'completion-summary',
+      params: {}
+    })
+  })
 })

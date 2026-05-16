@@ -1,18 +1,24 @@
 // src/router.js
-import { renderHome }     from './views/home-view.js';
-import { renderModule }   from './views/module-view.js';
-import { renderNotFound } from './views/not-found-view.js';
-import { renderLesson }   from './views/lesson-view.js';
-import { renderExercise } from './views/exercise-view.js';
+import { renderHome }             from './views/home-view.js';
+import { renderModule }           from './views/module-view.js';
+import { renderNotFound }         from './views/not-found-view.js';
+import { renderLesson }           from './views/lesson-view.js';
+import { renderExercise }         from './views/exercise-view.js';
+import { renderScenario }         from './views/scenario-view.js';
+import { renderComplianceIndex }  from './views/compliance-index-view.js';
+import { renderCompletionSummary } from './views/completion-summary-view.js';
 import { setActiveModule, setActiveLesson } from './sidebar.js';
 import { activateIcons } from './utils/icons.js';
 import { progressStore } from './progress-store.js';
 
 const routes = [
-  { pattern: '#/',                              view: 'home' },
-  { pattern: '#/module/:moduleId',              view: 'module' },
-  { pattern: '#/lesson/:moduleId/:lessonId',    view: 'lesson' },
-  { pattern: '#/exercise/:moduleId/:exerciseId', view: 'exercise' },
+  { pattern: '#/',                                   view: 'home' },
+  { pattern: '#/module/:moduleId',                   view: 'module' },
+  { pattern: '#/lesson/:moduleId/:lessonId',         view: 'lesson' },
+  { pattern: '#/exercise/:moduleId/:exerciseId',     view: 'exercise' },
+  { pattern: '#/scenario/:moduleId/:scenarioId',     view: 'scenario' },
+  { pattern: '#/compliance-index',                   view: 'compliance-index' },
+  { pattern: '#/completion-summary',                 view: 'completion-summary' },
 ];
 
 function extractParams(hash, pattern) {
@@ -40,11 +46,14 @@ export function matchRoute(hash) {
 }
 
 const viewRenderers = {
-  home:        (params) => renderHome(params),
-  module:      (params) => renderModule(params),
-  lesson:      (params) => renderLesson(params),
-  exercise:    (params) => renderExercise(params),
-  'not-found': (params) => renderNotFound(params),
+  home:                (params) => renderHome(params),
+  module:              (params) => renderModule(params),
+  lesson:              (params) => renderLesson(params),
+  exercise:            (params) => renderExercise(params),
+  scenario:            (params) => renderScenario(params),
+  'compliance-index':  (params) => renderComplianceIndex(params),
+  'completion-summary': (params) => renderCompletionSummary(params),
+  'not-found':         (params) => renderNotFound(params),
 };
 
 let _handledInitialLoad = false;
