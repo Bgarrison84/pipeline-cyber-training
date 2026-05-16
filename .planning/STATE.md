@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-last_updated: "2026-05-15T19:37:57.811Z"
+last_updated: "2026-05-15T20:10:00.000Z"
 progress:
   total_phases: 8
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 18
-  completed_plans: 15
-  percent: 83
+  completed_plans: 16
+  percent: 89
 ---
 
 # State — Pipeline Cyber Training
@@ -25,14 +25,14 @@ progress:
 ## Current Position
 
 **Phase:** 5 — Simulated PowerShell Terminal + Exercise View
-**Plan:** 05-03 complete (3 of 4 plans — Wave 2 exercise-view.js + router wiring done)
-**Status:** Executing
+**Plan:** 05-04 complete (4 of 4 plans — Wave 3 module-view exercise links + computeModuleProgress exerciseId branch done)
+**Status:** Phase 5 Complete
 **Blocker:** None
 
 ```
-Progress: [✓1][✓2][✓3][✓4][5→][ 6 ][ 7 ][ 8 ]
-                               ^
-                             Here
+Progress: [✓1][✓2][✓3][✓4][✓5][ 6 ][ 7 ][ 8 ]
+                                    ^
+                                  Here
 ```
 
 ---
@@ -45,7 +45,7 @@ Progress: [✓1][✓2][✓3][✓4][5→][ 6 ][ 7 ][ 8 ]
 | 2 | Content Loader + Lesson Rendering + Module 1 | ✓ Complete |
 | 3 | Progress Store | ✓ Complete |
 | 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (3 plans — checkpoint:human-verify approved) |
-| 5 | Simulated PowerShell Terminal + Exercise View | In progress (Plan 01 of 4 done) |
+| 5 | Simulated PowerShell Terminal + Exercise View | ✓ Complete (4 plans — all TERM-01–04 met, human verify approved 2026-05-15) |
 | 6 | Scenario Engine + Compliance Index + Completion Summary | Not started |
 | 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | Not started |
 | 8 | Patch Management Module (MOD-05) | Not started |
@@ -54,10 +54,10 @@ Progress: [✓1][✓2][✓3][✓4][5→][ 6 ][ 7 ][ 8 ]
 
 ## Performance Metrics
 
-**Phases complete:** 4/8
-**Plans complete:** 17/18 (05-03 complete)
-**Requirements shipped:** 13/26 (SHELL-01, SHELL-02, SHELL-03, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05, ASSESS-01)
-**Phase 5 progress:** TERM-01, TERM-02, TERM-03, TERM-04 — terminal-engine.js complete (13/13 GREEN); exercise-view.js complete (12/12 GREEN), router wired; computeModuleProgress exercise branch in plan 05-04
+**Phases complete:** 5/8
+**Plans complete:** 16/18 (05-04 complete — Phase 5 done)
+**Requirements shipped:** 17/26 (SHELL-01, SHELL-02, SHELL-03, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05, ASSESS-01, TERM-01, TERM-02, TERM-03, TERM-04)
+**Phase 5 summary:** All 4 plans complete — terminal-engine.js (createTerminal, 13 tests), exercise-view.js (renderExercise, 12 tests), router exercise route, module-view exercise links, computeModuleProgress exerciseId branch; 147/147 tests GREEN; all TERM-01–04 requirements met
 
 ---
 
@@ -108,8 +108,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-15 — Phase 5 Plan 03 complete (Wave 2 — renderExercise view + router, all 12 exercise-view tests + 6 router tests GREEN)
-**Next action:** Execute 05-04-PLAN.md (Wave 3 — module-view exercise links + computeModuleProgress exercise branch)
+**Last updated:** 2026-05-15 — Phase 5 complete (Plan 04 — Wave 3 module-view exercise links + computeModuleProgress exerciseId branch; 147/147 tests GREEN; human verify approved)
+**Next action:** Begin Phase 6 — Scenario Engine + Compliance Index + Completion Summary (`/gsd-plan-phase 6`)
 
 ---
 

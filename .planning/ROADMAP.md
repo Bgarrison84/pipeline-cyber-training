@@ -14,7 +14,7 @@
 - [x] **Phase 2: Content Loader + Lesson Rendering + Module 1** - Markdown fetch pipeline, syntax-highlighted code blocks, and first complete module authored
 - [x] **Phase 3: Progress Store** - localStorage persistence with schema versioning, quota handling, and data export
 - [x] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars (completed 2026-05-15)
-- [ ] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system
+- [x] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system (completed 2026-05-15)
 - [ ] **Phase 6: Scenario Engine + Compliance Index + Completion Summary** - Branching scenario exercises, compliance control index page, and printable training log
 - [ ] **Phase 7: Core Module Content (MOD-02, MOD-03, MOD-04)** - Network Hardening, Account & Access Management, and Incident Response modules fully populated with OT/IT distinctions
 - [ ] **Phase 8: Patch Management Module (MOD-05)** - Full Patch Management module with separate IT and OT/ICS sub-sections, compliance reporting exercises
@@ -133,7 +133,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 - [x] 05-03-PLAN.md — src/views/exercise-view.js renderExercise + src/router.js exercise route: full step progression, hint display, completion flow, re-visit state (Wave 2) ✓ 2026-05-15
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 05-04-PLAN.md — module-view exercise link buttons + computeModuleProgress exerciseId branch + style.css cursor blink keyframe + human verify checkpoint (Wave 3)
+- [x] 05-04-PLAN.md — module-view exercise link buttons + computeModuleProgress exerciseId branch + style.css cursor blink keyframe + human verify checkpoint (Wave 3) ✓ 2026-05-15
 
 Cross-cutting constraints:
 - `esc()` applied to all exercise JSON strings (title, description, context, instruction, hint, feedbackOnWrong) before innerHTML insertion (all plans)
@@ -191,7 +191,7 @@ Cross-cutting constraints:
 | 2. Content Loader + Lesson Rendering + Module 1 | 4/4 | ✓ Complete | 2026-05-14 |
 | 3. Progress Store | 3/3 | ✓ Complete | 2026-05-14 |
 | 4. Quiz Engine + Lesson Progress UI | 3/3 | ✓ Complete | 2026-05-15 |
-| 5. Simulated PowerShell Terminal + Exercise View | 3/4 | In progress | - |
+| 5. Simulated PowerShell Terminal + Exercise View | 4/4 | ✓ Complete | 2026-05-15 |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 0/? | Not started | - |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
 | 8. Patch Management Module (MOD-05) | 0/? | Not started | - |
