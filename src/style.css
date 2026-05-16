@@ -290,3 +290,12 @@
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
 }
+
+/* Phase 6: Print layout for completion summary */
+@media print {
+  #sidebar, #nav, .print-hide { display: none !important; }
+  .lesson-wrapper { max-width: 100% !important; padding: 32px !important; }
+  .lesson-column { max-width: 100% !important; }
+  body { background: #ffffff !important; color: #000000 !important; }
+  a { color: #000000 !important; text-decoration: underline !important; }
+}
