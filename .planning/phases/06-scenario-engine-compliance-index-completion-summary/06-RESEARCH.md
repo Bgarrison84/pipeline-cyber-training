@@ -656,27 +656,31 @@ function completeScenario(moduleId) {
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Which lesson owns the scenarioId field?**
    - What we know: `logging-auditing` has `intro` (no quiz/exercise), `ps-logging` (exerciseId: '01'), `audit-policies` (quizId: '01')
    - What's unclear: Should the scenario attach to `intro` (keeping it simple) or should a new scenario-specific lesson entry be added?
    - Recommendation: Attach `scenarioId: '01'` to the `intro` lesson for v1. The `computeModuleProgress` branch order (quizId > exerciseId > scenarioId > visited) means `intro` currently counts as visited-based; adding `scenarioId` upgrades its completion signal.
+   - RESOLVED: `scenarioId: '01'` attached to the `intro` lesson in `modules-config.js` (Plan 06-03).
 
 2. **How many phases should the Phase 6 scenario have?**
    - What we know: ASSESS-02 requires "at least two decision branches" — the existing placeholder has one phase
    - What's unclear: Optimal depth for a learning scenario (more phases = more learning, more authoring work)
    - Recommendation: 2–3 phases for the Module 1 scenario. Each phase adds one decision. This satisfies ASSESS-02 without over-engineering the authoring.
+   - RESOLVED: 2-phase scenario implemented in `scenarios/01.json` (Plan 06-01), satisfying ASSESS-02 minimum.
 
 3. **Should the compliance index link to lesson-level anchors (e.g., `#/lesson/logging-auditing/intro#nist-au-2`)?**
    - What we know: Current router is hash-based; hash-within-hash (`#/lesson/...#anchor`) would conflict with the routing scheme
    - What's unclear: Whether per-control anchor links inside lessons are expected
    - Recommendation: Link to the lesson/exercise/scenario page, not to anchors within. The compliance index says "this lesson covers NIST-AU-2" — the learner navigates to the lesson to find the content. This avoids the hash-within-hash problem entirely.
+   - RESOLVED: Page-level links only (no anchors) implemented in `compliance-index-view.js` (Plan 06-03).
 
 4. **What does "completing all branches" mean for ASSESS-02?**
    - What we know: ASSESS-02 says "Completing all branches of a scenario records completion and outcome data"
    - What's unclear: Does "all branches" mean the learner must explore every option path, or just reach the final node?
    - Recommendation: Mark complete when the learner reaches `isFinal: true`, regardless of which option they chose at each node. The learner reads all outcomes (correct and incorrect) before advancing, so all content is exposed. Requiring exhaustive branch traversal would require multi-session state tracking — disproportionate complexity for v1.
+   - RESOLVED: Completion triggered on `isFinal: true` node reached — implemented in `scenario-view.js` (Plan 06-02).
 
 ---
 

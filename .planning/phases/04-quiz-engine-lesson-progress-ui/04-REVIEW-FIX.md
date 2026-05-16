@@ -1,23 +1,23 @@
 ---
 phase: 04-quiz-engine-lesson-progress-ui
-fixed_at: 2026-05-15T13:00:00Z
+fixed_at: 2026-05-15T13:13:00Z
 review_path: .planning/phases/04-quiz-engine-lesson-progress-ui/04-REVIEW.md
-iteration: 1
-findings_in_scope: 7
-fixed: 7
+iteration: 2
+findings_in_scope: 10
+fixed: 10
 skipped: 0
 status: all_fixed
 ---
 
 # Phase 04: Code Review Fix Report
 
-**Fixed at:** 2026-05-15T13:00:00Z
+**Fixed at:** 2026-05-15T13:13:00Z
 **Source review:** `.planning/phases/04-quiz-engine-lesson-progress-ui/04-REVIEW.md`
-**Iteration:** 1
+**Iteration:** 2 (all 10 findings across both runs)
 
 **Summary:**
-- Findings in scope: 7 (2 Critical, 5 Warning)
-- Fixed: 7
+- Findings in scope: 10 (2 Critical, 5 Warning, 3 Info)
+- Fixed: 10
 - Skipped: 0
 
 ## Fixed Issues
@@ -80,10 +80,44 @@ status: all_fixed
 
 ## Test Results
 
-All 11 test files passed with 117 passing tests after all fixes were applied (`npm test`).
+All 11 test files passed with 117 passing tests after iteration 1 fixes (Critical + Warning).
 
 ---
 
-_Fixed: 2026-05-15T13:00:00Z_
+## Iteration 2 — Info findings (2026-05-15)
+
+### IN-01: sidebar.test.js — `_computeModuleProgressMock` needs `vi.hoisted()`
+
+**Files modified:** `tests/sidebar.test.js`
+**Commit:** `f758099`
+**Applied fix:** Replaced the plain `const _computeModuleProgressMock = vi.fn()...` declaration with a `vi.hoisted()` wrapper, matching the pattern already used in `tests/module-view.test.js`. The mock function is now initialized before Vitest hoists `vi.mock()` factory closures to the top of the file at transform time, ensuring `computeModuleProgress` in the quiz-engine mock resolves to the `vi.fn()` rather than `undefined`.
+
+### IN-02: `renderLesson` JSDoc `@returns` type mismatch
+
+**Files modified:** `src/views/lesson-view.js`
+**Commit:** `6274d38`
+**Applied fix:** Changed the `@returns` JSDoc line from `{Promise<string>} Empty string — view takes DOM control itself` to `{Promise<null>} null — view writes directly to #app`. The function returns `null` on every code path (lines 29, 36, 53, 94), never an empty string. The corrected JSDoc now accurately documents the actual contract.
+
+### IN-03: Add 2+ questions to 01.json and multi-question tests to quiz-engine.test.js
+
+**Files modified:** `public/data/modules/logging-auditing/quizzes/01.json`, `tests/quiz-engine.test.js`
+**Commit:** `2c92487`
+**Applied fix:**
+
+Part A — Extended `01.json` from 1 question to 3 questions by adding:
+- `q-02`: "Which PowerShell cmdlet retrieves Windows Security event log entries filtered by Event ID?" (correct: `Get-WinEvent -FilterHashtable`, compliance: NIST-AU-6)
+- `q-03`: "Under TSA SD-02F, what is the minimum retention period for cybersecurity event logs on pipeline OT systems?" (correct: 12 months, compliance: TSA-SD-02F)
+
+Part B — Added a `describe('renderQuiz — partial credit with multi-question quiz (IN-03)')` block to `tests/quiz-engine.test.js` with a dedicated `QUIZ_3Q` 3-question fixture and two tests:
+1. Verifies `progressStore.saveQuiz` is called with `{ score: 1, total: 3 }` when only q-01 is answered correctly and q-02/q-03 are answered incorrectly.
+2. Verifies the completion banner text reads "Quiz complete — 1/3 correct" when `score < totalQuestions`.
+
+## Final Test Results
+
+All 11 test files pass with **119 passing tests | 1 todo** after all 10 findings fixed across both iterations.
+
+---
+
+_Fixed: 2026-05-15T13:13:00Z_
 _Fixer: Claude (gsd-code-fixer)_
-_Iteration: 1_
+_Iteration: 2_
