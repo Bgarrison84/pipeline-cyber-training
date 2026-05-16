@@ -158,7 +158,7 @@ Plans:
 **Wave 0**
 - [x] 06-01-PLAN.md — RED test stubs (scenario-view, compliance-index-view, completion-summary-view) + 01.json full scenario + compliance-index.json manifest (Wave 0)
 **Wave 1** *(blocked on Wave 0 completion)*
-- [ ] 06-02-PLAN.md — src/views/scenario-view.js: renderScenario async renderer, decision-tree flow, completion saving (Wave 1)
+- [x] 06-02-PLAN.md — src/views/scenario-view.js: renderScenario async renderer, decision-tree flow, completion saving (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
 - [ ] 06-03-PLAN.md — src/views/compliance-index-view.js + router.js 3 new routes + modules-config.js scenarioId + module-view.js scenario links + quiz-engine.js scenarioId branch (Wave 2)
 **Wave 3** *(blocked on Wave 2 completion)*
