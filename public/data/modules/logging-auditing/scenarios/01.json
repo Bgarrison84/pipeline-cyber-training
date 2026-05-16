@@ -2,27 +2,52 @@
   "id": "logging-auditing-scenario-01",
   "moduleId": "logging-auditing",
   "title": "Investigating a Suspicious Login on PIPELINE-DC01",
-  "status": "placeholder",
   "complianceControls": ["TSA-Monitoring", "NIST-AU-2"],
-  "narrative": "Your SIEM alerts you to 47 failed logon attempts on PIPELINE-DC01 over the past 10 minutes, followed by one successful logon from an unknown workstation at 03:42 UTC.",
+  "narrative": "Your SIEM alerts you to 47 failed logon attempts on PIPELINE-DC01 over the past 10 minutes, followed by one successful logon from an unknown workstation at 03:42 UTC. The account is a domain user account with access to both IT systems and the pipeline data historian.\n\nIn OT environments: pipeline control systems (SCADA, DCS) may share Active Directory with IT systems. A compromised domain account could pivot to OT historian or HMI systems — treat any credential-based alert as potentially OT-impacting until verified.",
   "phases": [
     {
       "id": "phase-1",
-      "title": "Initial Triage",
       "type": "decision",
-      "prompt": "What is your first action?",
+      "title": "Initial Triage",
+      "isFinal": false,
+      "prompt": "Your SIEM shows 47 failed logon attempts followed by a successful logon from an unknown workstation at 03:42 UTC. What is your first action?",
       "options": [
         {
           "id": "opt-a",
           "text": "Immediately disable the account that successfully logged in.",
-          "outcome": "Disabling the account stops the attacker but also alerts them and destroys evidence of ongoing activity. Triage first.",
-          "correct": false
+          "outcome": "Disabling the account stops the attacker but also alerts them and destroys evidence of ongoing activity. Taking containment action before establishing a timeline means you may not know what systems were accessed. Triage first — collect evidence, then contain.",
+          "correct": false,
+          "nextPhaseId": "phase-2"
         },
         {
           "id": "opt-b",
           "text": "Query the Security event log on PIPELINE-DC01 for Event IDs 4624 and 4625 around the incident window.",
-          "outcome": "Correct. Reviewing the event log first establishes the timeline and source IP before you take any containment action.",
-          "correct": true
+          "outcome": "Correct. Reviewing the event log first establishes the timeline and source IP before you take any containment action. Event ID 4624 (successful logon) and 4625 (failed logon) together tell you who, when, and from where — giving you the context to make an informed containment decision.",
+          "correct": true,
+          "nextPhaseId": "phase-2"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "type": "decision",
+      "title": "Containment Decision",
+      "isFinal": true,
+      "prompt": "You have confirmed the logon originated from a workstation outside the normal IT subnet (10.0.5.22). The account belongs to a service account used by the pipeline historian. What do you do?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Immediately disable the service account and notify OT operations that historian data collection may be interrupted.",
+          "outcome": "Disabling the account stops the threat but historian data collection pauses. In a pipeline OT context, you must notify operations before disabling any account that may affect safety system logging. However, given the confirmed compromise, this is the correct priority order. TSA SD-02F requires prompt incident response and notification to relevant personnel.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Reset the service account password only, without notifying OT operations, to avoid an alarm.",
+          "outcome": "Resetting the password without notifying OT operations violates TSA SD-02F incident notification requirements and leaves OT operators unaware of a potential safety-relevant event. Notification is mandatory. Additionally, password reset alone may not stop an attacker who has established persistence through other means.",
+          "correct": false,
+          "nextPhaseId": null
         }
       ]
     }
