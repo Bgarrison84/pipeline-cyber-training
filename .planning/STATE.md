@@ -25,7 +25,7 @@ progress:
 ## Current Position
 
 **Phase:** 6 — Scenario Engine + Compliance Index + Completion Summary
-**Plan:** 06-02 complete → 06-03 executing (Wave 2 — compliance-index-view + router wiring)
+**Plan:** 06-03 complete → 06-04 executing (Wave 3 — completion-summary-view + print CSS + human verify)
 **Status:** Executing
 **Blocker:** None
 
@@ -46,7 +46,7 @@ Progress: [✓1][✓2][✓3][✓4][✓5][▶6][ 7 ][ 8 ]
 | 3 | Progress Store | ✓ Complete |
 | 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (3 plans — checkpoint:human-verify approved) |
 | 5 | Simulated PowerShell Terminal + Exercise View | ✓ Complete (4 plans — all TERM-01–04 met, human verify approved 2026-05-15) |
-| 6 | Scenario Engine + Compliance Index + Completion Summary | ▶ Executing (2/4 plans) |
+| 6 | Scenario Engine + Compliance Index + Completion Summary | ▶ Executing (3/4 plans) |
 | 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | Not started |
 | 8 | Patch Management Module (MOD-05) | Not started |
 
