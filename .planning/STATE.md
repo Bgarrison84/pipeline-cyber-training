@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: planning
-last_updated: "2026-05-15T20:10:00.000Z"
+status: executing
+last_updated: "2026-05-16T00:00:00.000Z"
 progress:
   total_phases: 8
   completed_phases: 5
-  total_plans: 18
+  total_plans: 22
   completed_plans: 16
-  percent: 89
+  percent: 73
 ---
 
 # State — Pipeline Cyber Training
@@ -24,13 +24,13 @@ progress:
 
 ## Current Position
 
-**Phase:** 5 — Simulated PowerShell Terminal + Exercise View
-**Plan:** 05-04 complete (4 of 4 plans — Wave 3 module-view exercise links + computeModuleProgress exerciseId branch done)
-**Status:** Phase 5 Complete
+**Phase:** 6 — Scenario Engine + Compliance Index + Completion Summary
+**Plan:** 06-01 executing (Wave 0 — RED test stubs + scenario JSON + compliance-index.json)
+**Status:** Executing
 **Blocker:** None
 
 ```
-Progress: [✓1][✓2][✓3][✓4][✓5][ 6 ][ 7 ][ 8 ]
+Progress: [✓1][✓2][✓3][✓4][✓5][▶6][ 7 ][ 8 ]
                                     ^
                                   Here
 ```
@@ -46,7 +46,7 @@ Progress: [✓1][✓2][✓3][✓4][✓5][ 6 ][ 7 ][ 8 ]
 | 3 | Progress Store | ✓ Complete |
 | 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (3 plans — checkpoint:human-verify approved) |
 | 5 | Simulated PowerShell Terminal + Exercise View | ✓ Complete (4 plans — all TERM-01–04 met, human verify approved 2026-05-15) |
-| 6 | Scenario Engine + Compliance Index + Completion Summary | Not started |
+| 6 | Scenario Engine + Compliance Index + Completion Summary | ▶ Executing (0/4 plans) |
 | 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | Not started |
 | 8 | Patch Management Module (MOD-05) | Not started |
 
