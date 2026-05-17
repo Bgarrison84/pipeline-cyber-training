@@ -64,7 +64,7 @@ export const MODULES = [
   {
     id: 'patch-management',
     title: 'Patch Management',
-    icon: 'Wrench',
+    icon: 'wrench',
     description: 'Windows/IT patching, OT/ICS patching workflows, and compliance reporting.',
     order: 5,
     estimatedMinutes: 60,

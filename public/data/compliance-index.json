@@ -262,7 +262,7 @@
     },
     {
       "id": "TSA-PatchMgmt",
-      "label": "TSA SD-02F — Patch Management",
+      "label": "TSA — Patch Management",
       "items": [
         {
           "type": "lesson",
@@ -335,6 +335,18 @@
           "moduleId": "patch-management",
           "contentId": "01",
           "title": "Patch Compliance Reporting"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "patch-management",
+          "contentId": "01",
+          "title": "Critical CVE vs. OT Vendor Qualification Window"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "patch-management",
+          "contentId": "03",
+          "title": "TSA Audit: Missing Compensating Controls Documentation"
         }
       ]
     },
@@ -359,6 +371,12 @@
           "moduleId": "patch-management",
           "contentId": "02",
           "title": "Maintenance Window vs. Ops Manager Pressure"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "patch-management",
+          "contentId": "03",
+          "title": "TSA Audit: Missing Compensating Controls Documentation"
         }
       ]
     }

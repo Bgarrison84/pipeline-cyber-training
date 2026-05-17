@@ -82,7 +82,7 @@
       ],
       "expectedCommands": [
         {
-          "pattern": "Get-Hotfix.*Export-Csv.*patch-status\\.csv|Export-Csv.*patch-status",
+          "pattern": "Get-Hotfix.*Export-Csv.*patch-status\\.csv|Export-Csv.*Audit.*patch-status\\.csv",
           "matchType": "regex",
           "caseSensitive": false
         }
@@ -110,7 +110,7 @@
       ],
       "expectedCommands": [
         {
-          "pattern": "Get-Content.*patch-status\\.csv.*Measure-Object|Measure-Object.*-Line.*patch|Get-Content.*Audit.*Measure",
+          "pattern": "Get-Content.*patch-status\\.csv.*Measure-Object|Measure-Object.*-Line.*patch-status|Get-Content.*patch-status.*Measure",
           "matchType": "regex",
           "caseSensitive": false
         }
