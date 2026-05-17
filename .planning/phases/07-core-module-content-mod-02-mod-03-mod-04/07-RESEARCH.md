@@ -716,17 +716,19 @@ If no data-validation tests are added (acceptable for this content-only phase):
 
 ---
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Module-level module.json files**
    - What we know: MOD-01 has `public/data/modules/logging-auditing/module.json` with module metadata (title, description, lessons array)
    - What's unclear: Whether MOD-02/03/04 need their own module.json files, or whether modules-config.js is the only source of truth
    - Recommendation: Check if any code fetches module.json at runtime. Content-loader.js and lesson-view.js were not observed fetching module.json in the code review. Creating module.json files for completeness is safe but may not be required. The planner can omit them unless confirmed needed.
+   - **RESOLVED: module.json files omitted from all plans — code reading confirmed no runtime fetch of module.json by content-loader.js, lesson-view.js, or any other engine. modules-config.js is the sole source of truth for module metadata.**
 
 2. **NIST-AU-12 backfill for MOD-01**
    - What we know: MOD-01's ps-logging.md has `NIST-AU-12` in its complianceControls frontmatter, but compliance-index.json has no NIST-AU-12 entry yet
    - What's unclear: D-10 scopes NIST-AU-12 to incident-response. D-11 says compliance-refs.json is not modified. Neither D clarifies whether NIST-AU-12's items[] should include ps-logging from MOD-01.
    - Recommendation: When creating the NIST-AU-12 control entry, include both the incident-response ps-ir lesson AND the logging-auditing ps-logging lesson/exercise for completeness. This matches compliance-index.json's purpose (linking all content that covers a control).
+   - **RESOLVED: NIST-AU-12 items[] will include both the incident-response ps-ir lesson AND the logging-auditing ps-logging lesson and exercise — MOD-01 ps-logging.md already carries NIST-AU-12 in complianceControls; the compliance index should reflect it. Plan 07-04 Task 2 updated accordingly.**
 
 ---
 
