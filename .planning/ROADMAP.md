@@ -16,7 +16,7 @@
 - [x] **Phase 4: Quiz Engine + Lesson Progress UI** - Multiple-choice quizzes with per-answer feedback, scoring, and module-level progress bars (completed 2026-05-15)
 - [x] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system (completed 2026-05-15)
 - [x] **Phase 6: Scenario Engine + Compliance Index + Completion Summary** - Branching scenario exercises, compliance control index page, and printable training log (completed 2026-05-16)
-- [ ] **Phase 7: Core Module Content (MOD-02, MOD-03, MOD-04)** - Network Hardening, Account & Access Management, and Incident Response modules fully populated with OT/IT distinctions
+- [x] **Phase 7: Core Module Content (MOD-02, MOD-03, MOD-04)** - Network Hardening, Account & Access Management, and Incident Response modules fully populated with OT/IT distinctions (completed 2026-05-16)
 - [ ] **Phase 8: Patch Management Module (MOD-05)** - Full Patch Management module with separate IT and OT/ICS sub-sections, compliance reporting exercises
 
 ---
@@ -188,13 +188,13 @@ Cross-cutting constraints:
 **Plans:** 4 plans
 Plans:
 **Wave 1**
-- [ ] 07-01-PLAN.md — MOD-02 Network Hardening: 3 lessons + quiz + exercise + scenario (Wave 1)
+- [x] 07-01-PLAN.md — MOD-02 Network Hardening: 3 lessons + quiz + exercise + scenario (Wave 1)
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 07-02-PLAN.md — MOD-03 Account & Access Management: 3 lessons + quiz + exercise + scenario (Wave 2)
+- [x] 07-02-PLAN.md — MOD-03 Account & Access Management: 3 lessons + quiz + exercise + scenario (Wave 2)
 **Wave 3** *(blocked on Wave 2 completion)*
-- [ ] 07-03-PLAN.md — MOD-04 Incident Response: 3 lessons + quiz + exercise + scenario (Wave 3)
+- [x] 07-03-PLAN.md — MOD-04 Incident Response: 3 lessons + quiz + exercise + scenario (Wave 3)
 **Wave 4** *(blocked on Wave 3 completion)*
-- [ ] 07-04-PLAN.md — Integration: modules-config.js 3-lesson arrays + compliance-index.json 9 new control entries (Wave 4)
+- [x] 07-04-PLAN.md — Integration: modules-config.js 3-lesson arrays + compliance-index.json 9 new control entries (Wave 4)
 
 Cross-cutting constraints:
 - All lessons contain `> [!OT]` callout block (DATA-03)
@@ -227,7 +227,7 @@ Cross-cutting constraints:
 | 4. Quiz Engine + Lesson Progress UI | 3/3 | ✓ Complete | 2026-05-15 |
 | 5. Simulated PowerShell Terminal + Exercise View | 4/4 | ✓ Complete | 2026-05-15 |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 4/4 | ✓ Complete | 2026-05-16 |
-| 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 0/? | Not started | - |
+| 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 4/4 | ✓ Complete | 2026-05-16 |
 | 8. Patch Management Module (MOD-05) | 0/? | Not started | - |
 
 ---

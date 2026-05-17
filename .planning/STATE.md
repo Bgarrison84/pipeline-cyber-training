@@ -6,10 +6,10 @@ status: planning
 last_updated: "2026-05-16T00:00:00.000Z"
 progress:
   total_phases: 8
-  completed_phases: 6
-  total_plans: 26
-  completed_plans: 20
-  percent: 77
+  completed_phases: 7
+  total_plans: 30
+  completed_plans: 25
+  percent: 88
 ---
 
 # State — Pipeline Cyber Training
@@ -24,15 +24,15 @@ progress:
 
 ## Current Position
 
-**Phase:** 7 — Core Module Content (MOD-02, MOD-03, MOD-04)
-**Plan:** Ready to execute (4 plans, 4 waves)
-**Status:** Phase 7 Planned → Ready to Execute
+**Phase:** 8 — Patch Management Module (MOD-05)
+**Plan:** Not yet planned
+**Status:** Phase 7 Complete → Phase 8 Ready to plan
 **Blocker:** None
 
 ```
-Progress: [✓1][✓2][✓3][✓4][✓5][✓6][ 7 ][ 8 ]
-                                         ^
-                                       Here
+Progress: [✓1][✓2][✓3][✓4][✓5][✓6][✓7][ 8 ]
+                                              ^
+                                            Here
 ```
 
 ---
@@ -47,17 +47,17 @@ Progress: [✓1][✓2][✓3][✓4][✓5][✓6][ 7 ][ 8 ]
 | 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (3 plans — checkpoint:human-verify approved) |
 | 5 | Simulated PowerShell Terminal + Exercise View | ✓ Complete (4 plans — all TERM-01–04 met, human verify approved 2026-05-15) |
 | 6 | Scenario Engine + Compliance Index + Completion Summary | ✓ Complete (4 plans — human verify approved 2026-05-16) |
-| 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | Planned (4 plans, 4 waves) — Ready to execute |
+| 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | ✓ Complete (4 plans — human verify approved 2026-05-16) |
 | 8 | Patch Management Module (MOD-05) | Not started |
 
 ---
 
 ## Performance Metrics
 
-**Phases complete:** 5/8
-**Plans complete:** 16/18 (05-04 complete — Phase 5 done)
-**Requirements shipped:** 17/26 (SHELL-01, SHELL-02, SHELL-03, DATA-01, CONT-01, CONT-02, CONT-03, CONT-04, MOD-01, ASSESS-03, DATA-04, DATA-05, ASSESS-01, TERM-01, TERM-02, TERM-03, TERM-04)
-**Phase 5 summary:** All 4 plans complete — terminal-engine.js (createTerminal, 13 tests), exercise-view.js (renderExercise, 12 tests), router exercise route, module-view exercise links, computeModuleProgress exerciseId branch; 147/147 tests GREEN; all TERM-01–04 requirements met
+**Phases complete:** 7/8
+**Plans complete:** 25/30 (07-04 complete — Phase 7 done)
+**Requirements shipped:** 25/26 (all except MOD-05)
+**Phase 7 summary:** All 4 plans complete — 18 content files (MOD-02 Network Hardening, MOD-03 Account & Access, MOD-04 Incident Response), modules-config.js wired with 3-lesson arrays, compliance-index.json expanded to 11 controls (9 new); sidebar <a> tag fix deployed; 167/167 tests GREEN; MOD-02/03/04, DATA-02, DATA-03 shipped
 
 ---
 
@@ -108,8 +108,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-16 — Phase 7 planned (4 plans — MOD-02 Network Hardening, MOD-03 Account & Access, MOD-04 Incident Response vertical slices, plus integration wave for modules-config.js + compliance-index.json)
-**Next action:** Execute Phase 7 (`/gsd-execute-phase 7`)
+**Last updated:** 2026-05-16 — Phase 7 complete (4 plans — 18 content files for MOD-02/03/04, modules-config.js wired, compliance-index.json expanded to 11 controls; sidebar fix deployed; human verify approved)
+**Next action:** Plan Phase 8 (`/gsd-discuss-phase 8` or `/gsd-plan-phase 8`)
 
 ---
 

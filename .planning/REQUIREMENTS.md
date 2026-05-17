@@ -7,7 +7,7 @@
 - [ ] **SHELL-01**: User can navigate between all 5 modules and their lessons via a persistent sidebar or top navigation menu
 - [ ] **SHELL-02**: Every module and lesson has a unique, linkable URL using hash-based routing (e.g. `#/module/logging-auditing/lesson/1`)
 - [x] **SHELL-03**: Visual progress bars show completion state at both lesson and module level
-- [ ] **SHELL-04**: Compliance index page maps control IDs (TSA SD-02F, NIST SP 800-82 Rev 3) to every lesson and exercise that covers them
+- [x] **SHELL-04**: Compliance index page maps control IDs (TSA SD-02F, NIST SP 800-82 Rev 3) to every lesson and exercise that covers them
 
 ### Content & Lessons
 
@@ -18,31 +18,31 @@
 
 ### Simulated PowerShell Terminal
 
-- [ ] **TERM-01**: Terminal accepts expected commands per exercise and returns helpful error feedback for wrong commands
-- [ ] **TERM-02**: Accepted commands produce realistic-looking PowerShell output (not placeholder or lorem text)
-- [ ] **TERM-03**: Plausible near-miss commands (e.g. wrong parameter name) receive a contextual hint rather than generic failure
-- [ ] **TERM-04**: Terminal UI displays a persistent label making clear it is a simulator — commands do not run on any real system
+- [x] **TERM-01**: Terminal accepts expected commands per exercise and returns helpful error feedback for wrong commands
+- [x] **TERM-02**: Accepted commands produce realistic-looking PowerShell output (not placeholder or lorem text)
+- [x] **TERM-03**: Plausible near-miss commands (e.g. wrong parameter name) receive a contextual hint rather than generic failure
+- [x] **TERM-04**: Terminal UI displays a persistent label making clear it is a simulator — commands do not run on any real system
 
 ### Assessment & Progress
 
 - [x] **ASSESS-01**: Each lesson includes multiple-choice quiz questions with per-answer explanatory feedback (not just correct/incorrect)
-- [ ] **ASSESS-02**: Scenario exercises walk learners through realistic compliance incidents with branching decision points and outcome explanations
+- [x] **ASSESS-02**: Scenario exercises walk learners through realistic compliance incidents with branching decision points and outcome explanations
 - [x] **ASSESS-03**: LocalStorage saves the learner's exact progress; returning learners resume at the lesson and step they left
-- [ ] **ASSESS-04**: Learner can generate a printable completion summary labeled as a training log artifact (explicitly not a compliance certification)
+- [x] **ASSESS-04**: Learner can generate a printable completion summary labeled as a training log artifact (explicitly not a compliance certification)
 
 ### Modules (v1 Skeleton — all 5 present)
 
 - [x] **MOD-01**: Logging & Auditing — core lessons, at least one quiz, one terminal exercise, one scenario; maps to TSA and NIST logging controls
-- [ ] **MOD-02**: Network Hardening — core lessons, at least one quiz, one terminal exercise, one scenario; covers firewall rules, network segmentation, port scanning via PS
-- [ ] **MOD-03**: Account & Access Management — core lessons, at least one quiz, one terminal exercise, one scenario; covers AD, least privilege, service accounts, password policies
-- [ ] **MOD-04**: Incident Response — core lessons, at least one quiz, one terminal exercise, one scenario; covers anomaly detection, system isolation, evidence collection via PS
+- [x] **MOD-02**: Network Hardening — core lessons, at least one quiz, one terminal exercise, one scenario; covers firewall rules, network segmentation, port scanning via PS
+- [x] **MOD-03**: Account & Access Management — core lessons, at least one quiz, one terminal exercise, one scenario; covers AD, least privilege, service accounts, password policies
+- [x] **MOD-04**: Incident Response — core lessons, at least one quiz, one terminal exercise, one scenario; covers anomaly detection, system isolation, evidence collection via PS
 - [ ] **MOD-05**: Patch Management — three sub-areas all represented: Windows/IT patching via PS (WSUS, PSWindowsUpdate), OT/ICS patching workflow (air-gapped, vendor coordination, risk-based deferral), and compliance reporting (generating patch status evidence for audits)
 
 ### Data Integrity & Compliance Accuracy
 
-- [ ] **DATA-01**: TSA directive version strings (e.g. "SD-02F") are stored in a single `data/compliance-refs.json` file — never hardcoded in lesson content
-- [ ] **DATA-02**: NERC CIP content is framed explicitly as a reference benchmark for pipeline operators, not a binding requirement (NERC CIP is an electric utility standard)
-- [ ] **DATA-03**: OT/IT distinctions are explicitly called out in every dual-use lesson, particularly in Patch Management (OT patch SLAs differ fundamentally from IT)
+- [x] **DATA-01**: TSA directive version strings (e.g. "SD-02F") are stored in a single `data/compliance-refs.json` file — never hardcoded in lesson content
+- [x] **DATA-02**: NERC CIP content is framed explicitly as a reference benchmark for pipeline operators, not a binding requirement (NERC CIP is an electric utility standard)
+- [x] **DATA-03**: OT/IT distinctions are explicitly called out in every dual-use lesson, particularly in Patch Management (OT patch SLAs differ fundamentally from IT)
 - [x] **DATA-04**: LocalStorage schema includes a `schemaVersion` key; app handles `QuotaExceededError` gracefully without silent data loss
 - [x] **DATA-05**: Learner can export their progress data as a JSON file for backup or self-hosted migration
 
@@ -79,7 +79,7 @@
 | SHELL-01 | Phase 1 | ✓ Shipped |
 | SHELL-02 | Phase 1 | ✓ Shipped |
 | SHELL-03 | Phase 4 | ✓ Shipped |
-| SHELL-04 | Phase 6 | Pending |
+| SHELL-04 | Phase 6 | ✓ Shipped |
 | CONT-01 | Phase 2 | ✓ Shipped |
 | CONT-02 | Phase 2 | ✓ Shipped |
 | CONT-03 | Phase 2 | ✓ Shipped |
@@ -89,16 +89,16 @@
 | TERM-03 | Phase 5 | ✓ Shipped |
 | TERM-04 | Phase 5 | ✓ Shipped |
 | ASSESS-01 | Phase 4 | ✓ Shipped |
-| ASSESS-02 | Phase 6 | Pending |
+| ASSESS-02 | Phase 6 | ✓ Shipped |
 | ASSESS-03 | Phase 3 | ✓ Shipped |
-| ASSESS-04 | Phase 6 | Pending |
+| ASSESS-04 | Phase 6 | ✓ Shipped |
 | MOD-01 | Phase 2 | ✓ Shipped |
-| MOD-02 | Phase 7 | Pending |
-| MOD-03 | Phase 7 | Pending |
-| MOD-04 | Phase 7 | Pending |
+| MOD-02 | Phase 7 | ✓ Shipped |
+| MOD-03 | Phase 7 | ✓ Shipped |
+| MOD-04 | Phase 7 | ✓ Shipped |
 | MOD-05 | Phase 8 | Pending |
 | DATA-01 | Phase 1 | ✓ Shipped |
-| DATA-02 | Phase 7 | Pending |
-| DATA-03 | Phase 7 | Pending |
+| DATA-02 | Phase 7 | ✓ Shipped |
+| DATA-03 | Phase 7 | ✓ Shipped |
 | DATA-04 | Phase 3 | ✓ Shipped |
 | DATA-05 | Phase 3 | ✓ Shipped |

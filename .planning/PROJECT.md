@@ -14,6 +14,11 @@ An IT/OT admin who completes a module should be able to perform the covered comp
 
 - [x] **ASSESS-01** (Phase 4): Multiple-choice quizzes with per-answer explanatory feedback, score persistence, revisit mode — validated in production (GitHub Pages)
 - [x] **SHELL-03** (Phase 4): Sidebar 4px progress bars with live update after quiz submission; module-view progress bar + lesson status badges (quiz-passed / visited / unvisited) — validated in production
+- [x] **MOD-02** (Phase 7): Network Hardening module complete — 3 lessons (OT callouts, CIP-004/CIP-007 NERC disclaimers), PS firewall quiz/exercise/scenario — validated in browser 2026-05-16
+- [x] **MOD-03** (Phase 7): Account & Access Management module complete — 3 lessons (AD queries, least privilege, svc-historian lore), CIP-004/CIP-006 NERC disclaimers, quiz/exercise/scenario — validated 2026-05-16
+- [x] **MOD-04** (Phase 7): Incident Response module complete — 3 lessons (OT safety-first IR, C:\Evidence\ path, CIP-008 ×2), quiz/exercise/scenario with ransomware decision tree — validated 2026-05-16
+- [x] **DATA-02** (Phase 7): NERC CIP framed as reference benchmark with verbatim disclaimer in all 6 new NERC-referencing lessons — validated 2026-05-16
+- [x] **DATA-03** (Phase 7): OT callout blocks present in all 9 new lessons (one per lesson); explicit OT context throughout — validated 2026-05-16
 
 ### Active
 
@@ -77,7 +82,7 @@ This document evolves at phase transitions and milestone boundaries.
 
 ## Current State
 
-Phase 4 complete (2026-05-15). Quiz engine and progress UI live on GitHub Pages. Next: Phase 5 — Simulated PowerShell Terminal + Exercise View.
+Phase 7 complete (2026-05-16). All 5 modules now have full content: Logging & Auditing (Phase 2), Network Hardening, Account & Access Management, and Incident Response (Phase 7). Patch Management (Phase 8) is next — the final module. 25/26 requirements shipped; only MOD-05 remains. Compliance index has 11 controls. Sidebar bug fixed (all 5 modules now visible).
 
 ---
-*Last updated: 2026-05-15 after Phase 4 completion*
+*Last updated: 2026-05-16 after Phase 7 completion*
