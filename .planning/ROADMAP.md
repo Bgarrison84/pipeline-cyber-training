@@ -218,8 +218,8 @@ Plans:
 **Wave 1**
 - [x] 08-01-PLAN.md — 3 lesson Markdown files (wsus-patching, ot-patching, patch-policy) (Wave 1) ✓ 2026-05-17
 **Wave 2** *(blocked on Wave 1 completion)*
-- [ ] 08-02-PLAN.md — Quiz (3 questions across all sub-areas) + Exercise (4-step compliance reporting) (Wave 2)
-- [ ] 08-03-PLAN.md — 3 scenario JSON files (01: Critical CVE, 02: Maintenance Window, 03: TSA Audit) (Wave 2, parallel with 08-02)
+- [x] 08-02-PLAN.md — Quiz (3 questions across all sub-areas) + Exercise (4-step compliance reporting) (Wave 2) ✓ 2026-05-17
+- [x] 08-03-PLAN.md — 3 scenario JSON files (01: Critical CVE, 02: Maintenance Window, 03: TSA Audit) (Wave 2, parallel with 08-02) ✓ 2026-05-17
 **Wave 3** *(blocked on Wave 2 completion)*
 - [ ] 08-04-PLAN.md — Config integration: modules-config.js 3-lesson update + 3 new compliance controls (Wave 3)
 

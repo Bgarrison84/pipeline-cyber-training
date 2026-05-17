@@ -26,7 +26,7 @@ progress:
 
 **Phase:** 8 — Patch Management Module (MOD-05)
 **Plan:** 4 plans ready (08-01 through 08-04)
-**Status:** Executing (Wave 2 of 3)
+**Status:** Executing (Wave 3 of 3)
 **Blocker:** None
 
 ```
