@@ -1,0 +1,113 @@
+{
+  "id": "network-hardening-quiz-01",
+  "moduleId": "network-hardening",
+  "title": "Network Hardening Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell cmdlet audits currently enabled inbound firewall rules on a Windows system?",
+      "complianceControls": [
+        "NIST-SC-7"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-NetAdapter",
+          "correct": false,
+          "feedback": "Get-NetAdapter lists network interfaces (Ethernet, Wi-Fi adapters), not firewall rules. It tells you what network connections exist, not what is permitted through the firewall."
+        },
+        {
+          "id": "b",
+          "text": "Get-NetFirewallRule -Enabled True",
+          "correct": true,
+          "feedback": "Correct. Get-NetFirewallRule -Enabled True retrieves all active Windows Firewall rules. Pipe to Where-Object {$_.Direction -eq 'Inbound'} to focus on inbound policy relevant to NIST SC-7 boundary protection."
+        },
+        {
+          "id": "c",
+          "text": "Get-NetTCPConnection",
+          "correct": false,
+          "feedback": "Get-NetTCPConnection shows active TCP connections and locally listening ports — it reflects the current connection state, not the firewall policy rules that permit or block those connections."
+        },
+        {
+          "id": "d",
+          "text": "Test-NetConnection",
+          "correct": false,
+          "feedback": "Test-NetConnection tests outbound connectivity to a target host and port — it tells you whether a path is reachable, but does not enumerate the local firewall rules governing what is allowed."
+        }
+      ],
+      "explanation": "Get-NetFirewallRule -Enabled True retrieves all enabled Windows Firewall rules. Pipe to Where-Object {$_.Direction -eq 'Inbound'} to focus on inbound policy relevant to SC-7 boundary protection auditing."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "Your automated scan finds TCP port 3389 (RDP) open inbound on a pipeline boundary firewall. Before blocking it, what should you do first?",
+      "complianceControls": [
+        "TSA-NetworkSeg"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Immediately run New-NetFirewallRule to block it.",
+          "correct": false,
+          "feedback": "Blocking without investigation could disrupt an authorized maintenance window already in progress — you could cut off an OT vendor or authorized admin mid-session. Verify authorization before taking containment action."
+        },
+        {
+          "id": "b",
+          "text": "Check the firewall change log and verify with the change manager whether an authorized change window is open for this port.",
+          "correct": true,
+          "feedback": "Correct. Port 3389 may be open for a legitimate, time-limited maintenance window. Verifying authorization first establishes whether this is sanctioned activity — if authorized, the port will close when the window ends and you document the verification. If no change window is active, you have confirmed it is unauthorized and can proceed with documented containment."
+        },
+        {
+          "id": "c",
+          "text": "Reset the server to close the connection automatically.",
+          "correct": false,
+          "feedback": "A server reset is a disruptive containment action that destroys evidence of who opened the port and why, and would cause an unplanned outage. Investigate first before taking any disruptive action."
+        },
+        {
+          "id": "d",
+          "text": "Log the event and take no further action until the next scheduled audit.",
+          "correct": false,
+          "feedback": "An open RDP inbound rule on a boundary device must be addressed promptly. Deferring to the next audit cycle is not compliant — the TSA network segmentation mandate requires that unauthorized network access paths are identified and remediated in a timely manner."
+        }
+      ],
+      "explanation": "The TSA network segmentation mandate requires prompt action on unauthorized access paths, but investigate-first is always the correct initial step. Establish whether an authorized change window explains the open port before taking containment action."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell command maps a listening TCP port to the process that opened it?",
+      "complianceControls": [
+        "NIST-SC-7",
+        "TSA-NetworkSeg"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-Process -Name svchost",
+          "correct": false,
+          "feedback": "Get-Process -Name svchost retrieves process information by name but does not show which TCP ports a process is listening on. It cannot tell you which port belongs to which process."
+        },
+        {
+          "id": "b",
+          "text": "netstat -ano",
+          "correct": false,
+          "feedback": "netstat -ano shows port-to-PID mapping but is a legacy command-line tool, not a PowerShell cmdlet. Use Get-NetTCPConnection for a PS 5.1 structured approach that returns objects you can pipe and filter."
+        },
+        {
+          "id": "c",
+          "text": "Get-NetTCPConnection -State Listen | Select-Object LocalPort, OwningProcess",
+          "correct": true,
+          "feedback": "Correct. Get-NetTCPConnection -State Listen returns a table of listening ports with the PID of the owning process in the OwningProcess column. Follow up with Get-Process -Id <PID> to resolve the PID to a process name — this two-step approach satisfies NIST SC-7 boundary protection auditing requirements."
+        },
+        {
+          "id": "d",
+          "text": "Test-NetConnection -Port 445",
+          "correct": false,
+          "feedback": "Test-NetConnection -Port 445 tests outbound connectivity to a remote port — it does not enumerate locally listening ports or identify which process owns a port on the local system."
+        }
+      ],
+      "explanation": "Get-NetTCPConnection -State Listen returns all locally listening TCP ports with OwningProcess (PID). Follow up with Get-Process -Id <PID> to get the process name. This two-step approach satisfies NIST SC-7 boundary protection auditing and NIST SI-3 unauthorized service detection requirements."
+    }
+  ]
+}

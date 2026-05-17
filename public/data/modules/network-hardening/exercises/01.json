@@ -1,0 +1,106 @@
+{
+  "id": "network-hardening-ex-01",
+  "moduleId": "network-hardening",
+  "title": "Firewall Audit and Port Mapping",
+  "description": "Use PowerShell to audit active inbound firewall rules, test connectivity, block an unauthorized port, and map listening ports to owning processes on PIPELINE-DC01.",
+  "complianceControls": ["TSA-NetworkSeg", "NIST-SC-7"],
+  "context": "You are logged into PIPELINE-DC01 as a domain administrator for ExampleCorp. A routine network review flagged that port 3389 may be accessible inbound from the IT subnet. You need to audit the firewall rules, verify connectivity, block the unauthorized port, and map all listening ports to processes.",
+  "steps": [
+    {
+      "id": "step-1",
+      "instruction": "Audit all enabled inbound firewall rules. Run the command to retrieve active inbound rules showing DisplayName, LocalPort, and Action.",
+      "hint": "Use Get-NetFirewallRule with -Enabled True and pipe to Where-Object filtering Direction, then Select-Object the three fields.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-NetFirewall\\b(?!Rule)",
+          "hint": "Close — use Get-NetFirewallRule (not Get-NetFirewall) to retrieve rule objects from Windows Firewall."
+        },
+        {
+          "pattern": "netsh\\s+advfirewall",
+          "hint": "In PowerShell, use Get-NetFirewallRule instead of netsh advfirewall — it returns structured objects you can pipe and filter."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-NetFirewallRule.*Enabled.*True|Get-NetFirewallRule.*-Enabled.*\\$true",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "DisplayName                    LocalPort  Action\n-----------                    ---------  ------\nAllow WinRM                    5985       Allow\nAllow SMB                      445        Allow\nAllow RDP Inbound              3389       Allow\nAllow ICMP Echo                *          Allow",
+      "feedbackOnWrong": "Run: Get-NetFirewallRule -Enabled True | Where-Object {$_.Direction -eq 'Inbound'} | Select-Object DisplayName, LocalPort, Action"
+    },
+    {
+      "id": "step-2",
+      "instruction": "Test that PIPELINE-DC01 is reachable on port 445 (SMB). Verify the expected management connection is open.",
+      "hint": "Use Test-NetConnection with -ComputerName and -Port parameters.",
+      "hintPatterns": [
+        {
+          "pattern": "ping\\s+PIPELINE",
+          "hint": "Ping tests ICMP reachability but not port availability. Use Test-NetConnection -ComputerName PIPELINE-DC01 -Port 445 to verify TCP port 445 specifically."
+        },
+        {
+          "pattern": "Test-Connection",
+          "hint": "Close — Test-Connection tests ICMP ping. Use Test-NetConnection (a different cmdlet) to test a specific TCP port."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Test-NetConnection.*PIPELINE-DC01.*445|Test-NetConnection.*445.*PIPELINE-DC01",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "ComputerName     : PIPELINE-DC01\nRemoteAddress    : 10.0.0.10\nRemotePort       : 445\nInterfaceAlias   : Ethernet\nSourceAddress    : 10.0.0.50\nTcpTestSucceeded : True",
+      "feedbackOnWrong": "Run: Test-NetConnection -ComputerName PIPELINE-DC01 -Port 445"
+    },
+    {
+      "id": "step-3",
+      "instruction": "Block inbound RDP (port 3389). Create a firewall rule named 'Block RDP Inbound' that drops all inbound TCP connections to port 3389.",
+      "hint": "Use New-NetFirewallRule with -Direction Inbound, -Protocol TCP, -LocalPort 3389, and -Action Block.",
+      "hintPatterns": [
+        {
+          "pattern": "Set-NetFirewallRule",
+          "hint": "Set-NetFirewallRule modifies an existing rule. To create a new blocking rule, use New-NetFirewallRule with -Action Block."
+        },
+        {
+          "pattern": "Remove-NetFirewallRule.*(RDP|3389)",
+          "hint": "Removing the existing Allow rule is one approach, but creating an explicit Block rule with New-NetFirewallRule is the correct compliance approach — it is auditable, named, and appears in rule reports."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "New-NetFirewallRule.*(Block RDP|3389.*Block|Block.*3389)",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "Name                  : {auto-generated-GUID}\nDisplayName           : Block RDP Inbound\nDescription           :\nDisplayGroup          :\nGroup                 :\nEnabled               : True\nProfile               : Any\nDirection             : Inbound\nAction                : Block\nEdgeTraversalPolicy   : Block\nLooseSourceMapping    : False\nLocalOnlyMapping      : False\nOwner                 :\nPrimaryStatus         : OK\nStatus                : The rule was parsed successfully from the store.",
+      "feedbackOnWrong": "Run: New-NetFirewallRule -DisplayName 'Block RDP Inbound' -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Block"
+    },
+    {
+      "id": "step-4",
+      "instruction": "List all TCP ports currently in LISTEN state, sorted by port number, with the owning process ID. Then resolve one of the PIDs to a process name.",
+      "hint": "Use Get-NetTCPConnection -State Listen piped to Select-Object and Sort-Object, then Get-Process -Id with a PID from the output.",
+      "hintPatterns": [
+        {
+          "pattern": "netstat",
+          "hint": "netstat -ano shows similar output but is not a PowerShell cmdlet. Use Get-NetTCPConnection -State Listen for a structured PS 5.1 approach that returns objects you can pipe and filter."
+        },
+        {
+          "pattern": "Get-NetTCPConnection\\s*$|Get-NetTCPConnection\\s+-State\\s+Established",
+          "hint": "Close — add -State Listen to filter for listening ports only, then pipe to Select-Object LocalAddress, LocalPort, OwningProcess | Sort-Object LocalPort."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-NetTCPConnection.*(Listen)|Get-Process.*-Id",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "LocalAddress  LocalPort  OwningProcess\n------------  ---------  -------------\n0.0.0.0       135        1024\n0.0.0.0       445        4\n0.0.0.0       3389       1856\n0.0.0.0       5985       4\n\nGet-Process -Id 1856\n\nHandles  NPM(K)    PM(K)      WS(K)     CPU(s)     Id  SI ProcessName\n-------  ------    -----      -----     ------     --  -- -----------\n    412      18    15640      22880       1.23   1856   1 svchost",
+      "feedbackOnWrong": "Run: Get-NetTCPConnection -State Listen | Select-Object LocalAddress, LocalPort, OwningProcess | Sort-Object LocalPort — then use Get-Process -Id <PID> to resolve the owning process name."
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "id": "network-hardening-scenario-01",
+  "moduleId": "network-hardening",
+  "title": "Unauthorized Access Point on the IT/OT Boundary",
+  "complianceControls": ["TSA-NetworkSeg", "NIST-SC-7"],
+  "narrative": "An automated port scan of the IT/OT boundary firewall for ExampleCorp's pipeline control network has flagged TCP port 3389 (RDP) open inbound. The scan ran at 02:15 UTC as part of the nightly compliance check. PIPELINE-DC01 and three OT workstations on the 10.0.0.0/24 segment are behind this boundary device.\n\nIn OT environments: an open inbound RDP port on a boundary firewall that faces the IT network is a critical risk — an attacker who pivots through it can directly reach historian servers and SCADA workstations on the 10.0.0.0/24 segment. Pipeline control system availability depends on this boundary being correctly enforced.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Discovery",
+      "isFinal": false,
+      "prompt": "Port 3389 inbound is open on the boundary firewall according to the overnight scan. What is your first action?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Block port 3389 immediately using New-NetFirewallRule without further investigation.",
+          "outcome": "Blocking immediately without investigation risks disrupting an authorized remote maintenance window already in progress — you could cut off an OT vendor or authorized admin mid-session. TSA network segmentation requirements require documented responses; taking containment before establishing whether this is authorized means your incident record will lack the investigation step. Investigate first.",
+          "correct": false,
+          "nextPhaseId": "phase-2"
+        },
+        {
+          "id": "opt-b",
+          "text": "Check the firewall change log and verify with the change manager whether an authorized change window is active for port 3389.",
+          "outcome": "Correct. Verifying authorization first establishes whether this is a legitimate maintenance window or an unauthorized change. If authorized, the port will close when the window ends and no further action is needed — you document the verification. If no change window is active, you have confirmed it is unauthorized and can proceed to containment with full documentation.",
+          "correct": true,
+          "nextPhaseId": "phase-2"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "type": "decision",
+      "title": "Containment",
+      "isFinal": true,
+      "prompt": "Investigation confirms no authorized change window is active. A rogue workstation connected to the OT VLAN opened the port 72 hours ago outside the change management process. What is the correct response?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Isolate the rogue workstation from the network, block port 3389 on the boundary firewall using New-NetFirewallRule, and notify TSA per the incident reporting requirements.",
+          "outcome": "Correct. Isolating the device stops further exposure. Blocking the port closes the access path on the boundary firewall. Notifying TSA is mandatory — the current TSA pipeline security directive requires prompt incident notification when a cybersecurity incident or unauthorized change is identified. Document the full timeline: when the port was opened, when it was discovered, and all actions taken.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Quietly close port 3389 using New-NetFirewallRule and log it in the internal change system without notifying TSA.",
+          "outcome": "Closing the port is correct, but not notifying TSA is a compliance violation. The current TSA pipeline security directive requires incident reporting for unauthorized changes to network access controls — handling it internally is not a compliant option when an unauthorized network change on a pipeline system is confirmed. Internal logging alone does not satisfy the TSA incident reporting mandate.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}
