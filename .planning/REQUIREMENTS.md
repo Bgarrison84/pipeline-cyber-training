@@ -61,17 +61,17 @@
 
 | REQ-ID | Phase | Status |
 |--------|-------|--------|
-| CONT-05 | — | Pending roadmap |
-| CONT-06 | — | Pending roadmap |
-| CONT-07 | — | Pending roadmap |
-| FORK-01 | — | Pending roadmap |
-| FORK-02 | — | Pending roadmap |
-| FORK-03 | — | Pending roadmap |
-| SME-01 | — | Pending roadmap |
-| SME-02 | — | Pending roadmap |
-| SME-03 | — | Pending roadmap |
-| PWA-01 | — | Pending roadmap |
-| PWA-02 | — | Pending roadmap |
-| PWA-03 | — | Pending roadmap |
-| SYNC-01 | — | Pending roadmap |
-| SYNC-02 | — | Pending roadmap |
+| CONT-05 | Phase 9 | Pending |
+| CONT-06 | Phase 9 | Pending |
+| CONT-07 | Phase 9 | Pending |
+| FORK-01 | Phase 10 | Pending |
+| FORK-02 | Phase 10 | Pending |
+| FORK-03 | Phase 10 | Pending |
+| SME-01 | Phase 9 | Pending |
+| SME-02 | Phase 9 | Pending |
+| SME-03 | Phase 9 | Pending |
+| PWA-01 | Phase 11 | Pending |
+| PWA-02 | Phase 11 | Pending |
+| PWA-03 | Phase 11 | Pending |
+| SYNC-01 | Phase 12 | Pending |
+| SYNC-02 | Phase 12 | Pending |
