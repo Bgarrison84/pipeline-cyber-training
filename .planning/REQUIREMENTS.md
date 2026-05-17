@@ -4,8 +4,8 @@
 
 ### App Shell
 
-- [ ] **SHELL-01**: User can navigate between all 5 modules and their lessons via a persistent sidebar or top navigation menu
-- [ ] **SHELL-02**: Every module and lesson has a unique, linkable URL using hash-based routing (e.g. `#/module/logging-auditing/lesson/1`)
+- [x] **SHELL-01**: User can navigate between all 5 modules and their lessons via a persistent sidebar or top navigation menu
+- [x] **SHELL-02**: Every module and lesson has a unique, linkable URL using hash-based routing (e.g. `#/module/logging-auditing/lesson/1`)
 - [x] **SHELL-03**: Visual progress bars show completion state at both lesson and module level
 - [x] **SHELL-04**: Compliance index page maps control IDs (TSA SD-02F, NIST SP 800-82 Rev 3) to every lesson and exercise that covers them
 
@@ -36,7 +36,7 @@
 - [x] **MOD-02**: Network Hardening — core lessons, at least one quiz, one terminal exercise, one scenario; covers firewall rules, network segmentation, port scanning via PS
 - [x] **MOD-03**: Account & Access Management — core lessons, at least one quiz, one terminal exercise, one scenario; covers AD, least privilege, service accounts, password policies
 - [x] **MOD-04**: Incident Response — core lessons, at least one quiz, one terminal exercise, one scenario; covers anomaly detection, system isolation, evidence collection via PS
-- [ ] **MOD-05**: Patch Management — three sub-areas all represented: Windows/IT patching via PS (WSUS, PSWindowsUpdate), OT/ICS patching workflow (air-gapped, vendor coordination, risk-based deferral), and compliance reporting (generating patch status evidence for audits)
+- [x] **MOD-05**: Patch Management — three sub-areas all represented: Windows/IT patching via PS (WSUS, PSWindowsUpdate), OT/ICS patching workflow (air-gapped, vendor coordination, risk-based deferral), and compliance reporting (generating patch status evidence for audits)
 
 ### Data Integrity & Compliance Accuracy
 

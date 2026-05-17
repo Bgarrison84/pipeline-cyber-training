@@ -17,7 +17,7 @@
 - [x] **Phase 5: Simulated PowerShell Terminal + Exercise View** - Whitelist-only PS terminal engine with multi-step exercise validation and hint system (completed 2026-05-15)
 - [x] **Phase 6: Scenario Engine + Compliance Index + Completion Summary** - Branching scenario exercises, compliance control index page, and printable training log (completed 2026-05-16)
 - [x] **Phase 7: Core Module Content (MOD-02, MOD-03, MOD-04)** - Network Hardening, Account & Access Management, and Incident Response modules fully populated with OT/IT distinctions (completed 2026-05-16)
-- [ ] **Phase 8: Patch Management Module (MOD-05)** - Full Patch Management module with separate IT and OT/ICS sub-sections, compliance reporting exercises
+- [x] **Phase 8: Patch Management Module (MOD-05)** - Full Patch Management module with separate IT and OT/ICS sub-sections, compliance reporting exercises (completed 2026-05-17)
 
 ---
 
@@ -243,7 +243,7 @@ Cross-cutting constraints:
 | 5. Simulated PowerShell Terminal + Exercise View | 4/4 | ✓ Complete | 2026-05-15 |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 4/4 | ✓ Complete | 2026-05-16 |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 4/4 | ✓ Complete | 2026-05-16 |
-| 8. Patch Management Module (MOD-05) | 0/4 | In progress | - |
+| 8. Patch Management Module (MOD-05) | 4/4 | ✓ Complete | 2026-05-17 |
 
 ---
 

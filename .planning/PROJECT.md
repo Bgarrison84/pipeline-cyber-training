@@ -20,16 +20,17 @@ An IT/OT admin who completes a module should be able to perform the covered comp
 - [x] **DATA-02** (Phase 7): NERC CIP framed as reference benchmark with verbatim disclaimer in all 6 new NERC-referencing lessons — validated 2026-05-16
 - [x] **DATA-03** (Phase 7): OT callout blocks present in all 9 new lessons (one per lesson); explicit OT context throughout — validated 2026-05-16
 
-### Active
+### Active → Validated in Phase 8
 
-- [ ] Five learning modules: Logging & Auditing, Network Hardening, Account & Access Management, Incident Response, Patch Management
-- [ ] Each module contains: guided lessons, knowledge-check quizzes, simulated PS terminal exercises, scenario-based exercises, and reference examples
-- [ ] Simulated PowerShell terminal that validates commands and gives feedback (no real execution)
-- [ ] Compliance tagging: lessons and exercises map to specific TSA, NERC CIP, and NIST controls
-- [ ] Progress tracking saved to localStorage (no login required)
-- [ ] Patch management module covers Windows/IT patching, OT/ICS patching in restricted environments, and compliance reporting
-- [ ] Content is accurate to 2024+ compliance requirements (TSA SD-02C series, NERC CIP-005/007/010, NIST CSF/SP 800-82)
-- [ ] Public site, designed to generalize to an internal company deployment later
+- [x] **MOD-05** (Phase 8): Patch Management module complete — 3 lessons (WSUS/IT patching, OT air-gapped patching, compliance policy), 3-question quiz spanning all sub-areas, 4-step compliance reporting exercise (Get-Hotfix → Export-Csv → Measure-Object), 3 scenarios (CVE vs. OEM qualification, maintenance window pressure, TSA audit gaps) — validated in browser 2026-05-17
+- [x] **Five learning modules** (Phase 8): All 5 modules present and fully populated — Logging & Auditing, Network Hardening, Account & Access Management, Incident Response, Patch Management
+- [x] **26/26 requirements shipped** (Phase 8): v1 milestone complete as of 2026-05-17
+
+## Current State
+
+Phase 8 complete — v1 milestone shipped. All 5 modules live on GitHub Pages with guided lessons, quizzes, terminal exercises, and branching scenarios. 26/26 requirements met. 30/30 plans executed across 8 phases.
+
+**v1 milestone complete:** 2026-05-17
 
 ### Out of Scope
 

@@ -26,7 +26,7 @@ progress:
 
 **Phase:** 8 — Patch Management Module (MOD-05)
 **Plan:** 4 plans ready (08-01 through 08-04)
-**Status:** Verifying
+**Status:** Complete
 **Blocker:** None
 
 ```
@@ -48,15 +48,15 @@ Progress: [✓1][✓2][✓3][✓4][✓5][✓6][✓7][ 8 ]
 | 5 | Simulated PowerShell Terminal + Exercise View | ✓ Complete (4 plans — all TERM-01–04 met, human verify approved 2026-05-15) |
 | 6 | Scenario Engine + Compliance Index + Completion Summary | ✓ Complete (4 plans — human verify approved 2026-05-16) |
 | 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | ✓ Complete (4 plans — human verify approved 2026-05-16) |
-| 8 | Patch Management Module (MOD-05) | Not started |
+| 8 | Patch Management Module (MOD-05) | ✓ Complete (4 plans — human verify approved 2026-05-17) |
 
 ---
 
 ## Performance Metrics
 
-**Phases complete:** 7/8
-**Plans complete:** 25/30 (07-04 complete — Phase 7 done)
-**Requirements shipped:** 25/26 (all except MOD-05)
+**Phases complete:** 8/8
+**Plans complete:** 30/30 (08-04 complete — Phase 8 done)
+**Requirements shipped:** 26/26 (all requirements shipped — v1 milestone complete)
 **Phase 7 summary:** All 4 plans complete — 18 content files (MOD-02 Network Hardening, MOD-03 Account & Access, MOD-04 Incident Response), modules-config.js wired with 3-lesson arrays, compliance-index.json expanded to 11 controls (9 new); sidebar <a> tag fix deployed; 167/167 tests GREEN; MOD-02/03/04, DATA-02, DATA-03 shipped
 
 ---
@@ -108,9 +108,8 @@ None currently.
 
 ## Session Continuity
 
-**Last updated:** 2026-05-17 — Phase 8 planned (4 plans, 3 waves: lessons → quiz+exercise+scenarios → config integration)
-**Next action:** Execute Phase 8 — `/gsd-execute-phase 8`
-**Resume file:** `.planning/phases/08-patch-management-module-mod-05/`
+**Last updated:** 2026-05-17 — Phase 8 complete (MOD-05 Patch Management shipped — all 26/26 requirements met)
+**Next action:** v1 milestone complete — consider `/gsd-complete-milestone` to archive and tag v1.0
 
 ---
 
