@@ -38,8 +38,17 @@ To enumerate all inbound allow rules — the entries that require documented jus
 
 ```powershell
 # TSA-NetworkSeg: Enumerate all inbound ALLOW rules to find exceptions requiring justification
-# Each Allow entry represents an open inbound path that must be documented
-Get-NetFirewallRule -Direction Inbound -Action Allow | Select-Object DisplayName, LocalPort, Profile, Enabled
+# LocalPort lives on the NetFirewallPortFilter object, not the rule object — join them via ForEach-Object
+Get-NetFirewallRule -Direction Inbound -Action Allow |
+    ForEach-Object {
+        $filter = $_ | Get-NetFirewallPortFilter
+        [PSCustomObject]@{
+            DisplayName = $_.DisplayName
+            LocalPort   = $filter.LocalPort
+            Profile     = $_.Profile
+            Enabled     = $_.Enabled
+        }
+    }
 ```
 
 Review the output for rules that are enabled and active on the Domain or Private profile. Rules with `LocalPort: Any` are particularly high-risk — they allow connections to all ports from any source on the matched profile. Every entry should map to a documented business requirement.

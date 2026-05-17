@@ -13,11 +13,20 @@ Auditing the current inbound firewall rule set on PIPELINE-DC01 is the starting 
 
 ```powershell
 # NIST SC-7: Audit active inbound firewall rules on PIPELINE-DC01
-# Direction Inbound + Enabled True filters to the rules that accept incoming traffic
-Get-NetFirewallRule -Enabled True | Where-Object {$_.Direction -eq 'Inbound'} | Select-Object DisplayName, LocalPort, Action
+# LocalPort is NOT a property of NetFirewallRule objects — it lives on the associated
+# NetFirewallPortFilter object. Join both objects to see DisplayName, LocalPort, and Action together.
+Get-NetFirewallRule -Enabled True | Where-Object {$_.Direction -eq 'Inbound'} |
+    ForEach-Object {
+        $filter = $_ | Get-NetFirewallPortFilter
+        [PSCustomObject]@{
+            DisplayName = $_.DisplayName
+            LocalPort   = $filter.LocalPort
+            Action      = $_.Action
+        }
+    }
 ```
 
-Review the `Action` column: every entry showing `Allow` represents an open door into this host. The `LocalPort` column identifies which port is exposed. Any port not required by a documented business need should be blocked.
+Review the `Action` column: every entry showing `Allow` represents an open door into this host. The `LocalPort` column identifies which port is exposed — note that `LocalPort` comes from the associated `NetFirewallPortFilter` object, not from the rule object itself, which is why the `ForEach-Object` join with `Get-NetFirewallPortFilter` is required. Any port not required by a documented business need should be blocked.
 
 ## Testing Connectivity to Expected Hosts
 

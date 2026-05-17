@@ -28,7 +28,7 @@
         }
       ],
       "successOutput": "DisplayName                    LocalPort  Action\n-----------                    ---------  ------\nAllow WinRM                    5985       Allow\nAllow SMB                      445        Allow\nAllow RDP Inbound              3389       Allow\nAllow ICMP Echo                *          Allow",
-      "feedbackOnWrong": "Run: Get-NetFirewallRule -Enabled True | Where-Object {$_.Direction -eq 'Inbound'} | Select-Object DisplayName, LocalPort, Action"
+      "feedbackOnWrong": "LocalPort is not a direct property on NetFirewallRule objects — use: Get-NetFirewallRule -Enabled True | Where-Object {$_.Direction -eq 'Inbound'} | ForEach-Object { $filter = $_ | Get-NetFirewallPortFilter; [PSCustomObject]@{ DisplayName = $_.DisplayName; LocalPort = $filter.LocalPort; Action = $_.Action } }"
     },
     {
       "id": "step-2",
