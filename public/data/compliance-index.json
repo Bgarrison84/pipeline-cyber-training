@@ -259,6 +259,108 @@
           "title": "Enable Script Block Logging"
         }
       ]
+    },
+    {
+      "id": "TSA-PatchMgmt",
+      "label": "TSA SD-02F — Patch Management",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "wsus-patching",
+          "title": "Windows Update and WSUS"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "ot-patching",
+          "title": "OT/ICS Patching in Air-Gapped Environments"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "patch-policy",
+          "title": "Patch Management Policy and Compliance Documentation"
+        },
+        {
+          "type": "exercise",
+          "moduleId": "patch-management",
+          "contentId": "01",
+          "title": "Patch Compliance Reporting"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "patch-management",
+          "contentId": "01",
+          "title": "Critical CVE vs. OT Vendor Qualification Window"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "patch-management",
+          "contentId": "02",
+          "title": "Maintenance Window vs. Ops Manager Pressure"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "patch-management",
+          "contentId": "03",
+          "title": "TSA Audit: Missing Compensating Controls Documentation"
+        }
+      ]
+    },
+    {
+      "id": "NIST-SI-2",
+      "label": "NIST SP 800-82 Rev 3 — SI-2: Flaw Remediation",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "wsus-patching",
+          "title": "Windows Update and WSUS"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "ot-patching",
+          "title": "OT/ICS Patching in Air-Gapped Environments"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "patch-policy",
+          "title": "Patch Management Policy and Compliance Documentation"
+        },
+        {
+          "type": "exercise",
+          "moduleId": "patch-management",
+          "contentId": "01",
+          "title": "Patch Compliance Reporting"
+        }
+      ]
+    },
+    {
+      "id": "NIST-MA-2",
+      "label": "NIST SP 800-82 Rev 3 — MA-2: Controlled Maintenance",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "ot-patching",
+          "title": "OT/ICS Patching in Air-Gapped Environments"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "patch-management",
+          "contentId": "patch-policy",
+          "title": "Patch Management Policy and Compliance Documentation"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "patch-management",
+          "contentId": "02",
+          "title": "Maintenance Window vs. Ops Manager Pressure"
+        }
+      ]
     }
   ]
 }
