@@ -1,0 +1,114 @@
+{
+  "id": "patch-management-quiz-01",
+  "moduleId": "patch-management",
+  "title": "Patch Management Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell cmdlet retrieves a list of all installed Windows patches (hotfixes) on a local system, including installation dates?",
+      "complianceControls": [
+        "NIST-SI-2"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-WindowsUpdate",
+          "correct": false,
+          "feedback": "Get-WindowsUpdate is part of the PSWindowsUpdate module which is not installed by default in PS 5.1. Use Get-Hotfix for installed patch inventory on any standard Windows system."
+        },
+        {
+          "id": "b",
+          "text": "Get-Hotfix",
+          "correct": true,
+          "feedback": "Correct. Get-Hotfix returns all installed QFE (Quick-Fix Engineering) patches from the local WMI store. Pipe to Select-Object HotFixID, Description, InstalledOn and Sort-Object InstalledOn for an audit-ready inventory. This is the PS 5.1 built-in approach requiring no additional modules."
+        },
+        {
+          "id": "c",
+          "text": "Get-WUHistory",
+          "correct": false,
+          "feedback": "Get-WUHistory is part of the PSWindowsUpdate module and is not available by default in PS 5.1. Get-Hotfix is the built-in cmdlet for querying the installed patch inventory."
+        },
+        {
+          "id": "d",
+          "text": "Get-WinEvent -LogName System",
+          "correct": false,
+          "feedback": "Get-WinEvent queries the event log. While patch-related events appear in the System log, it does not return a structured patch inventory list the way Get-Hotfix does."
+        }
+      ],
+      "explanation": "Get-Hotfix is the PS 5.1 built-in cmdlet for querying installed Windows patches. It reads from WMI (Win32_QuickFixEngineering) and returns a structured list of HotFixID, Description, InstalledOn, and InstalledBy — all fields required for a compliance audit report."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "A critical CVE has been published for Windows Server 2019. Your PIPELINE-HIST01 historian runs Windows Server 2019. Microsoft's patch is available immediately. What is the correct OT patch management response?",
+      "complianceControls": [
+        "TSA-PatchMgmt",
+        "NIST-MA-2"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Apply the Microsoft patch immediately — a critical CVE requires same-day remediation on all systems",
+          "correct": false,
+          "feedback": "Applying an unapproved patch to an OT historian without OEM vendor qualification risks corrupting the historian software or OPC server configuration. Same-day IT cadences do not apply to OT systems where unplanned changes can disrupt active pipeline operations."
+        },
+        {
+          "id": "b",
+          "text": "Contact the historian OEM vendor to request qualification status for the patch; document compensating controls (network isolation, enhanced monitoring) until the vendor qualifies the patch",
+          "correct": true,
+          "feedback": "Correct. OT systems require OEM vendor qualification before patching. The typical qualification period is 3-12 months. During the wait, the organization must document compensating controls — such as blocking all inbound connections to PIPELINE-HIST01 except required historian ports and enabling enhanced SIEM monitoring — and obtain supervisor sign-off. This approach satisfies TSA pipeline security directive OT patch management requirements."
+        },
+        {
+          "id": "c",
+          "text": "Wait for the next scheduled IT patch cycle (30 days) and apply it with standard IT change management",
+          "correct": false,
+          "feedback": "Standard IT change management does not satisfy OT patch requirements. OT systems require OEM qualification regardless of the IT patch cycle. Applying without OEM qualification after 30 days still violates the OT approval workflow required by TSA directives."
+        },
+        {
+          "id": "d",
+          "text": "Reimage PIPELINE-HIST01 to a clean baseline and restore from the most recent backup",
+          "correct": false,
+          "feedback": "Reimaging destroys the historian's running configuration and potentially its data archive. This is a last-resort recovery action, not a routine patch management response. The historian OEM vendor must qualify any software changes before they are applied."
+        }
+      ],
+      "explanation": "OT systems (historians, HMIs, PLCs) require OEM vendor qualification before any patch is applied. The typical qualification cycle is 3-12 months. During the wait, the organization must document compensating controls — network isolation, enhanced monitoring, or restricted access — with supervisor approval. This is required by the TSA patch management mandate for OT/ICS environments."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "A TSA auditor requests patch compliance evidence for your pipeline OT systems. Which combination of PowerShell commands generates the required audit artifact?",
+      "complianceControls": [
+        "TSA-PatchMgmt",
+        "NIST-SI-2"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-Process | Export-Csv 'C:\\Audit\\processes.csv'",
+          "correct": false,
+          "feedback": "Get-Process exports running processes, not installed patch inventory. This does not satisfy a patch compliance audit request. The auditor needs to see which hotfixes are installed, not which processes are running."
+        },
+        {
+          "id": "b",
+          "text": "Get-WinEvent -LogName System | Where-Object {$_.Id -eq 19} | Export-Csv",
+          "correct": false,
+          "feedback": "Event ID 19 (WindowsUpdateClient OperationalSuccess) shows update installation events but not the full patch inventory. Get-Hotfix is the authoritative inventory source for audit evidence because it returns structured patch records directly from WMI."
+        },
+        {
+          "id": "c",
+          "text": "Get-Hotfix | Export-Csv 'C:\\Audit\\patch-status.csv' -NoTypeInformation",
+          "correct": true,
+          "feedback": "Correct. Get-Hotfix returns the full installed patch inventory and Export-Csv writes it to a structured file the auditor can open in Excel or import into a compliance system. -NoTypeInformation removes the PS type header row that auditors find confusing. C:\\Audit\\ is the established audit evidence staging path."
+        },
+        {
+          "id": "d",
+          "text": "Invoke-WebRequest -Uri 'https://wsus.examplecorp.local/report'",
+          "correct": false,
+          "feedback": "Pulling a WSUS report via HTTP is not a standard PS command pattern available from the command line. Even if it were, OT systems in segmented environments (10.0.0.0/24) may have no network access to the WSUS server. The local Get-Hotfix approach works on any system regardless of connectivity."
+        }
+      ],
+      "explanation": "Get-Hotfix | Export-Csv is the standard PS 5.1 approach for generating patch compliance evidence. The -NoTypeInformation flag removes the PowerShell type header, producing a clean CSV suitable for auditor submission. After exporting, use Get-Content 'C:\\Audit\\patch-status.csv' | Measure-Object -Line to verify the file contains data rows."
+    }
+  ]
+}
