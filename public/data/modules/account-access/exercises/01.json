@@ -8,7 +8,7 @@
   "steps": [
     {
       "id": "step-1",
-      "instruction": "Enumerate all members of the Domain Admins group. List their Name and SamAccountName.",
+      "instruction": "Enumerate all members of the Domain Admins group. List their Name and SamAccountName. Review the output: which accounts would you expect to see, and which appear anomalous for a backup service account?",
       "hint": "Use Get-ADGroupMember with -Identity 'Domain Admins' and pipe to Select-Object.",
       "hintPatterns": [
         {
