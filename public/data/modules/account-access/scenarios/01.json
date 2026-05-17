@@ -1,0 +1,55 @@
+{
+  "id": "account-access-scenario-01",
+  "moduleId": "account-access",
+  "title": "Unauthorized Privilege Escalation on PIPELINE-DC01",
+  "complianceControls": ["TSA-AccessControl", "NIST-AC-2"],
+  "narrative": "During a quarterly Active Directory access review, an automated audit script flags an anomaly: the service account svc-pipeline-backup is listed as a member of Domain Admins. A review of the group membership change log shows the account was added three days ago. No approved change request exists for this modification. svc-pipeline-backup is the backup service account for PIPELINE-DC01 — it has no operational reason to be in Domain Admins.\n\nIn OT environments: a Domain Admin service account in an OT-connected environment has unrestricted access to every domain-joined system, including PIPELINE-DC01, historian servers, and potentially any OT workstations that trust the ExampleCorp domain. The three-day window means the account may have been used for lateral movement or data staging. All actions taken by svc-pipeline-backup during this window must be reviewed before remediation.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Detection",
+      "isFinal": false,
+      "prompt": "The audit reveals svc-pipeline-backup was added to Domain Admins three days ago with no approved change request. What is your first action?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Remove svc-pipeline-backup from Domain Admins immediately to stop any ongoing unauthorized access.",
+          "outcome": "Removing the account immediately stops the access path, but doing so before investigating destroys forensic value. You will not know which systems the account accessed during the three-day window, whether it was used for data exfiltration, or whether other accounts were similarly modified. The TSA access control mandate requires that incident response preserve evidence — immediate removal without investigation violates the investigation-first principle.",
+          "correct": false,
+          "nextPhaseId": "phase-2"
+        },
+        {
+          "id": "opt-b",
+          "text": "Investigate the origin of the change before removing — check the Security event log for Event ID 4728 (member added to security-enabled group) to determine who made the change and from which workstation.",
+          "outcome": "Correct. Investigating first (Event ID 4728 shows who added svc-pipeline-backup to Domain Admins, from which host, and at what time) establishes the scope of the incident and identifies whether this was an insider action or an attacker who compromised another privileged account. This information is critical for TSA incident notification and determines what other remediation steps are required.",
+          "correct": true,
+          "nextPhaseId": "phase-2"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "type": "decision",
+      "title": "Remediation",
+      "isFinal": true,
+      "prompt": "Investigation confirms the change was made by an insider without authorization. The account was used to access PIPELINE-DC01 file shares during the three-day window. What is the correct full remediation?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Remove svc-pipeline-backup from Domain Admins, force an immediate password reset for the account, preserve a copy of all Security event logs from the three-day window as evidence, and notify TSA per the incident reporting requirement.",
+          "outcome": "Correct. This is the complete remediation sequence. Removing from Domain Admins closes the access path. Password reset prevents further use of any cached credentials. Evidence preservation maintains chain of custody for any investigation or regulatory review. TSA notification is mandatory — the current TSA pipeline security directive requires prompt reporting of cybersecurity incidents, and an insider credential abuse affecting a pipeline OT environment qualifies.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Remove svc-pipeline-backup from Domain Admins and reset its password. Do not notify TSA because the incident was caused by an insider and is being handled by HR.",
+          "outcome": "Closing the access path and resetting the password are correct steps. However, not notifying TSA is a compliance violation. The current TSA pipeline security directive requires incident notification regardless of whether the source is an insider or an external attacker — 'HR is handling it' does not satisfy the TSA cybersecurity incident reporting requirement. The regulator must be notified even when the incident is under internal investigation.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}

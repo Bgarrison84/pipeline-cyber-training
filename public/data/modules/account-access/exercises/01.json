@@ -1,0 +1,106 @@
+{
+  "id": "account-access-ex-01",
+  "moduleId": "account-access",
+  "title": "AD Group Audit and Local Admin Review",
+  "description": "Use PowerShell to audit Domain Admins membership, identify service accounts by SPN, verify svc-historian's group memberships, and check local administrator group membership on PIPELINE-DC01.",
+  "complianceControls": ["TSA-AccessControl", "NIST-AC-2"],
+  "context": "You are logged into PIPELINE-DC01 as a domain administrator for ExampleCorp. A quarterly access review is underway. You need to verify Domain Admins group membership, identify service accounts, audit a specific service account, and check local administrator group membership.",
+  "steps": [
+    {
+      "id": "step-1",
+      "instruction": "Enumerate all members of the Domain Admins group. List their Name and SamAccountName.",
+      "hint": "Use Get-ADGroupMember with -Identity 'Domain Admins' and pipe to Select-Object.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-ADUser.*Domain Admins|Get-ADGroup.*Members",
+          "hint": "Close — use Get-ADGroupMember -Identity 'Domain Admins' to directly retrieve member objects rather than filtering Get-ADUser by group."
+        },
+        {
+          "pattern": "Get-LocalGroupMember.*Domain Admins",
+          "hint": "Get-LocalGroupMember retrieves local machine groups, not domain groups. Use Get-ADGroupMember for Active Directory groups."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-ADGroupMember.*Domain Admins",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "distinguishedName : CN=Administrator,CN=Users,DC=ExampleCorp,DC=local\nname              : Administrator\nobjectClass       : user\nobjectGUID        : {guid}\nSamAccountName    : Administrator\nSID               : S-1-5-21-...\n\ndistinguishedName : CN=SVC-Pipeline-Backup,CN=ServiceAccounts,DC=ExampleCorp,DC=local\nname              : SVC-Pipeline-Backup\nobjectClass       : user\nobjectGUID        : {guid}\nSamAccountName    : svc-pipeline-backup\nSID               : S-1-5-21-...",
+      "feedbackOnWrong": "Run: Get-ADGroupMember -Identity 'Domain Admins' | Select-Object Name, SamAccountName"
+    },
+    {
+      "id": "step-2",
+      "instruction": "Find all Active Directory user accounts that have a ServicePrincipalName registered. These are your service accounts. Show Name, Enabled status, and ServicePrincipalName.",
+      "hint": "Use Get-ADUser with a -Filter that checks ServicePrincipalName, and include -Properties ServicePrincipalName.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-ADServiceAccount",
+          "hint": "Get-ADServiceAccount returns Managed Service Accounts (MSAs), not regular service accounts with SPNs. Use Get-ADUser -Filter {ServicePrincipalName -like '*'} -Properties ServicePrincipalName."
+        },
+        {
+          "pattern": "Get-ADUser.*-Filter\\s+\\*",
+          "hint": "Close — add a filter: Get-ADUser -Filter {ServicePrincipalName -like '*'} to return only service accounts, and include -Properties ServicePrincipalName to see the registered SPNs."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-ADUser.*ServicePrincipalName",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "Name              : SVC-Historian\nEnabled           : True\nServicePrincipalName : {MSSQLSvc/PIPELINE-DC01:1433, historian/pipeline-dc01}\n\nName              : SVC-Pipeline-Backup\nEnabled           : True\nServicePrincipalName : {backup/pipeline-dc01}",
+      "feedbackOnWrong": "Run: Get-ADUser -Filter {ServicePrincipalName -like '*'} -Properties ServicePrincipalName | Select-Object Name, Enabled, ServicePrincipalName"
+    },
+    {
+      "id": "step-3",
+      "instruction": "Check which Active Directory groups svc-historian belongs to. Verify it is not in any privileged groups.",
+      "hint": "Use Get-ADPrincipalGroupMembership with -Identity svc-historian and pipe to Select-Object Name.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-ADGroupMember.*svc-historian",
+          "hint": "Get-ADGroupMember lists members OF a group. To list groups that svc-historian belongs to, use Get-ADPrincipalGroupMembership -Identity svc-historian."
+        },
+        {
+          "pattern": "Get-ADUser.*svc-historian.*MemberOf|Get-ADUser.*svc-historian.*-Properties",
+          "hint": "Close — Get-ADUser with -Properties MemberOf returns distinguished names. Use Get-ADPrincipalGroupMembership -Identity svc-historian | Select-Object Name for human-readable group names."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-ADPrincipalGroupMembership.*svc-historian|Get-ADPrincipalGroupMembership.*historian",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "distinguishedName : CN=Domain Users,CN=Users,DC=ExampleCorp,DC=local\nGroupCategory     : Security\nGroupScope        : Global\nname              : Domain Users\nobjectClass       : group\nobjectGUID        : {guid}\nSamAccountName    : Domain Users\nSID               : S-1-5-21-...\n\ndistinguishedName : CN=Historian-DataReaders,OU=ServiceGroups,DC=ExampleCorp,DC=local\nGroupCategory     : Security\nGroupScope        : Global\nname              : Historian-DataReaders\nobjectClass       : group\nobjectGUID        : {guid}\nSamAccountName    : Historian-DataReaders\nSID               : S-1-5-21-...",
+      "feedbackOnWrong": "Run: Get-ADPrincipalGroupMembership -Identity svc-historian | Select-Object Name"
+    },
+    {
+      "id": "step-4",
+      "instruction": "Check the local Administrators group on this machine. Identify who has local admin rights.",
+      "hint": "Use Get-LocalGroupMember with -Group 'Administrators'.",
+      "hintPatterns": [
+        {
+          "pattern": "net localgroup administrators",
+          "hint": "net localgroup works but is not a PowerShell cmdlet. Use Get-LocalGroupMember -Group 'Administrators' for structured PS 5.1 output."
+        },
+        {
+          "pattern": "Get-ADGroupMember.*Administrators|Get-ADGroupMember.*Local",
+          "hint": "Get-ADGroupMember queries domain groups. For local machine groups like the local Administrators group, use Get-LocalGroupMember -Group 'Administrators'."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-LocalGroupMember.*Administrators",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "ObjectClass Name                            PrincipalSource\n----------- ----                            ---------------\nUser        PIPELINE-DC01\\Administrator     Local\nGroup       EXAMPLECORP\\Domain Admins        ActiveDirectory\nUser        EXAMPLECORP\\svc-pipeline-backup  ActiveDirectory",
+      "feedbackOnWrong": "Run: Get-LocalGroupMember -Group 'Administrators'"
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "id": "account-access-quiz-01",
+  "moduleId": "account-access",
+  "title": "Account & Access Management Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell cmdlet retrieves the current members of the Domain Admins group in Active Directory?",
+      "complianceControls": [
+        "NIST-AC-2"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-ADUser -Filter * | Where-Object {$_.Groups -contains 'Domain Admins'}",
+          "correct": false,
+          "feedback": "Get-ADUser does not have a -Groups filter property and this syntax will not return group membership correctly. Use Get-ADGroupMember targeting the group directly."
+        },
+        {
+          "id": "b",
+          "text": "Get-LocalGroupMember -Group 'Domain Admins'",
+          "correct": false,
+          "feedback": "Get-LocalGroupMember retrieves members of LOCAL groups on the current machine, not domain groups. Domain Admins is a domain group requiring Get-ADGroupMember."
+        },
+        {
+          "id": "c",
+          "text": "Get-ADGroupMember -Identity 'Domain Admins'",
+          "correct": true,
+          "feedback": "Correct. Get-ADGroupMember -Identity 'Domain Admins' directly retrieves all member objects of the specified AD group. Pipe to Select-Object Name, SamAccountName, Enabled for a compliance-friendly output."
+        },
+        {
+          "id": "d",
+          "text": "Get-ADGroup -Identity 'Domain Admins' -Properties Members",
+          "correct": false,
+          "feedback": "Get-ADGroup with -Properties Members returns a list of distinguished names (DNs), not the user objects with Name and Enabled status needed for an access review."
+        }
+      ],
+      "explanation": "Get-ADGroupMember -Identity 'Domain Admins' returns the member objects (users, groups, computers) with their name and account type. Pipe to Select-Object to control output fields. This is the correct PS 5.1 approach for NIST AC-2 account management reviews."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "During a quarterly access review, you find svc-historian in the Domain Admins group. What is the correct action?",
+      "complianceControls": [
+        "NIST-AC-6"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Leave it — historian service accounts require Domain Admin rights to write data.",
+          "correct": false,
+          "feedback": "Historian service accounts do not require Domain Admin rights. They require permissions on the specific shares and databases they write to. Domain Admin is excessive and violates least privilege — NIST AC-6."
+        },
+        {
+          "id": "b",
+          "text": "Remove svc-historian from Domain Admins immediately without investigation.",
+          "correct": false,
+          "feedback": "Removing the account without investigation means you will not understand how it gained Domain Admin rights or whether other accounts are similarly compromised. Investigation must precede removal to establish the scope of the issue."
+        },
+        {
+          "id": "c",
+          "text": "Investigate how svc-historian gained Domain Admin membership, then remove it and restrict its permissions to only what is required for historian operation.",
+          "correct": true,
+          "feedback": "Correct. Investigation first establishes whether this is an isolated misconfiguration or part of a larger unauthorized change. Removal and restriction follow investigation. This sequence satisfies both NIST AC-6 least privilege requirements and the forensic preservation principle."
+        },
+        {
+          "id": "d",
+          "text": "Disable svc-historian immediately to prevent any further unauthorized access.",
+          "correct": false,
+          "feedback": "Disabling the historian service account will immediately stop historian data collection, potentially disrupting OT visibility. Investigate and remove from Domain Admins rather than disabling the account entirely."
+        }
+      ],
+      "explanation": "Least privilege (NIST AC-6) requires that svc-historian holds only the minimum permissions needed for historian operation — never Domain Admin. Correct response: investigate the escalation path, then remove from Domain Admins and scope permissions properly. Disabling the account is too disruptive; blind removal without investigation loses forensic context."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell cmdlet finds all accounts in Active Directory that have a ServicePrincipalName (SPN) — identifying service accounts?",
+      "complianceControls": [
+        "TSA-AccessControl",
+        "NIST-AC-2"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-ADServiceAccount -Filter *",
+          "correct": false,
+          "feedback": "Get-ADServiceAccount retrieves Managed Service Accounts (MSAs) and Group Managed Service Accounts (gMSAs), not regular user accounts that happen to have SPNs registered. Use Get-ADUser with an SPN filter for standard service accounts."
+        },
+        {
+          "id": "b",
+          "text": "Get-ADUser -Filter {ServicePrincipalName -like '*'} -Properties ServicePrincipalName",
+          "correct": true,
+          "feedback": "Correct. This filters user accounts that have any SPN registered. The -Properties ServicePrincipalName flag is required because SPN is not returned by default. Pipe to Select-Object Name, Enabled, ServicePrincipalName for a compliance-ready list."
+        },
+        {
+          "id": "c",
+          "text": "Get-Service | Where-Object {$_.StartType -eq 'Automatic'}",
+          "correct": false,
+          "feedback": "Get-Service retrieves Windows service configuration on the local machine. It does not query Active Directory for service account SPNs."
+        },
+        {
+          "id": "d",
+          "text": "Get-ADUser -Filter {Enabled -eq $true} -Properties *",
+          "correct": false,
+          "feedback": "Returning all properties for all enabled users is wasteful and does not filter for SPNs specifically. Use the ServicePrincipalName filter to target only service accounts."
+        }
+      ],
+      "explanation": "Get-ADUser -Filter {ServicePrincipalName -like '*'} -Properties ServicePrincipalName identifies all domain user accounts with registered Kerberos SPNs — these are your service accounts. This query supports NIST AC-2 account management by giving you a complete inventory of accounts that run services and may hold elevated permissions."
+    }
+  ]
+}
