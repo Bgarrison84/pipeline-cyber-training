@@ -215,10 +215,20 @@ Cross-cutting constraints:
   4. All three Patch Management sub-areas (Windows/IT patching, OT/ICS patching, compliance reporting) have at least one quiz question with per-answer explanatory feedback and one compliance control ID tag each
 **Plans:** 4 plans
 Plans:
-- [ ] 08-01-PLAN.md — Lesson files: wsus-patching (L1), ot-patching (L2), patch-policy (L3) (Wave 1)
-- [ ] 08-02-PLAN.md — Quiz (3 questions) + Exercise (4-step compliance reporting) (Wave 2, parallel with 08-03)
+**Wave 1**
+- [ ] 08-01-PLAN.md — 3 lesson Markdown files (wsus-patching, ot-patching, patch-policy) (Wave 1)
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 08-02-PLAN.md — Quiz (3 questions across all sub-areas) + Exercise (4-step compliance reporting) (Wave 2)
 - [ ] 08-03-PLAN.md — 3 scenario JSON files (01: Critical CVE, 02: Maintenance Window, 03: TSA Audit) (Wave 2, parallel with 08-02)
-- [ ] 08-04-PLAN.md — Config integration: modules-config.js + compliance-index.json (Wave 3)
+**Wave 3** *(blocked on Wave 2 completion)*
+- [ ] 08-04-PLAN.md — Config integration: modules-config.js 3-lesson update + 3 new compliance controls (Wave 3)
+
+Cross-cutting constraints:
+- OT callout `> [!OT]` required in every lesson (DATA-03)
+- NERC CIP verbatim disclaimer when CIP mentioned (DATA-02)
+- scenarioId/exerciseId/quizId in modules-config.js only — never in .md frontmatter
+- No TSA version strings hardcoded in lesson prose — reference compliance-refs.json (DATA-01)
+- All identifiers generic: PIPELINE-HIST01, PIPELINE-DC01, 10.0.0.0/24, ExampleCorp
 
 ---
 
