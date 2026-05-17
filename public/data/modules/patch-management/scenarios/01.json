@@ -1,0 +1,55 @@
+{
+  "id": "patch-management-scenario-01",
+  "moduleId": "patch-management",
+  "title": "Critical CVE vs. OT Vendor Qualification Window",
+  "complianceControls": ["TSA-PatchMgmt", "NIST-SI-2"],
+  "narrative": "A critical CVE targeting Windows Server 2019 has been published. PIPELINE-HIST01 — the pipeline data historian running Windows Server 2019 — is confirmed affected by the CVE. Microsoft's patch is available immediately in the Windows Update catalog. The OEM vendor for the historian software has not yet tested or qualified this patch; their qualification process typically takes 3–6 months. Pipeline operations are currently active with no scheduled maintenance window for 6 weeks.\n\nIn OT environments: a Windows Server patch that is unqualified by the OEM can cause the historian's OPC server or data acquisition service to crash or corrupt data. During active pipeline operations, a historian outage means operators lose real-time process data visibility — a safety-impacting event that may require a manual operational response. The risk of an unqualified patch during operations outweighs the risk of operating with a compensating control while awaiting OEM qualification.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Discovery",
+      "isFinal": false,
+      "prompt": "A critical CVE targeting Windows Server 2019 is confirmed to affect PIPELINE-HIST01. Microsoft's patch is available immediately. The historian OEM has not yet qualified this patch. What is the correct first response?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Apply the Microsoft patch to PIPELINE-HIST01 immediately — the CVE severity justifies bypassing OEM qualification.",
+          "outcome": "Applying an unqualified patch to PIPELINE-HIST01 during active operations risks crashing the OPC server or data acquisition service. If historian data collection stops, operators lose visibility into real-time process measurements — potentially a safety event requiring manual operational response. The TSA patch management mandate for OT systems requires OEM qualification before patching; CVE severity does not override this requirement for active OT systems. Document the CVE and open a vendor qualification request immediately.",
+          "correct": false,
+          "nextPhaseId": "phase-2"
+        },
+        {
+          "id": "opt-b",
+          "text": "Implement compensating controls (network isolation for PIPELINE-HIST01, enhanced monitoring on any new connections) and contact the OEM vendor to request patch qualification status.",
+          "outcome": "Correct. For OT systems, compensating controls plus a vendor qualification request is the required response when a patch is not yet OEM-qualified. Network isolation — blocking all inbound connections to PIPELINE-HIST01 except required historian polling ports — reduces exposure to the CVE while the qualification process runs. Document the compensating controls with: the CVE ID, the vulnerability it mitigates, the date implemented, your name as approver, and the review interval. This documentation is what a TSA auditor will request.",
+          "correct": true,
+          "nextPhaseId": "phase-2"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "type": "decision",
+      "title": "Aftermath",
+      "isFinal": true,
+      "prompt": "Three days later, an investigation reveals that IT's WSUS server auto-pushed the patch to an OT workstation connected to the SCADA system — outside any change window — because the OT workstation was inadvertently in the IT WSUS target group. The patch caused a PLC polling service crash on the workstation.",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Quietly fix the OT workstation, roll back the patch, and log the incident in the internal IT ticketing system only.",
+          "outcome": "This response has two critical failures: first, quietly fixing the workstation without TSA notification violates the current TSA pipeline security directive — unauthorized changes that affect OT operations trigger mandatory incident reporting; second, the root cause (OT workstation in the wrong WSUS target group) remains unaddressed, making another auto-push incident certain. TSA auditors reviewing the ticketing record will find a known incident with no notification and no root cause remediation — a compounding finding.",
+          "correct": false,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Notify TSA per the incident reporting requirements, document the incident and root cause, and implement WSUS segmentation to move all OT workstations to a dedicated OT WSUS target group with manual approval only.",
+          "outcome": "Correct. TSA notification is mandatory for unauthorized changes that affect OT operations. Documenting the root cause — IT WSUS targeting includes OT workstations — is required for the incident record. Implementing WSUS segmentation (dedicated OT group, manual approval, no auto-deployment to the 10.0.0.0/24 segment) is the architectural fix that prevents recurrence. This response satisfies both the immediate TSA reporting requirement and the longer-term risk reduction mandate.",
+          "correct": true,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}
