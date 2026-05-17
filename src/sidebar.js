@@ -1,4 +1,4 @@
-// src/sidebar.js
+﻿// src/sidebar.js
 import { MODULES } from './modules-config.js';
 import { esc } from './utils/escape.js';
 import { checkLessonAvailability } from './content-loader.js';
@@ -26,11 +26,11 @@ export async function initSidebar({ onImportSuccess } = {}) {
     <div class="sidebar-module" data-module-id="${esc(mod.id)}">
       <a href="#/module/${esc(mod.id)}"
          aria-label="${esc(mod.title)}"
-         style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-primary); text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: border-color 150ms ease, background 150ms ease;"
+         style="display: flex; align-items: center; gap: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); color: var(--color-text-primary); text-decoration: none; cursor: pointer; border-left: 3px solid transparent; transition: border-color 150ms ease, background 150ms ease;">
         <i data-lucide="${esc(mod.icon.toLowerCase())}" style="width:20px;height:20px;flex-shrink:0;"></i>
         <span class="sidebar-label" style="font-size: var(--text-body); font-weight: 400; white-space: nowrap; overflow: hidden;">${esc(mod.title)}</span>
       </a>
-      <div class="sidebar-lessons" style="padding-left: calc(20px + var(--spacing-sm) + var(--spacing-md));">
+      <div class="sidebar-lessons" style="padding-left: calc(20px + var(--spacing-sm) + var(--spacing-md)); max-height: 0; overflow: hidden; transition: max-height 200ms ease;">
         ${mod.lessons.map(lesson => {
           const key = mod.id + '/' + lesson.id;
           if (available.has(key)) {
