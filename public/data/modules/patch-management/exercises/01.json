@@ -1,0 +1,122 @@
+{
+  "id": "patch-management-ex-01",
+  "moduleId": "patch-management",
+  "title": "Patch Compliance Reporting",
+  "description": "Use PowerShell to generate patch compliance evidence for an OT audit: inventory installed patches, identify overdue updates, export the full inventory as a CSV artifact, and verify the artifact was created.",
+  "complianceControls": ["TSA-PatchMgmt", "NIST-SI-2"],
+  "context": "You are logged into PIPELINE-DC01 as a domain administrator for ExampleCorp. A TSA audit is scheduled in 48 hours. You need to generate and verify a patch compliance report covering all installed patches on this system, with particular attention to any patches older than 90 days that may require documented compensating controls.",
+  "steps": [
+    {
+      "id": "step-1",
+      "instruction": "Inventory all installed patches on this system, sorted most recent first. Run the command that retrieves installed hotfixes showing HotFixID, Description, and InstalledOn.",
+      "hint": "Use Get-Hotfix piped to Select-Object with three properties, then Sort-Object on InstalledOn with -Descending.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-WindowsUpdate|Get-WUList|Get-WUHistory",
+          "hint": "Those cmdlets require the PSWindowsUpdate module. Use the built-in Get-Hotfix cmdlet for PS 5.1 patch inventory."
+        },
+        {
+          "pattern": "Get-Hotfix\\s*$",
+          "hint": "Close — pipe Get-Hotfix to Select-Object HotFixID, Description, InstalledOn then Sort-Object InstalledOn -Descending to get a sorted, audit-ready list."
+        },
+        {
+          "pattern": "Get-WmiObject\\s+Win32_QuickFixEngineering\\s*$",
+          "hint": "Get-WmiObject Win32_QuickFixEngineering also works for patch inventory, but this step uses Get-Hotfix for a cleaner output. Add the Select-Object and Sort-Object pipes."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-Hotfix.*Select-Object.*HotFixID|Get-Hotfix.*Select.*HotFixID",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "HotFixID   Description         InstalledOn\n--------   -----------         -----------\nKB5035849  Security Update     3/15/2024 12:00:00 AM\nKB5034441  Security Update     2/14/2024 12:00:00 AM\nKB5031364  Update              1/10/2024 12:00:00 AM\nKB5028997  Security Update     10/12/2023 12:00:00 AM\nKB5026368  Security Update     7/11/2023 12:00:00 AM",
+      "feedbackOnWrong": "Run: Get-Hotfix | Select-Object HotFixID, Description, InstalledOn | Sort-Object InstalledOn -Descending"
+    },
+    {
+      "id": "step-2",
+      "instruction": "Identify any patches installed more than 90 days ago. These are candidates that may require compensating controls documentation if they are unpatched security updates. Run the WMI command that filters by installation date.",
+      "hint": "Use Get-WmiObject Win32_QuickFixEngineering piped through two Where-Object filters: one for records that have an InstalledOn value, and one comparing [datetime]$_.InstalledOn to (Get-Date).AddDays(-90).",
+      "hintPatterns": [
+        {
+          "pattern": "Get-Hotfix.*Where.*AddDays|Get-Hotfix.*lt.*90",
+          "hint": "Get-Hotfix's InstalledOn property is a DateTime object that cannot be cast the same way. This step uses Get-WmiObject Win32_QuickFixEngineering whose InstalledOn is a string — cast it with [datetime]$_.InstalledOn before comparing."
+        },
+        {
+          "pattern": "Get-WmiObject.*Win32_QuickFixEngineering(?!.*Where)",
+          "hint": "Close — pipe to Where-Object {$_.InstalledOn} to exclude records without a date, then another Where-Object {[datetime]$_.InstalledOn -lt (Get-Date).AddDays(-90)} to filter to patches older than 90 days."
+        },
+        {
+          "pattern": "Get-WmiObject.*AddDays\\(-30\\)|Get-WmiObject.*AddDays\\(-60\\)",
+          "hint": "The threshold for this audit step is 90 days — use (Get-Date).AddDays(-90)."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-WmiObject\\s+Win32_QuickFixEngineering.*AddDays\\(-90\\)|Get-WmiObject.*QuickFixEngineering.*-90",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "Source        Description      HotFixID   InstalledBy      InstalledOn\n------        -----------      --------   -----------      -----------\nPIPELINE-DC01 Security Update  KB5028997  ExampleCorp\\Administrator  10/12/2023 12:00:00 AM\nPIPELINE-DC01 Security Update  KB5026368  ExampleCorp\\Administrator  7/11/2023 12:00:00 AM\n\nWARNING: KB5028997 and KB5026368 are security updates older than 90 days.\nIf these represent unpatched vulnerabilities, compensating controls documentation is required.",
+      "feedbackOnWrong": "Run: Get-WmiObject Win32_QuickFixEngineering | Where-Object {$_.InstalledOn} | Where-Object {[datetime]$_.InstalledOn -lt (Get-Date).AddDays(-90)}"
+    },
+    {
+      "id": "step-3",
+      "instruction": "Export the full installed patch inventory to a CSV file at C:\\Audit\\patch-status.csv. This is the audit evidence artifact you will submit to the TSA auditor.",
+      "hint": "Pipe Get-Hotfix to Export-Csv with the path 'C:\\Audit\\patch-status.csv' and use -NoTypeInformation to produce a clean CSV without the PowerShell type header row.",
+      "hintPatterns": [
+        {
+          "pattern": "Export-Csv.*patch.*\\.csv(?!.*NoTypeInformation)|Export-Csv.*patch-status(?!.*NoTypeInformation)",
+          "hint": "Close — add -NoTypeInformation to remove the PS type header row from the CSV. Auditors expect a clean header row starting with HotFixID, not a #TYPE line."
+        },
+        {
+          "pattern": "Out-File.*patch|Set-Content.*patch",
+          "hint": "Out-File and Set-Content write plain text. Use Export-Csv to produce a properly formatted comma-separated file with column headers that auditors can open in Excel."
+        },
+        {
+          "pattern": "Export-Csv.*Documents|Export-Csv.*Desktop",
+          "hint": "The audit evidence directory for this exercise is C:\\Audit\\ — use 'C:\\Audit\\patch-status.csv' as the path."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-Hotfix.*Export-Csv.*patch-status\\.csv|Export-Csv.*patch-status",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "Exporting patch inventory to C:\\Audit\\patch-status.csv...\nExport complete. File created: C:\\Audit\\patch-status.csv\n\nVerify with: Get-Content 'C:\\Audit\\patch-status.csv' | Measure-Object -Line",
+      "feedbackOnWrong": "Run: Get-Hotfix | Export-Csv 'C:\\Audit\\patch-status.csv' -NoTypeInformation"
+    },
+    {
+      "id": "step-4",
+      "instruction": "Verify the exported audit file was created and contains data. Check the line count of C:\\Audit\\patch-status.csv to confirm the file has more than just the header row.",
+      "hint": "Use Get-Content with the path to the CSV file piped to Measure-Object -Line. If the count is 1, only the header row was written — investigate Get-Hotfix output.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-Item.*patch-status|Test-Path.*patch-status",
+          "hint": "Close — Test-Path confirms the file exists but not that it has content. Use Get-Content 'C:\\Audit\\patch-status.csv' | Measure-Object -Line to verify the row count."
+        },
+        {
+          "pattern": "Measure-Object(?!.*-Line)|Measure-Object\\s+-Word|-Character",
+          "hint": "Use -Line to count rows in the CSV file — that is the audit check. Measure-Object -Word or -Character would not give a meaningful row count."
+        },
+        {
+          "pattern": "Import-Csv.*patch-status",
+          "hint": "Import-Csv would work for verifying the file, but the auditor-friendly verification is Get-Content | Measure-Object -Line to show a line count — simpler to document."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-Content.*patch-status\\.csv.*Measure-Object|Measure-Object.*-Line.*patch|Get-Content.*Audit.*Measure",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "Lines Words Characters Property\n----- ----- ---------- --------\n    6                           \n\nAudit artifact verified: 6 lines (1 header + 5 patch records).\nFile C:\\Audit\\patch-status.csv is ready for auditor submission.",
+      "feedbackOnWrong": "Run: Get-Content 'C:\\Audit\\patch-status.csv' | Measure-Object -Line"
+    }
+  ]
+}
