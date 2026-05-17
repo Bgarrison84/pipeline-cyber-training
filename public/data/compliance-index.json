@@ -49,6 +49,216 @@
           "title": "Configuring Audit Policies via Group Policy"
         }
       ]
+    },
+    {
+      "id": "TSA-NetworkSeg",
+      "label": "TSA SD-02F — Network Segmentation and Access Control",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "network-hardening",
+          "contentId": "intro",
+          "title": "Network Hardening Overview"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "network-hardening",
+          "contentId": "ps-firewall",
+          "title": "Managing Firewall Rules with PowerShell"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "network-hardening",
+          "contentId": "firewall-policy",
+          "title": "Windows Firewall Policy for OT Networks"
+        },
+        {
+          "type": "exercise",
+          "moduleId": "network-hardening",
+          "contentId": "01",
+          "title": "Firewall Audit and Port Mapping"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "network-hardening",
+          "contentId": "01",
+          "title": "Unauthorized Access Point on the IT/OT Boundary"
+        }
+      ]
+    },
+    {
+      "id": "NIST-SC-7",
+      "label": "NIST SP 800-82 Rev 3 — SC-7: Boundary Protection",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "network-hardening",
+          "contentId": "intro",
+          "title": "Network Hardening Overview"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "network-hardening",
+          "contentId": "firewall-policy",
+          "title": "Windows Firewall Policy for OT Networks"
+        }
+      ]
+    },
+    {
+      "id": "NIST-SI-3",
+      "label": "NIST SP 800-82 Rev 3 — SI-3: Malicious Code Protection",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "network-hardening",
+          "contentId": "ps-firewall",
+          "title": "Managing Firewall Rules with PowerShell"
+        }
+      ]
+    },
+    {
+      "id": "TSA-AccessControl",
+      "label": "TSA SD-02F — Access Control Management",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "account-access",
+          "contentId": "intro",
+          "title": "Account and Access Control Overview"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "account-access",
+          "contentId": "ps-ad",
+          "title": "Active Directory Queries with PowerShell"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "account-access",
+          "contentId": "access-policy",
+          "title": "Least Privilege and Service Account Policy"
+        },
+        {
+          "type": "exercise",
+          "moduleId": "account-access",
+          "contentId": "01",
+          "title": "AD Group Audit and Local Admin Review"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "account-access",
+          "contentId": "01",
+          "title": "Unauthorized Privilege Escalation on PIPELINE-DC01"
+        }
+      ]
+    },
+    {
+      "id": "NIST-AC-2",
+      "label": "NIST SP 800-82 Rev 3 — AC-2: Account Management",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "account-access",
+          "contentId": "intro",
+          "title": "Account and Access Control Overview"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "account-access",
+          "contentId": "ps-ad",
+          "title": "Active Directory Queries with PowerShell"
+        }
+      ]
+    },
+    {
+      "id": "NIST-AC-6",
+      "label": "NIST SP 800-82 Rev 3 — AC-6: Least Privilege",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "account-access",
+          "contentId": "access-policy",
+          "title": "Least Privilege and Service Account Policy"
+        }
+      ]
+    },
+    {
+      "id": "TSA-IR",
+      "label": "TSA SD-02F — Cybersecurity Incident Response",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "incident-response",
+          "contentId": "intro",
+          "title": "Incident Response Overview"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "incident-response",
+          "contentId": "ps-ir",
+          "title": "Evidence Collection with PowerShell"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "incident-response",
+          "contentId": "ir-procedures",
+          "title": "Containment and Recovery Procedures"
+        },
+        {
+          "type": "exercise",
+          "moduleId": "incident-response",
+          "contentId": "01",
+          "title": "Evidence Collection and System Isolation"
+        },
+        {
+          "type": "scenario",
+          "moduleId": "incident-response",
+          "contentId": "01",
+          "title": "Ransomware Indicator on Pipeline DMZ Workstation"
+        }
+      ]
+    },
+    {
+      "id": "NIST-IR-4",
+      "label": "NIST SP 800-82 Rev 3 — IR-4: Incident Handling",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "incident-response",
+          "contentId": "intro",
+          "title": "Incident Response Overview"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "incident-response",
+          "contentId": "ir-procedures",
+          "title": "Containment and Recovery Procedures"
+        }
+      ]
+    },
+    {
+      "id": "NIST-AU-12",
+      "label": "NIST SP 800-82 Rev 3 — AU-12: Audit Record Generation",
+      "items": [
+        {
+          "type": "lesson",
+          "moduleId": "incident-response",
+          "contentId": "ps-ir",
+          "title": "Evidence Collection with PowerShell"
+        },
+        {
+          "type": "lesson",
+          "moduleId": "logging-auditing",
+          "contentId": "ps-logging",
+          "title": "Enabling PowerShell Script Block Logging"
+        },
+        {
+          "type": "exercise",
+          "moduleId": "logging-auditing",
+          "contentId": "01",
+          "title": "Enable Script Block Logging"
+        }
+      ]
     }
   ]
 }
