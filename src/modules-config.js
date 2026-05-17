@@ -8,7 +8,7 @@ export const MODULES = [
   {
     id: 'logging-auditing',
     title: 'Logging & Auditing',
-    icon: 'BookOpen',
+    icon: 'book-open',
     description: 'Configure Windows Event Logging and PowerShell script block logging to meet compliance requirements.',
     order: 1,
     estimatedMinutes: 45,
@@ -50,7 +50,7 @@ export const MODULES = [
   {
     id: 'incident-response',
     title: 'Incident Response',
-    icon: 'AlertTriangle',
+    icon: 'alert-triangle',
     description: 'Anomaly detection, system isolation, and evidence collection via PowerShell.',
     order: 4,
     estimatedMinutes: 40,
