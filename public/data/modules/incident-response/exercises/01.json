@@ -1,0 +1,106 @@
+{
+  "id": "incident-response-ex-01",
+  "moduleId": "incident-response",
+  "title": "Evidence Collection and System Isolation",
+  "description": "Use PowerShell to collect process, network connection, and Security event log evidence from PIPELINE-DC01, then isolate the system from the network after evidence collection is complete.",
+  "complianceControls": ["TSA-IR", "NIST-AU-12"],
+  "context": "You are logged into PIPELINE-DC01 as a domain administrator for ExampleCorp. The EDR has alerted to suspicious file activity on this workstation. You need to collect evidence (process state, network connections, logon events) before isolating the system. C:\\Evidence\\ already exists.",
+  "steps": [
+    {
+      "id": "step-1",
+      "instruction": "Capture the top 10 CPU-consuming processes as the first evidence snapshot. Show Name, Id, CPU, and Path for each.",
+      "hint": "Use Get-Process piped to Sort-Object CPU with -Descending, then Select-Object -First 10 with the four fields.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-Process\\s+-Name|Get-Process\\s+\\*",
+          "hint": "Close — use Get-Process without a name filter to get all processes, then pipe to Sort-Object CPU -Descending and Select-Object -First 10 Name, Id, CPU, Path."
+        },
+        {
+          "pattern": "tasklist|task\\s+list",
+          "hint": "tasklist shows processes but is not a PowerShell cmdlet. Use Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, Id, CPU, Path for structured PS 5.1 output."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-Process.*Sort-Object.*CPU|Get-Process.*cpu",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "Name                     Id       CPU Path\n----                     --       --- ----\ncrypto_worker.exe      4512    94.23 C:\\Users\\Public\\AppData\\Temp\\crypto_worker.exe\nCPUMiner.exe           3908    87.11 C:\\ProgramData\\svchost_upd\\CPUMiner.exe\nsvchost                1024    12.50 C:\\Windows\\System32\\svchost.exe\nCSRSS                   888     8.90 C:\\Windows\\System32\\csrss.exe\nexplorer               2340     3.20 C:\\Windows\\explorer.exe\ndwm                    1892     2.10 C:\\Windows\\System32\\dwm.exe\nSearchIndexer          2648     1.90 C:\\Windows\\System32\\SearchIndexer.exe\nspoolsv                1544     0.80 C:\\Windows\\System32\\spoolsv.exe\nRdpCoreTS              3120     0.50 C:\\Windows\\System32\\RdpCoreTS.dll\ntaskhostw              2144     0.30 C:\\Windows\\System32\\taskhostw.exe",
+      "feedbackOnWrong": "Run: Get-Process | Sort-Object CPU -Descending | Select-Object -First 10 Name, Id, CPU, Path"
+    },
+    {
+      "id": "step-2",
+      "instruction": "Capture all established TCP connections to remote addresses outside the 10.x.x.x range. Show LocalPort, RemoteAddress, RemotePort, and OwningProcess.",
+      "hint": "Use Get-NetTCPConnection -State Established piped to Where-Object filtering RemoteAddress not starting with '10.', then Select-Object the four fields.",
+      "hintPatterns": [
+        {
+          "pattern": "netstat",
+          "hint": "netstat -ano shows similar data but is not a PowerShell cmdlet. Use Get-NetTCPConnection -State Established | Where-Object {$_.RemoteAddress -notlike '10.*'} for PS 5.1 structured output."
+        },
+        {
+          "pattern": "Get-NetTCPConnection\\s+-State\\s+Listen|Get-NetTCPConnection\\s*$",
+          "hint": "Close — use -State Established (not Listen) to see active connections, and add Where-Object {$_.RemoteAddress -notlike '10.*'} to filter for external IPs only."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Get-NetTCPConnection.*Established.*notlike|Get-NetTCPConnection.*notlike.*Established|Get-NetTCPConnection.*10\\.\\*",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "LocalPort RemoteAddress    RemotePort OwningProcess\n--------- -------------    ---------- -------------\n    49232 203.0.113.47            443          4512\n    49288 198.51.100.22           8080         4512\n    49301 192.0.2.15              4444         3908",
+      "feedbackOnWrong": "Run: Get-NetTCPConnection -State Established | Where-Object {$_.RemoteAddress -notlike '10.*'} | Select-Object LocalPort, RemoteAddress, RemotePort, OwningProcess"
+    },
+    {
+      "id": "step-3",
+      "instruction": "Export the last 50 Security event log logon events (Event ID 4624) to a CSV file at C:\\Evidence\\logons.csv. Use -NoTypeInformation to omit the PS type header.",
+      "hint": "Use Get-WinEvent with -LogName Security and -MaxEvents 50, pipe to Where-Object filtering Id -eq 4624, pipe to Select-Object TimeCreated, Message, then Export-Csv with the path and -NoTypeInformation flag.",
+      "hintPatterns": [
+        {
+          "pattern": "Get-EventLog.*Security",
+          "hint": "Get-EventLog is deprecated in newer PS versions. Use Get-WinEvent -LogName Security -MaxEvents 50 | Where-Object {$_.Id -eq 4624} | Select-Object TimeCreated, Message | Export-Csv 'C:\\Evidence\\logons.csv' -NoTypeInformation"
+        },
+        {
+          "pattern": "Export-Csv(?!.*NoTypeInformation)|Out-File.*\\.csv",
+          "hint": "Close — add -NoTypeInformation flag to Export-Csv to omit the PS type header row from the CSV file, making it readable by non-PowerShell investigators."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Export-Csv.*Evidence.*logons|Get-WinEvent.*4624.*Export-Csv",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "\"TimeCreated\",\"Message\"\n\"05/16/2026 03:41:22\",\"An account was successfully logged on...\"\n\"05/16/2026 03:39:08\",\"An account was successfully logged on...\"\n\"05/16/2026 02:15:44\",\"An account was successfully logged on...\"\n\nFile written to C:\\Evidence\\logons.csv (3 records exported)",
+      "feedbackOnWrong": "Run: Get-WinEvent -LogName Security -MaxEvents 50 | Where-Object {$_.Id -eq 4624} | Select-Object TimeCreated, Message | Export-Csv 'C:\\Evidence\\logons.csv' -NoTypeInformation"
+    },
+    {
+      "id": "step-4",
+      "instruction": "Evidence collection is complete. Isolate this system by disabling the Ethernet network adapter. This severs the connection to prevent further spread. Confirm: this is run AFTER evidence collection.",
+      "hint": "Use Disable-NetAdapter with -Name 'Ethernet' and -Confirm:$false to skip the confirmation prompt.",
+      "hintPatterns": [
+        {
+          "pattern": "Disable-NetAdapter(?!.*-Confirm)|Disable-NetAdapter.*-Confirm:true",
+          "hint": "Add -Confirm:$false to suppress the interactive confirmation prompt: Disable-NetAdapter -Name 'Ethernet' -Confirm:$false"
+        },
+        {
+          "pattern": "netsh.*interface.*disable|ipconfig.*release",
+          "hint": "netsh and ipconfig can disable network interfaces but are not PowerShell cmdlets. Use Disable-NetAdapter -Name 'Ethernet' -Confirm:$false for the PS 5.1 approach."
+        }
+      ],
+      "expectedCommands": [
+        {
+          "pattern": "Disable-NetAdapter.*Ethernet|Disable-NetAdapter.*-Name",
+          "matchType": "regex",
+          "caseSensitive": false
+        }
+      ],
+      "successOutput": "WARNING: Disabling network adapter 'Ethernet' will disconnect this session if connected remotely.\n\nName     InterfaceDescription                    ifIndex Status\n----     --------------------                    ------- ------\nEthernet Intel(R) 82574L Gigabit Network Connection   4 Disabled",
+      "feedbackOnWrong": "Run: Disable-NetAdapter -Name 'Ethernet' -Confirm:$false — note: this disconnects the network adapter. In the simulator, it is safe to run; on a live system, ensure evidence collection is complete first."
+    }
+  ]
+}

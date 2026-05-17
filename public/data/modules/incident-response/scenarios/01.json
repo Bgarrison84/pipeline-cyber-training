@@ -1,0 +1,55 @@
+{
+  "id": "incident-response-scenario-01",
+  "moduleId": "incident-response",
+  "title": "Ransomware Indicator on Pipeline DMZ Workstation",
+  "complianceControls": ["TSA-IR", "NIST-IR-4"],
+  "narrative": "At 14:22 UTC, an EDR alert fires on a workstation in the ExampleCorp pipeline DMZ. The alert signature is 'Possible Ransomware: Unusual file encryption activity detected.' A secondary alert follows within 90 seconds: 'Lateral movement attempt detected — target: 10.0.0.0/24 historian VLAN.' PIPELINE-DC01 and the historian server are on the 10.0.0.0/24 segment. The DMZ workstation is a Windows engineering workstation used by a remote OT vendor for periodic system access.\n\nIn OT environments: the historian VLAN (10.0.0.0/24) contains real-time process data from SCADA and DCS systems. Ransomware that reaches the historian can encrypt time-series data and historian configuration, causing loss of operational visibility. Loss of historian data does not stop the pipeline, but it disables anomaly detection and compliance logging simultaneously. Pipeline safety instrumented systems (SIS) on the same segment face a higher risk: ransomware that reaches a SIS workstation can affect safety function availability.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Triage",
+      "isFinal": false,
+      "prompt": "The EDR shows file encryption activity on the DMZ workstation and lateral movement attempts toward the historian VLAN (10.0.0.0/24). What is your first action?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Immediately isolate the DMZ workstation from the network using Disable-NetAdapter to stop lateral movement toward the historian VLAN.",
+          "outcome": "Correct. In OT incident response, the threat of ransomware reaching the historian VLAN — and potentially the safety instrumented systems on 10.0.0.0/24 — outweighs the forensic loss from immediate isolation. You can collect evidence from the isolated workstation after containment. The correct OT IR priority: operational safety first, forensic completeness second when spread to safety-critical systems is the active threat.",
+          "correct": true,
+          "nextPhaseId": "phase-2"
+        },
+        {
+          "id": "opt-b",
+          "text": "Collect a complete forensic disk image of the workstation before taking any containment action to preserve maximum evidence.",
+          "outcome": "A full forensic disk image takes 30–90 minutes. During that time, active lateral movement toward the historian VLAN and SIS systems continues. In an IT-only environment, this might be acceptable. In a pipeline OT environment, allowing active ransomware to remain connected to the historian VLAN while you collect evidence is an unacceptable operational risk. Isolate first, then collect evidence from the isolated system.",
+          "correct": false,
+          "nextPhaseId": "phase-2"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "type": "decision",
+      "title": "Reporting",
+      "isFinal": true,
+      "prompt": "The workstation is isolated. Script block logging in PowerShell/Operational on the isolated host reveals an encoded PowerShell command was the initial attack vector — the attacker's script disabled Windows Defender before executing the ransomware payload. What is the correct next step?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Notify TSA within the required reporting timeframe with the known incident details, and preserve the isolated workstation as a forensic artifact without restoring or modifying it until the investigation concludes.",
+          "outcome": "Correct. The current TSA pipeline security directive requires prompt notification of cybersecurity incidents affecting pipeline systems. The notification must include: affected systems, detection time, the nature of the incident (ransomware with encoded PS vector), containment actions taken (network isolation), and operational impact. The isolated workstation must be preserved — restoring it before TSA notification and investigation completion destroys the forensic evidence of the encoded PS command vector.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Restore the workstation from the most recent backup immediately to minimize downtime, then submit an internal incident report to IT management.",
+          "outcome": "Restoring the workstation immediately destroys the forensic evidence — including the PowerShell script block logs that identified the attack vector. The current TSA pipeline security directive requires incident notification before remediation that would destroy evidence. An internal IT incident report does not satisfy the TSA reporting requirement. The correct sequence: Notify TSA first. Preserve the isolated system. Restore only after TSA notification has been made and the investigation allows.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}

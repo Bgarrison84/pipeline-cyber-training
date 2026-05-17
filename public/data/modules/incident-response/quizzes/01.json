@@ -1,0 +1,113 @@
+{
+  "id": "incident-response-quiz-01",
+  "moduleId": "incident-response",
+  "title": "Incident Response Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell command exports Security event log entries to a CSV file for chain-of-custody evidence?",
+      "complianceControls": [
+        "NIST-AU-12"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-EventLog -LogName Security | Out-File 'C:\\Evidence\\logons.txt'",
+          "correct": false,
+          "feedback": "Out-File creates a plain text file, not a structured CSV. Investigators cannot easily parse or import it. Use Export-Csv for chain-of-custody evidence that non-PowerShell investigators can open in Excel or a spreadsheet tool."
+        },
+        {
+          "id": "b",
+          "text": "Get-WinEvent -LogName Security -MaxEvents 50 | Where-Object {$_.Id -eq 4624} | Select-Object TimeCreated, Message | Export-Csv 'C:\\Evidence\\logons.csv' -NoTypeInformation",
+          "correct": true,
+          "feedback": "Correct. Get-WinEvent with Where-Object filters to only logon events (4624), Select-Object limits columns, Export-Csv creates a structured CSV, and -NoTypeInformation removes the PS type header that would confuse non-PowerShell investigators. This satisfies NIST AU-12 audit record generation in a portable, human-readable format."
+        },
+        {
+          "id": "c",
+          "text": "Copy-Item -Path 'C:\\Windows\\System32\\winevt\\Logs\\Security.evtx' -Destination 'C:\\Evidence\\'",
+          "correct": false,
+          "feedback": "Copying the raw .evtx binary file preserves the event log but requires Event Viewer or specialized forensic tools to read. Export-Csv is more accessible for investigators and produces a portable, human-readable format that satisfies NIST AU-12 without requiring additional software."
+        },
+        {
+          "id": "d",
+          "text": "wevtutil epl Security C:\\Evidence\\security.evtx",
+          "correct": false,
+          "feedback": "wevtutil epl exports the event log in binary .evtx format, not a portable CSV. It is useful for offline log analysis but does not produce the structured, human-readable CSV format required for chain-of-custody documentation accessible to non-PowerShell investigators."
+        }
+      ],
+      "explanation": "Get-WinEvent piped to Export-Csv with -NoTypeInformation produces a portable, human-readable evidence file. Filter to specific Event IDs (4624 for logons) and use Select-Object to include only the fields needed for the investigation. Hash the resulting CSV immediately with Get-FileHash for chain-of-custody integrity verification (NIST AU-12)."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "Your EDR alerts to possible ransomware file encryption on a DMZ workstation showing lateral movement signatures toward the historian VLAN. In an OT pipeline context, what is the highest-priority first action?",
+      "complianceControls": [
+        "TSA-IR",
+        "NIST-IR-4"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Collect a complete forensic image of the workstation disk before taking any other action.",
+          "correct": false,
+          "feedback": "Full disk imaging takes 30–90 minutes. In an OT context, that delay allows ransomware to reach and encrypt historian data or SCADA configuration files, potentially affecting pipeline operational safety. OT incident response prioritizes containment over complete forensic evidence when active lateral movement toward safety systems is the threat."
+        },
+        {
+          "id": "b",
+          "text": "Isolate the workstation immediately from the network to stop lateral movement toward OT systems.",
+          "correct": true,
+          "feedback": "Correct. In OT environments, the threat of ransomware reaching historian, SCADA, or safety instrumented systems outweighs the forensic loss from immediate isolation. Isolate first, then collect evidence from the isolated system. This is the OT IR principle: operational safety priority over forensic completeness when spread to safety systems is the active risk."
+        },
+        {
+          "id": "c",
+          "text": "Wait for the security team to assess the EDR alert before taking any action.",
+          "correct": false,
+          "feedback": "An EDR alert with confirmed lateral movement signatures toward OT systems is not a wait-and-see situation. In OT incident response, waiting for a formal assessment while ransomware propagates toward safety systems is unacceptable. The correct response is immediate isolation."
+        },
+        {
+          "id": "d",
+          "text": "Reset the workstation to factory settings and restore from backup immediately.",
+          "correct": false,
+          "feedback": "Restoring immediately destroys all forensic evidence and violates TSA incident notification requirements. The incident must be documented and TSA notified before any restoration that would destroy evidence. Isolate first, then collect evidence, then notify TSA, then restore."
+        }
+      ],
+      "explanation": "NIST IR-4 and TSA IR requirements both require documented incident response. In OT environments, the key distinguishing principle is that operational safety takes priority over forensic completeness when a threat shows lateral movement toward safety-critical OT systems. Isolate first, collect from the isolated host. The correct order for pipeline OT: Isolate → Collect → Contain → Notify → Recover."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "After isolating a ransomware-affected workstation, script block logging reveals an encoded PowerShell command was the initial vector. What is the TSA-required next step before restoring the system?",
+      "complianceControls": [
+        "TSA-IR"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Restore the workstation from the most recent backup and reconnect it to the network.",
+          "correct": false,
+          "feedback": "Restoring before notifying TSA destroys the forensic state of the isolated workstation. The current TSA pipeline security directive requires incident notification before any remediation that might destroy evidence. Notify TSA first, preserve the system, then restore only after notification has been made and the investigation allows."
+        },
+        {
+          "id": "b",
+          "text": "Notify TSA within the required reporting timeframe with the known incident details, and preserve the isolated workstation as a forensic artifact until the investigation is complete.",
+          "correct": true,
+          "feedback": "Correct. The current TSA pipeline security directive requires prompt notification of cybersecurity incidents affecting pipeline systems. The notification must include the nature of the incident, affected systems, and containment actions taken. The isolated workstation must be preserved — not restored — until TSA notification has been made and the investigation allows."
+        },
+        {
+          "id": "c",
+          "text": "Run a malware scan on the isolated workstation and confirm it is clean before notifying TSA.",
+          "correct": false,
+          "feedback": "Running a malware scan modifies system state and may destroy forensic artifacts. Notification to TSA must occur based on the known incident facts, not contingent on completing internal cleanup. Notification first, then investigation — the scan can run after TSA has been notified."
+        },
+        {
+          "id": "d",
+          "text": "Submit an incident report internally to IT management only — TSA notification is not required for ransomware that did not affect pipeline operations.",
+          "correct": false,
+          "feedback": "The current TSA pipeline security directive requires notification regardless of whether the incident directly disrupted pipeline operations. A cybersecurity incident on a pipeline DMZ workstation with lateral movement toward OT systems meets the notification threshold. An internal IT report does not satisfy the TSA reporting requirement."
+        }
+      ],
+      "explanation": "The current TSA pipeline security directive imposes a mandatory incident notification requirement when a cybersecurity incident is confirmed on pipeline systems. Notification must occur within the required timeframe — not after internal cleanup is complete. Preserve the isolated workstation as forensic evidence. Notify TSA with: what happened, when, which systems were affected, containment actions taken, and operational impact on pipeline operations."
+    }
+  ]
+}
