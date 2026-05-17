@@ -1,0 +1,55 @@
+{
+  "id": "patch-management-scenario-03",
+  "moduleId": "patch-management",
+  "title": "TSA Audit: Missing Compensating Controls Documentation",
+  "complianceControls": ["TSA-PatchMgmt", "NIST-SI-2", "NIST-MA-2"],
+  "narrative": "A TSA auditor has arrived for a scheduled cybersecurity compliance review of ExampleCorp's pipeline operations. The auditor requests compensating controls documentation for three OT patches that were deferred beyond the standard 30-day IT patch window. Your team has the compensating controls documentation for two of the three deferred patches — the third patch was deferred 8 months ago and no compensating control document was ever created.\n\nIn OT environments: TSA auditors reviewing compensating controls documentation are specifically looking for three things — evidence the risk was assessed, evidence a compensating measure was implemented, and evidence the documentation was reviewed at defined intervals. A missing document is not a small administrative oversight — it is evidence that the organization may not have had a deliberate risk management process for that deferred patch. The absence of a compensating control document for a security patch affecting OT systems is typically treated as a significant finding.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Audit Request",
+      "isFinal": false,
+      "prompt": "The TSA auditor requests compensating controls documentation for 3 deferred OT patches. You have documentation for 2 of them. The third has no documentation. What do you tell the auditor?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Tell the auditor the documentation for the third patch is forthcoming and will be provided within the week.",
+          "outcome": "Telling a TSA auditor that documentation is 'forthcoming' for a patch deferred 8 months ago signals that the compensating controls process was not followed in real time — a TSA auditor interprets this as a systemic process failure, not a minor gap. Promising future documentation while the auditor is present does not satisfy the audit request; the auditor is reviewing historical compliance, not future intent. TSA may record this as a compliance gap finding and flag the organization for follow-up review.",
+          "correct": false,
+          "nextPhaseId": "phase-2"
+        },
+        {
+          "id": "opt-b",
+          "text": "Be transparent with the auditor: present the two documented patches' complete records, acknowledge that the third deferred patch has no compensating controls documentation, and commit to a specific remediation timeline with a corrective action plan.",
+          "outcome": "Correct. TSA auditors expect transparency. Presenting the two complete records demonstrates that the organization's compensating controls process works for most cases — the third is an identifiable exception. Acknowledging the gap and committing to a specific corrective action plan (within a defined number of days, with a named responsible person) shows organizational accountability. TSA auditors consistently report that organizations that disclose gaps with clear remediation plans fare significantly better than those who minimize or deny gaps. The gap itself may still be recorded as a finding; the response determines whether it escalates.",
+          "correct": true,
+          "nextPhaseId": "phase-2"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "type": "decision",
+      "title": "Remediation",
+      "isFinal": true,
+      "prompt": "The audit is complete. The missing compensating controls document is officially a finding. The team must now address the gap for the third deferred patch. How should the documentation be handled?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Retroactively reconstruct the compensating controls document based on what the team believes was done 8 months ago, back-date it, and submit it as the original record.",
+          "outcome": "Retroactively reconstructing and back-dating documentation is falsification of compliance records — a far more serious violation than the original missing document. A TSA auditor who later discovers back-dated records in a follow-up review will treat it as deliberate misrepresentation, which can result in significantly more severe enforcement action than the original finding. Under no circumstances should compliance documentation be created, back-dated, or altered to misrepresent when it was produced.",
+          "correct": false,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Implement a formal compensating controls process going forward; document what can be contemporaneously verified (current system state, current network isolation measures) with explicit caveats noting the documentation was created post-audit; include a corrective action plan with a named responsible person and supervisor sign-off.",
+          "outcome": "Correct. Post-audit documentation created contemporaneously — with honest caveats noting when it was created and why it was not created at the time of deferral — has more integrity than reconstructed historical records. The corrective action plan with supervisor sign-off demonstrates organizational commitment to preventing recurrence. Submit this package to TSA as part of the finding remediation response. The caveated contemporaneous document acknowledges the failure honestly; that honesty is more defensible in any follow-up review than a falsified historical record.",
+          "correct": true,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}
