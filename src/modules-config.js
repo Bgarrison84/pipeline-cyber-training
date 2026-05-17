@@ -69,8 +69,9 @@ export const MODULES = [
     order: 5,
     estimatedMinutes: 60,
     lessons: [
-      { id: 'wsus-patching', title: 'Windows Update and WSUS' },
-      { id: 'ot-patching',   title: 'OT/ICS Patching in Air-Gapped Environments' },
+      { id: 'wsus-patching', title: 'Windows Update and WSUS',                                   scenarioId: '01' },
+      { id: 'ot-patching',   title: 'OT/ICS Patching in Air-Gapped Environments',                exerciseId: '01', scenarioId: '02' },
+      { id: 'patch-policy',  title: 'Patch Management Policy and Compliance Documentation',       quizId: '01',     scenarioId: '03' },
     ],
     complianceTags: ['TSA', 'NIST'],
   },
