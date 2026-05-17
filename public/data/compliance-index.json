@@ -4,7 +4,7 @@
   "controls": [
     {
       "id": "TSA-Monitoring",
-      "label": "TSA SD-02F — Continuous Monitoring",
+      "label": "TSA — Continuous Monitoring",
       "items": [
         {
           "type": "lesson",
@@ -52,7 +52,7 @@
     },
     {
       "id": "TSA-NetworkSeg",
-      "label": "TSA SD-02F — Network Segmentation and Access Control",
+      "label": "TSA — Network Segmentation and Access Control",
       "items": [
         {
           "type": "lesson",
@@ -118,7 +118,7 @@
     },
     {
       "id": "TSA-AccessControl",
-      "label": "TSA SD-02F — Access Control Management",
+      "label": "TSA — Access Control Management",
       "items": [
         {
           "type": "lesson",
@@ -184,7 +184,7 @@
     },
     {
       "id": "TSA-IR",
-      "label": "TSA SD-02F — Cybersecurity Incident Response",
+      "label": "TSA — Cybersecurity Incident Response",
       "items": [
         {
           "type": "lesson",
