@@ -213,7 +213,12 @@ Cross-cutting constraints:
   2. The OT/ICS patching sub-section explicitly addresses: offline media staging, OEM patch qualification requirements, 3–12 month vendor approval cycles, and compensating controls documentation — not IT cadences applied to OT
   3. A terminal exercise covering compliance reporting (generating patch status evidence for audits) is present and functional — the output is plausible-format patch compliance report text
   4. All three Patch Management sub-areas (Windows/IT patching, OT/ICS patching, compliance reporting) have at least one quiz question with per-answer explanatory feedback and one compliance control ID tag each
-**Plans:** TBD
+**Plans:** 4 plans
+Plans:
+- [ ] 08-01-PLAN.md — Lesson files: wsus-patching (L1), ot-patching (L2), patch-policy (L3) (Wave 1)
+- [ ] 08-02-PLAN.md — Quiz (3 questions) + Exercise (4-step compliance reporting) (Wave 2, parallel with 08-03)
+- [ ] 08-03-PLAN.md — 3 scenario JSON files (01: Critical CVE, 02: Maintenance Window, 03: TSA Audit) (Wave 2, parallel with 08-02)
+- [ ] 08-04-PLAN.md — Config integration: modules-config.js + compliance-index.json (Wave 3)
 
 ---
 
@@ -228,7 +233,7 @@ Cross-cutting constraints:
 | 5. Simulated PowerShell Terminal + Exercise View | 4/4 | ✓ Complete | 2026-05-15 |
 | 6. Scenario Engine + Compliance Index + Completion Summary | 4/4 | ✓ Complete | 2026-05-16 |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | 4/4 | ✓ Complete | 2026-05-16 |
-| 8. Patch Management Module (MOD-05) | 0/? | Not started | - |
+| 8. Patch Management Module (MOD-05) | 0/4 | In progress | - |
 
 ---
 
@@ -240,3 +245,5 @@ Cross-cutting constraints:
 *Phase 4 planned: 2026-05-14 — 3 plans, 3 waves*
 *Phase 5 planned: 2026-05-15 — 4 plans, 4 waves*
 *Phase 6 planned: 2026-05-15 — 4 plans, 4 waves*
+*Phase 7 planned: 2026-05-16 — 4 plans, 4 waves*
+*Phase 8 planned: 2026-05-17 — 4 plans, 3 waves*
