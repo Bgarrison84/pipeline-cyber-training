@@ -1,0 +1,55 @@
+{
+  "id": "patch-management-scenario-02",
+  "moduleId": "patch-management",
+  "title": "Maintenance Window vs. Ops Manager Pressure",
+  "complianceControls": ["TSA-PatchMgmt", "NIST-MA-2"],
+  "narrative": "The OEM vendor has completed qualification of the CVE patch for PIPELINE-HIST01. This is 4 months after the CVE was published — within the typical 3–6 month OEM qualification window. The next scheduled maintenance window for PIPELINE-HIST01 is 3 weeks away. The operations manager has requested that the team skip the scheduled window and patch PIPELINE-HIST01 now to close the CVE faster and demonstrate responsiveness to the TSA.\n\nIn OT environments: scheduled maintenance windows for OT systems exist not merely for scheduling convenience — they coordinate with OT operations to ensure the historian is in a safe state to restart, that operators are prepared for a potential historian interruption, and that a rollback plan is staged and ready. Patching outside a maintenance window removes these safeguards. Even with an OEM-qualified patch, an unplanned historian restart can interrupt pipeline process data collection at a critical monitoring moment.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Scheduling",
+      "isFinal": false,
+      "prompt": "The OEM has qualified the CVE patch. The next maintenance window is 3 weeks away. The operations manager wants to patch PIPELINE-HIST01 now to close the CVE faster. What do you do?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Skip the scheduled maintenance window and patch PIPELINE-HIST01 immediately to close the CVE.",
+          "outcome": "Patching immediately without a scheduled maintenance window bypasses the safety coordination that OT change management exists to provide: operator notification, rollback plan staging, and confirmation that the historian is in a safe state. If the patch fails mid-install and the historian cannot restart, operators are now without process data visibility with no pre-staged rollback plan and no operator standby. The TSA patch management mandate requires controlled maintenance for OT systems — 'faster' is not a compliance argument for bypassing change management.",
+          "correct": false,
+          "nextPhaseId": "phase-2"
+        },
+        {
+          "id": "opt-b",
+          "text": "Maintain the scheduled maintenance window timeline; document that the OEM qualification is complete and compensating controls remain in place for the 3-week window period.",
+          "outcome": "Correct. Maintaining the scheduled window preserves the safety coordination safeguards: operators are informed, a rollback plan is staged, and the historian is taken offline in a controlled state. Documenting that OEM qualification is complete updates the compensating controls record to reflect reduced risk (the patch is now available and approved) while the controlled window date approaches. This approach satisfies both the TSA change management requirements and the operations manager's accountability need — the patch is scheduled, not deferred indefinitely.",
+          "correct": true,
+          "nextPhaseId": "phase-2"
+        }
+      ]
+    },
+    {
+      "id": "phase-2",
+      "type": "decision",
+      "title": "Maintenance Window",
+      "isFinal": true,
+      "prompt": "During the scheduled maintenance window, the patch fails to install mid-process. A dialog box requesting a reboot confirmation is frozen on PIPELINE-HIST01's screen. The historian is currently offline (as expected for the window). What do you do?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Force-retry the patch installation by clicking through the frozen dialog and restarting the install process without rolling back.",
+          "outcome": "Force-retrying a failed mid-install patch on an OT system risks leaving the OS in a partially patched, potentially corrupted state. If the patch installation left some system components updated and others not, the historian software may fail to start — with an unclear root cause. In OT environments, a partial install that corrupts the OPC server or data acquisition service could require a full OS reinstall, which is a significantly longer and more disruptive outage. Roll back first; characterize the failure before retrying.",
+          "correct": false,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Roll back PIPELINE-HIST01 to its pre-patch clean state, document the failure with the exact error details and the dialog screenshot, and reschedule with OEM vendor support engaged for the retry window.",
+          "outcome": "Correct. Rolling back to the last known-good state restores historian service before operations resume at the end of the maintenance window. Documenting the failure — the exact error, the frozen dialog, and a screenshot — is required for the OEM support case that will diagnose the root cause before the retry. Rescheduling with OEM support engaged ensures the retry attempt has expert assistance staged. This response follows the controlled maintenance (NIST MA-2) requirements: every OT maintenance action, including failures, must be documented with outcome records.",
+          "correct": true,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}
