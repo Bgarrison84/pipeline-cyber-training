@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A static GitHub Pages web application that teaches IT/OT admins at oil and gas pipeline companies the PowerShell skills and cybersecurity concepts they need to meet regulatory compliance requirements. Learners work through five topic modules using guided lessons, quizzes, a simulated PowerShell terminal, scenario-based exercises, and a searchable reference library — all without leaving the browser.
+A static GitHub Pages web application that teaches IT/OT admins at oil and gas pipeline companies the PowerShell skills and cybersecurity concepts they need to meet regulatory compliance requirements (TSA Pipeline Security Directives, NIST SP 800-82 Rev 3). Five learning modules with guided lessons, quizzes, a simulated PowerShell terminal, and scenario-based exercises — fully shipped at v1.0 with all five modules complete.
 
 ## Core Value
 
@@ -10,70 +10,86 @@ An IT/OT admin who completes a module should be able to perform the covered comp
 
 ## Requirements
 
-### Validated
+### Validated (v1.0 — all shipped 2026-05-17)
 
-- [x] **ASSESS-01** (Phase 4): Multiple-choice quizzes with per-answer explanatory feedback, score persistence, revisit mode — validated in production (GitHub Pages)
-- [x] **SHELL-03** (Phase 4): Sidebar 4px progress bars with live update after quiz submission; module-view progress bar + lesson status badges (quiz-passed / visited / unvisited) — validated in production
-- [x] **MOD-02** (Phase 7): Network Hardening module complete — 3 lessons (OT callouts, CIP-004/CIP-007 NERC disclaimers), PS firewall quiz/exercise/scenario — validated in browser 2026-05-16
-- [x] **MOD-03** (Phase 7): Account & Access Management module complete — 3 lessons (AD queries, least privilege, svc-historian lore), CIP-004/CIP-006 NERC disclaimers, quiz/exercise/scenario — validated 2026-05-16
-- [x] **MOD-04** (Phase 7): Incident Response module complete — 3 lessons (OT safety-first IR, C:\Evidence\ path, CIP-008 ×2), quiz/exercise/scenario with ransomware decision tree — validated 2026-05-16
-- [x] **DATA-02** (Phase 7): NERC CIP framed as reference benchmark with verbatim disclaimer in all 6 new NERC-referencing lessons — validated 2026-05-16
-- [x] **DATA-03** (Phase 7): OT callout blocks present in all 9 new lessons (one per lesson); explicit OT context throughout — validated 2026-05-16
+- ✓ **SHELL-01** — Sidebar navigation across all 5 modules — v1.0
+- ✓ **SHELL-02** — Hash-based routing, bookmarkable URLs — v1.0
+- ✓ **SHELL-03** — Sidebar progress bars + module-view lesson status badges — v1.0
+- ✓ **SHELL-04** — Compliance index page (14 controls, TSA SD-02F + NIST SP 800-82 Rev 3) — v1.0
+- ✓ **CONT-01** — Lessons in Markdown, rendered in-browser via marked.js — v1.0
+- ✓ **CONT-02** — Shiki v4 PS 5.1 syntax highlighting — v1.0
+- ✓ **CONT-03** — One-click copy-to-clipboard on all code blocks — v1.0
+- ✓ **CONT-04** — TSA/NIST control IDs per lesson, sourced from compliance-refs.json — v1.0
+- ✓ **TERM-01** — PS terminal accepts correct commands, rejects wrong with feedback — v1.0
+- ✓ **TERM-02** — Realistic PS 5.1 output format (not placeholder text) — v1.0
+- ✓ **TERM-03** — Near-miss commands receive contextual hints — v1.0
+- ✓ **TERM-04** — Persistent "PS SIMULATOR" label always visible — v1.0
+- ✓ **ASSESS-01** — Per-answer explanatory feedback on quizzes — v1.0
+- ✓ **ASSESS-02** — Branching scenario engine with decision-tree outcomes — v1.0
+- ✓ **ASSESS-03** — localStorage progress with auto-resume to last visited lesson — v1.0
+- ✓ **ASSESS-04** — Printable training log with statutory disclaimer — v1.0
+- ✓ **MOD-01** — Logging & Auditing: lessons, quiz, exercise, scenario — v1.0
+- ✓ **MOD-02** — Network Hardening: 3 lessons, PS firewall exercise, NERC CIP disclaimers — v1.0
+- ✓ **MOD-03** — Account & Access Management: AD queries, least privilege, svc-historian — v1.0
+- ✓ **MOD-04** — Incident Response: OT safety-first, ransomware scenario, C:\Evidence\ path — v1.0
+- ✓ **MOD-05** — Patch Management: IT/WSUS + OT/air-gapped + compliance reporting exercise — v1.0
+- ✓ **DATA-01** — TSA version strings only in compliance-refs.json — v1.0
+- ✓ **DATA-02** — NERC CIP framed as reference benchmark with verbatim disclaimer — v1.0
+- ✓ **DATA-03** — OT callout blocks (`> [!OT]`) in every dual-use lesson — v1.0
+- ✓ **DATA-04** — schemaVersion: 1 in localStorage, QuotaExceededError handled gracefully — v1.0
+- ✓ **DATA-05** — Export progress as JSON — v1.0
 
-### Active → Validated in Phase 8
+### Active (v2 — Next Milestone)
 
-- [x] **MOD-05** (Phase 8): Patch Management module complete — 3 lessons (WSUS/IT patching, OT air-gapped patching, compliance policy), 3-question quiz spanning all sub-areas, 4-step compliance reporting exercise (Get-Hotfix → Export-Csv → Measure-Object), 3 scenarios (CVE vs. OEM qualification, maintenance window pressure, TSA audit gaps) — validated in browser 2026-05-17
-- [x] **Five learning modules** (Phase 8): All 5 modules present and fully populated — Logging & Auditing, Network Hardening, Account & Access Management, Incident Response, Patch Management
-- [x] **26/26 requirements shipped** (Phase 8): v1 milestone complete as of 2026-05-17
+- [ ] Offline support (service worker / PWA) — critical for air-gapped internal org forks
+- [ ] Internal org fork guide — configuration docs for deploying as internal training tool
+- [ ] Deeper content pass — more lessons per module, advanced scenarios
+- [ ] Progress sync across devices (requires auth design decision)
+- [ ] Compliance SME review of content before marketing as authoritative
 
-## Current State
+### Out of Scope (Validated at v1.0)
 
-Phase 8 complete — v1 milestone shipped. All 5 modules live on GitHub Pages with guided lessons, quizzes, terminal exercises, and branching scenarios. 26/26 requirements met. 30/30 plans executed across 8 phases.
-
-**v1 milestone complete:** 2026-05-17
-
-### Out of Scope
-
-- Real PowerShell execution — security risk and GitHub Pages cannot run server-side code
-- User authentication / accounts — progress stays local in the browser
-- Video content — text, code, and interactive exercises only for v1
-- Mobile-first — desktop-primary (IT/OT admins work at workstations); responsive is a bonus, not a requirement
+- Real PowerShell execution — static GitHub Pages cannot execute server-side code; security risk regardless
+- User accounts / authentication — localStorage-only for v1; no login, no server needed for training use case
+- Video content — text, code, and interactive exercises sufficient for admin-level learners
+- Mobile-first layout — desktop-primary; IT/OT admins work at workstations; responsive is a bonus, not a requirement
+- Gamification (points, badges, leaderboards) — research confirms this backfires with compliance-focused professional audiences
+- Social sharing of completion — operational security risk in pipeline OT context
+- NERC CIP as mandatory framework — does not apply to pipeline operators; electric utility standard only
 
 ## Context
 
-- Pipeline companies face mandatory cybersecurity compliance under TSA Security Directives (SD-02C and successors) issued after 2021 Colonial Pipeline incident, plus longstanding NERC CIP standards for critical infrastructure and NIST SP 800-82 guidance for ICS/OT environments
-- OT/ICS patching is uniquely constrained: air-gapped networks, vendor-specific patch windows, longer patch cycles, and different risk calculations than IT — the patch management module must address this distinction explicitly
-- Learners are basic PowerShell users (can run scripts, not write them from scratch) — lessons should build upward from syntax they recognize, not assume zero knowledge
-- GitHub Pages hosting means the entire app is static HTML/CSS/JS; any "interactive terminal" must simulate PowerShell behavior client-side
-- Project starts public; content and structure should avoid company-specific assumptions so it can be forked and customized for an internal org deployment
+- Pipeline companies face mandatory cybersecurity compliance under TSA Security Directives (SD-02F, effective May 2025, expires May 2026) issued after 2021 Colonial Pipeline incident, plus NIST SP 800-82 guidance for ICS/OT environments
+- OT/ICS patching is uniquely constrained: air-gapped networks, vendor-specific patch windows (3–12 month OEM qualification cycles), and different risk calculations than IT — addressed explicitly in MOD-05
+- Learners are basic PowerShell users (can run scripts, not write from scratch) — lessons build upward from syntax they recognize
+- GitHub Pages hosting means the entire app is static HTML/CSS/JS; "interactive terminal" simulates PowerShell behavior client-side
+- Project is public-first; content and structure avoid company-specific assumptions so it can be forked and customized for internal org deployment
+- **TSA SD-02F expires May 2, 2026** — compliance-refs.json update needed before that date
 
 ## Constraints
 
-- **Tech**: Static site only (GitHub Pages) — no backend, no server-side execution
-- **Terminal**: Simulated PS only — commands validated against expected output patterns, not actually run
-- **Hosting**: GitHub Pages (free, version-controlled, no ops overhead)
-- **Compliance currency**: Content must be tied to specific control IDs so it can be updated when standards change
+- **Tech:** Static site only (GitHub Pages) — no backend, no server-side execution
+- **Terminal:** Simulated PS only — commands validated against expected output patterns, not actually run
+- **Hosting:** GitHub Pages (free, version-controlled, no ops overhead)
+- **Compliance currency:** Content tied to specific control IDs so it can be updated when standards change; all version strings in compliance-refs.json
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| GitHub Pages (static) | No hosting cost, no ops burden, version-controlled content | — Pending |
-| localStorage for progress | Avoids auth complexity; acceptable for training context | — Pending |
-| Simulated PS terminal | Real execution impossible on static host; simulation still teaches syntax and command patterns | — Pending |
-| Public-first | Wider impact; can fork/customize for internal use | — Pending |
-| V1 = skeleton all 5 topics | All areas present so users see full scope; content fills in over time | — Pending |
+| GitHub Pages (static) | No hosting cost, no ops burden, version-controlled content | ✓ Good — zero-ops deploy, CI on push to main |
+| localStorage for progress | Avoids auth complexity; acceptable for training context | ✓ Good — schemaVersion migration path established |
+| Custom vanilla JS terminal | jQuery Terminal had unnecessary complexity; regex-match per step is sufficient | ✓ Good — 147→167 tests, no library baggage |
+| Public-first | Wider impact; can fork/customize for internal use | ✓ Good — generic identifiers throughout |
+| V1 = skeleton all 5 topics | All areas present so users see full scope; content fills in over time | ✓ Good — shipped complete content, not skeleton |
+| Hybrid JSON + Markdown | JSON for structured data; Markdown for human-editable prose | ✓ Good — authoring contract clear for v2 additions |
+| compliance-refs.json for all version strings | TSA directive version must never be hardcoded | ✓ Good — no hardcoded version strings found in content |
+| Wave 0 stub file pattern | Vite resolves paths at transform time before mocks; stub files are the reliable RED pattern | ✓ Good — established for Phase 5+, reused in 6/7/8 |
+| Dynamic import('./sidebar.js') in engines | Breaks quiz-engine ↔ sidebar circular dependency | ✓ Good — no circular dep issues across 167 tests |
 
 ## Evolution
 
 This document evolves at phase transitions and milestone boundaries.
-
-**After each phase transition** (via `/gsd-transition`):
-1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
-3. New requirements emerged? → Add to Active
-4. Decisions to log? → Add to Key Decisions
-5. "What This Is" still accurate? → Update if drifted
 
 **After each milestone** (via `/gsd-complete-milestone`):
 1. Full review of all sections
@@ -81,9 +97,6 @@ This document evolves at phase transitions and milestone boundaries.
 3. Audit Out of Scope — reasons still valid?
 4. Update Context with current state
 
-## Current State
-
-Phase 7 complete (2026-05-16). All 5 modules now have full content: Logging & Auditing (Phase 2), Network Hardening, Account & Access Management, and Incident Response (Phase 7). Patch Management (Phase 8) is next — the final module. 25/26 requirements shipped; only MOD-05 remains. Compliance index has 11 controls. Sidebar bug fixed (all 5 modules now visible).
-
 ---
-*Last updated: 2026-05-16 after Phase 7 completion*
+
+*Last updated: 2026-05-17 after v1.0 milestone — 26/26 requirements shipped, all 5 modules complete*
