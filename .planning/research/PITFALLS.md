@@ -1,345 +1,349 @@
-# Pitfalls Research — Pipeline Cyber Training
+# Pitfalls Research — v2.0
 
-**Domain:** Static GitHub Pages cybersecurity training app — oil & gas pipeline compliance (TSA, NERC CIP, NIST)
-**Researched:** 2026-05-10
-**Research confidence:** HIGH for GitHub Pages constraints, localStorage, SPA routing; HIGH for compliance currency (directives confirmed via official TSA/NERC sources); MEDIUM for OT/ICS training content accuracy; MEDIUM for simulated terminal fidelity.
-
----
-
-## 1. NERC CIP Scope Misrepresentation
-
-**Risk:** NERC CIP is an electric-utility reliability standard enforced by FERC against Bulk Electric System (BES) operators — it does not legally mandate compliance for oil and gas pipeline operators. Pipeline operators are regulated by TSA directives and follow NIST SP 800-82 as guidance. Training content that presents NERC CIP as a binding requirement for pipeline operators is factually wrong and will be caught immediately by any compliance-aware learner, destroying credibility.
-
-**Warning signs:**
-- Lesson text says "pipeline operators must comply with NERC CIP" without qualification
-- NERC CIP control IDs presented as enforcement obligations alongside TSA control requirements
-- No distinction drawn between "electric utility" and "pipeline operator" learner populations
-
-**Prevention:**
-- Frame NERC CIP as a best-practice reference and comparison standard, not a binding requirement for pipeline operators
-- Add a scope callout at the start of any module referencing NERC CIP: "NERC CIP governs electric utilities; pipeline operators follow TSA directives. NERC CIP practices are referenced here as a maturity benchmark."
-- Map every compliance tag to the correct enforcement regime: TSA SD-02 series for pipeline operators, NERC CIP only for electric-sector context, NIST SP 800-82 as guidance/framework
-- Have a compliance SME review all NERC CIP-tagged content before publishing
-
-**Phase relevance:** Content architecture phase (before any lesson authoring begins); revisited in every module's content review.
+**Domain:** Adding PWA, fork config, progress sync, and additional content to an existing Vite 6 + Tailwind v4 static training platform  
+**Researched:** 2026-05-17  
+**Confidence:** HIGH for PWA/content pitfalls (verified against official vite-plugin-pwa docs and Workbox docs, and direct source inspection); MEDIUM for sync/Supabase (verified against Supabase docs + community reports); MEDIUM-LOW for TSA directive successor (no public SD-02G confirmed as of research date)
 
 ---
 
-## 2. TSA Directive Version Staleness
+## PWA: Markdown and JSON data files silently excluded from offline cache
 
-**Risk:** TSA Pipeline Security Directives iterate annually. The -02 series has already progressed through versions A, B, C, D, E, F (SD-02F effective May 3, 2025, expiring May 2, 2026) and SD-01G was issued January 2026. Content authored against SD-02C (as stated in PROJECT.md requirements) is already two versions behind as of the project start date. Hardcoded version references in lesson text become wrong the moment TSA issues the next letter revision, misleading learners about their actual compliance obligations.
+**Pitfall:** `vite-plugin-pwa` (Workbox `generateSW` strategy) defaults to only precaching `js`, `css`, and `html` artifacts from the build output. Lesson `.md` files and quiz/exercise/scenario `.json` files live in `public/data/` — they are copied verbatim into `dist/` but Workbox's default `globPatterns: ['**/*.{js,css,html}']` ignores them. The app shell loads fine offline but all lesson fetches return network errors with no user-visible error (content-loader's `fetchLesson` returns `null` on fetch failure and the view renders a blank lesson column).
 
-**Warning signs:**
-- Lesson text contains hardcoded version strings like "SD-02C" in prose rather than in a managed reference
-- No changelog section or "last verified" date on compliance-tagged content
-- No process defined for who checks TSA's SD & EA page after each directive expiry date
+**Warning sign:** Manual offline test (Chrome DevTools Network panel set to Offline) shows lesson content area blank while nav and sidebar render correctly. No console error appears because `fetchLesson()` has a silent catch.
 
-**Prevention:**
-- Store the current directive version in a single data file (e.g., `data/compliance-refs.json`) that lessons pull from, so a version bump is a one-line edit
-- Add a visible "Directive currency: verified [date]" badge to every lesson that cites TSA controls
-- Each directive expires roughly annually; add a recurring calendar reminder tied to the expiry date of the current directive to trigger a content audit
-- Scope PROJECT.md to "2024+ requirements (SD-02 series)" rather than a specific letter version to reduce churn in the project document itself
+**Prevention:** Explicitly extend `globPatterns` in the Vite config:
+```js
+VitePWA({
+  workbox: {
+    globPatterns: ['**/*.{js,css,html,md,json,ico,png,svg,webp}']
+  }
+})
+```
+This also precaches `compliance-refs.json` and `fork.config.json` — correct behavior; offline users need all data files.
 
-**Phase relevance:** Data model / content architecture phase; content maintenance runbook at project close.
-
----
-
-## 3. NIST SP 800-82 Edition Conflation
-
-**Risk:** NIST published SP 800-82 Revision 3 in September 2023, renaming it from "Guide to Industrial Control Systems Security" to "Guide to Operational Technology (OT) Security" and expanding scope significantly. Content written from Revision 2 sources will reference outdated section numbers, use "ICS" where "OT" is now standard, and miss new topics like cloud OT, supply chain, and risk management framework integration. Learners who consult the actual document will find the training misaligned.
-
-**Warning signs:**
-- References to "ICS security" as a synonym for OT security without acknowledging the scope change
-- Section or appendix citations that match Rev 2 numbering
-- No mention of the Rev 3 CSF integration or supply chain content
-
-**Prevention:**
-- Pin all NIST SP 800-82 references to Revision 3 explicitly (the final version from September 2023, available at csrc.nist.gov)
-- Use NIST's own terminology: "OT security" as the primary term, "ICS" only when referring to a specific system type
-- Do not cite section numbers in lesson content — link to the publication and describe concepts, so section renumbering in future revisions does not break content
-
-**Phase relevance:** Content authoring across all five modules, especially Patch Management and Network Hardening.
+**Phase to address:** PWA implementation phase (PWA-01). Add offline smoke test to acceptance criteria.
 
 ---
 
-## 4. OT / IT Conflation in Technical Content
+## PWA: Service worker scope mismatch at GitHub Pages non-root base path
 
-**Risk:** Applying IT security practices to OT environments without qualification is the single most criticized failure in OT cybersecurity training. Specific failure modes relevant to this project: (a) presenting patch cadence advice ("patch within 30 days") without noting that OT vendor approval cycles routinely take 3-12 months; (b) recommending vulnerability scanning without warning that active scanners can crash PLCs; (c) presenting MFA as straightforward to deploy in environments where operators work at HMIs in a control room with no internet connectivity; (d) treating air-gapped networks as binary (either fully air-gapped or internet-connected) when most pipelines have hybrid architectures.
+**Pitfall:** This project deploys to `/pipeline-cyber-training/` (set in `vite.config.js` as `base: '/pipeline-cyber-training/'`). Browsers enforce that a service worker cannot control URLs outside the directory where `sw.js` is served. If the plugin or manual registration code places `sw.js` at the domain root (`/sw.js`), scope registration fails with `DOMException: The path of the provided scope (/pipeline-cyber-training/) is not under the max scope allowed`. This is documented as a known issue (vite-plugin-pwa issue #82). The plugin handles this automatically when Vite's `base` is set correctly — the failure occurs when `scope` or `outDir` are manually overridden.
 
-**Warning signs:**
-- Patch management module uses the same patch SLAs for Windows servers and OT field devices
-- Network hardening module recommends network scanners without OT-specific caveats
-- Account management module presents MFA deployment as a single workflow regardless of environment
-- No explicit "OT vs IT" differentiation callouts in lessons
+**Warning sign:** Browser console shows `DOMException` during service worker registration. PWA install prompt never appears. DevTools Application tab shows "Registration failed."
 
-**Prevention:**
-- Every exercise and lesson that could apply to both environments must include an explicit "In OT environments:" callout section
-- The Patch Management module must have a dedicated OT patching section covering: vendor approval gates, OEM qualification requirements, compensating controls when patching is not feasible, and documentation requirements for unpatched systems
-- Establish a content rule: never give a recommendation that applies to OT systems without citing the specific constraint (availability > confidentiality in OT, no tolerance for unplanned downtime, vendor support contract implications)
-- Source OT-specific content from NIST SP 800-82 Rev 3, ICS-CERT advisories, and ISA/IEC 62443, not generic IT security sources
+**Prevention:** Do not override `scope`, `outDir`, or `base` options inside `VitePWA({})` — let the plugin inherit Vite's `base` config automatically. Verify the built `dist/pipeline-cyber-training/sw.js` path exists after `npm run build`. Never place `sw.js` manually in `public/` — let the plugin generate it.
 
-**Phase relevance:** Patch Management module (highest risk); Network Hardening; Account & Access Management; all modules need OT callout review before publish.
+**Phase to address:** PWA-01. Verify with `vite build && vite preview` before any GitHub Pages deploy; the preview server uses the base path correctly.
 
 ---
 
-## 5. Simulated Terminal Fidelity Gap
+## PWA: Users stuck on stale cached version indefinitely after content updates
 
-**Risk:** A browser-based PowerShell simulator necessarily omits features of real PowerShell: no pipeline objects (only text output), no tab completion, no real cmdlet parameter validation, no module loading, no actual registry or filesystem state. Learners who complete exercises in the simulator and then attempt the same commands in their real environment will encounter differences — wrong output format, missing properties, different error messages — and lose confidence in the training. Worse, if the simulator accepts invalid syntax that real PowerShell would reject, it actively teaches wrong habits.
+**Pitfall:** With `registerType: 'prompt'` (not `autoUpdate`), an updated service worker downloads but stays in "waiting" state until all app tabs are closed. Learners who keep the training app open as a background tab (common behavior for ongoing training) never receive the update. They see lesson nav links that don't include the new v2.0 lessons, quiz question banks that don't have CONT-07 additions, and possibly the old expired compliance badge text.
 
-**Warning signs:**
-- Simulator accepts `Get-EventLog -LogName Security` without warning that this cmdlet is deprecated in PowerShell 7+
-- Output formatting in simulator does not match real PowerShell table/list output
-- Exercises use commands that require modules not installed by default (e.g., `ActiveDirectory` module) without flagging this
-- No "what this would look like in real PS" note alongside simulator output
+**Warning sign:** After deploying a new build, some users report not seeing new lessons that others see. Issue resolves when they close and reopen the tab. No error occurs.
 
-**Prevention:**
-- Scope the simulator explicitly: it validates command syntax and teaches command patterns, not output fidelity — say this in the UI
-- Add a persistent "Simulator note" banner: "Output is illustrative. Your actual environment output will vary."
-- Every exercise must include a "Real-world note" section describing what the learner should verify or expect when running this in their actual environment
-- Test every simulated command against actual PowerShell 5.1 (Windows default for most pipeline IT environments) and PowerShell 7.x, and flag version differences explicitly in content
-- Do not simulate cmdlets that require elevated privileges without a visible "(requires admin)" label
-- Define which PowerShell version the simulator models (recommend PS 5.1 as the baseline, given the learner population)
+**Prevention:** Use `registerType: 'autoUpdate'` with `skipWaiting: true` in Workbox options so the new service worker activates immediately on install. Implement the PWA-02 offline indicator as a combined "update available — reload" notification using the `workbox-window` `waiting` event. This makes the update visible without requiring the user to close all tabs.
 
-**Phase relevance:** Simulated terminal build phase; every module's exercise authoring; QA before each module publish.
+**Phase to address:** PWA-01 and PWA-02 together — the update notification is part of the activation strategy.
 
 ---
 
-## 6. Quiz-Only Knowledge Transfer Failure
+## PWA: Cached compliance-refs.json goes stale after SME update if build is skipped
 
-**Risk:** If exercises reduce to reading a lesson then answering multiple-choice questions, learners can pass without developing operational skill. The PROJECT.md core value states: "An IT/OT admin who completes a module should be able to perform the covered compliance control in their real environment." Multiple-choice quizzes do not produce that outcome. This is the most commonly cited failure mode in technical e-learning, and it is especially acute for a compliance audience where "I passed the training" can create false confidence in an auditable environment.
+**Pitfall:** After SME-01 updates `compliance-refs.json`, existing users with a cached service worker receive the old JSON from precache. The Workbox precache manifest only updates when `npm run build` is run — a developer who edits `public/data/compliance-refs.json` directly in GitHub's web editor and commits to `main` without triggering a CI build will not regenerate the Workbox manifest. The new content hash for the file never appears in `sw.js`, so the cached old file is never invalidated.
 
-**Warning signs:**
-- Scenario exercises only require learners to select the correct option rather than type or construct a command
-- Modules can be completed without the simulated terminal being used at all
-- Quiz questions test recall ("Which of the following is...") rather than application ("Given this log output, what is the next step?")
-- Progress tracking counts quiz completion as module completion without terminal exercise completion
+**Warning sign:** `compliance-refs.json` shows expired TSA SD-02F dates in the compliance badge for users who visited before the update, even days after the file was changed on the server. The issue affects offline users only; online users get the fresh file via the network.
 
-**Prevention:**
-- Require terminal exercise completion as a gate for module completion credit (not just lesson reads and quizzes)
-- Design scenario exercises as: "Here is a simulated log / alert / audit output — type the PS command to investigate it" not "Which command would you use?"
-- Include at least one scenario per module that requires multi-step command construction (pipe a Get- command into a filtering command)
-- Write quiz questions at application/analysis level (Bloom's), not recall level
+**Prevention:** Always run `npm run build` after any `public/` data file change. Document this constraint in the SME review checklist. Never patch `dist/` files directly. If GitHub Actions CI is set up for deployment, this is automatic — make CI the only deployment path.
 
-**Phase relevance:** Instructional design phase (before any lesson authoring); module QA for each of the five modules.
+**Phase to address:** SME compliance phase (SME-01) — add this rule to the SME review artifact.
 
 ---
 
-## 7. Learner Overload from Regulatory Complexity
+## PWA + Progress Sync: sync API calls cached by service worker silently return stale data
 
-**Risk:** TSA, NERC CIP, and NIST CSF/SP 800-82 each have distinct control numbering schemes, terminology, and applicability rules. Presenting all three simultaneously without a clear mental model will overwhelm basic PowerShell users who are not compliance specialists. Common failure mode: learners focus on memorizing control IDs rather than understanding what the controls require operationally, producing quiz-passers who cannot perform the underlying task.
+**Pitfall:** If Supabase or GitHub Gist sync API calls pass through the service worker's `fetch` event handler and the Workbox runtime caching strategy for those URLs is missing or defaults to `StaleWhileRevalidate`, sync calls can return cached responses from a previous session. A `PUT` to update Gist content returns a cached `200` — the user believes sync succeeded but the Gist is never updated.
 
-**Warning signs:**
-- Lesson introductions spend more content explaining compliance framework structure than on the technical skill being taught
-- Compliance tags show three different framework IDs for every lesson
-- Post-lesson surveys or informal feedback uses words like "overwhelming" or "I don't know which framework applies to me"
-- Learners skip reference library sections
+**Warning sign:** Sync "succeeds" (no errors in UI) but progress on the second device always shows the state from the first successful sync, never updated. The issue is only visible when testing cross-device sync manually.
 
-**Prevention:**
-- Lead with the technical task, not the compliance framework: "Here is how to configure Windows audit policy. This satisfies TSA SD-02F requirement X and aligns with NIST SP 800-82 control Y."
-- Use a single primary framework tag per lesson (TSA for pipeline operators); treat NIST as a secondary cross-reference, NERC CIP as an optional "if you also support electric infrastructure" sidebar
-- Provide a one-page "Which frameworks apply to me?" guide at module entry, not buried in reference library
-- Limit compliance tag display in the UI to the two most relevant controls per lesson; full cross-reference goes in the reference library
+**Prevention:** Add explicit `NetworkOnly` runtime caching entries that match the sync backend URLs in the same PR as PWA implementation:
+```js
+workbox: {
+  runtimeCaching: [{
+    urlPattern: /^https:\/\/api\.github\.com\//,
+    handler: 'NetworkOnly',
+  }, {
+    urlPattern: /^https:\/\/.*\.supabase\.co\//,
+    handler: 'NetworkOnly',
+  }]
+}
+```
 
-**Phase relevance:** Content architecture / tagging design phase; UX design phase for compliance tag display.
-
----
-
-## 8. GitHub Pages SPA Routing 404s
-
-**Risk:** GitHub Pages is a static file server. It has no knowledge of client-side routes. If the app uses HTML5 history-mode routing (e.g., `/module/logging/lesson/2`), any direct URL load or browser refresh will return a 404 because GitHub Pages looks for a physical file at that path and finds none. This affects: sharing deep links to specific lessons, bookmarking progress, browser back-button behavior after a page refresh.
-
-**Warning signs:**
-- Refreshing the browser on any page other than the root returns a 404
-- Copying a lesson URL and pasting it in a new tab fails
-- The app works perfectly in local development but breaks after GitHub Pages deployment
-
-**Prevention:**
-- Use hash-based routing (`/#/module/logging/lesson/2`) throughout — this is the simplest, most reliable solution for GitHub Pages and has no SEO downside for a training app
-- Alternatively, if using a build tool (Vite, etc.), configure it to output a flat directory structure with one `index.html` per route, enabling direct path loads
-- Add a `404.html` that redirects to `index.html` with the path encoded as a query parameter as a fallback (the spa-github-pages pattern)
-- Test routing by deploying to a branch preview and directly navigating to a deep URL before shipping any module
-
-**Phase relevance:** Initial project scaffolding / architecture phase; must be resolved before any routing-dependent feature is built.
+**Phase to address:** SYNC-02 implementation, coordinated with PWA-01. These two phases must share a PR or the sync networking configuration must be in scope during PWA implementation.
 
 ---
 
-## 9. GitHub Pages Build and Bandwidth Constraints
+## Fork Config: fork.config.json fetch adds a second startup async call without test isolation
 
-**Risk:** Published GitHub Pages sites are capped at 1 GB. The site has no binary media (PROJECT.md excludes video), but a large compliance reference library with many JSON data files plus JavaScript bundles could approach this limit over time. Additionally, there is a soft 100 GB/month bandwidth limit and a 10 builds/hour limit (unless using GitHub Actions). A cybersecurity training app used across a pipeline company could hit bandwidth limits if used at scale.
+**Pitfall:** `main.js` already calls `loadComplianceRefs()` at startup (a `fetch()` call). Adding a second startup fetch for `fork.config.json` using the same pattern means two async fetches must resolve before the app renders. Tests that exercise modules which read fork config data need to mock `global.fetch` for BOTH files. The existing Vitest test pattern uses `vi.mock` at the module level for most modules — a raw `fetch` mock in test setup may not be in time for test files that import `main.js` or trigger fork config loading via module side-effects. The "Wave 0 stub file" pattern documented in `PROJECT.md` is the established solution.
 
-**Warning signs:**
-- Repository size exceeds 500 MB (halfway to the 1 GB page limit)
-- A single JavaScript bundle is over 1 MB uncompressed
-- More than 10 content pushes are made in a single hour during active development
+**Warning sign:** Tests that previously passed start failing with `fetch is not defined` or fork config returning `null` when tests expect default values. Sidebar renders nothing in tests that render the full app shell.
 
 **Prevention:**
-- Audit bundle size before each module launch using Vite's `--report` or Webpack Bundle Analyzer; keep total JS under 500 KB gzipped
-- Inline compliance reference data as structured JSON in the repository, not as large flat text files; compress aggressively
-- Use GitHub Actions for deployment (removes the 10 builds/hour restriction)
-- For internal company deployments: host on internal web server or SharePoint, not GitHub Pages — the bandwidth limit is not suitable for mandatory training across hundreds of employees
+- Implement fork config loading as a named export `loadForkConfig()` in `main.js`, following the exact pattern of `loadComplianceRefs()`.
+- If `fork.config.json` returns 404, return a full default config object — never `null`. This keeps all code paths that read fork config safe without null guards everywhere.
+- `fork.config.json` must be placed in `public/` (not `src/`) so it is served statically at `import.meta.env.BASE_URL + 'fork.config.json'`.
+- Tests that mock fork config: use `vi.spyOn(window, 'fetch')` targeting the fork config URL, or mock the `loadForkConfig` export directly.
 
-**Phase relevance:** Initial scaffolding; also a consideration when planning for internal deployment fork.
+**Phase to address:** Fork config implementation phase (FORK-02/FORK-03).
 
 ---
 
-## 10. localStorage Progress Loss Without Warning
+## Fork Config: activeModules filtering applied to progress calculation layer breaks completion math
 
-**Risk:** localStorage is cleared silently by: (a) users manually clearing browser history/data; (b) browser storage eviction when disk space is low (Chrome evicts least-recently-used origins); (c) Safari's 7-day eviction of script-writable storage if the site is not visited; (d) private/incognito browsing (storage does not persist across sessions in private mode); (e) switching browsers or devices. A learner who completes two modules, clears their browser, or switches from Chrome to Edge loses all progress with no warning. In a compliance training context where completion may need to be documented, silent data loss is a serious credibility problem.
+**Pitfall:** `fork.config.json` specifies `"activeModules": ["logging-auditing", "network-hardening"]` to hide unused modules. But `MODULES` in `modules-config.js` is a static array imported at module load time — before `fork.config.json` is fetched. `computeModuleProgress()` in `quiz-engine.js` iterates `MODULES`. If fork config filtering is applied to the sidebar render but not to `computeModuleProgress`, the completion summary and progress bars count deactivated modules as 0% complete, making "100% complete" impossible for a fork with only 2 active modules.
 
-**Warning signs:**
-- No warning shown when a user opens the app in a private window
-- No export/backup mechanism for progress data
-- No "progress was reset" detection or user notification
-- Module completion has no durable artifact (certificate, export, email)
+**Warning sign:** A fork with `activeModules: ["logging-auditing"]` shows "20% complete" even when all Logging & Auditing lessons are done, because 4 other modules remain at 0%.
 
-**Prevention:**
-- Detect private browsing on load and display a banner: "You are in private browsing mode. Progress will not be saved after you close this window."
-- Wrap all `localStorage.setItem()` calls in try/catch; handle `QuotaExceededError` gracefully with a user-visible alert and instructions to clear old data
-- Provide a "Export my progress" button that downloads a JSON file (or generates a printable completion summary) — this gives learners a durable record without requiring backend infrastructure
-- Add a "progress restored" confirmation when the app loads successfully from saved state, so users know their data persisted
-- Store a version key in localStorage; if the data schema changes between versions, detect the mismatch and prompt the user rather than silently corrupting state
+**Prevention:** Apply fork config filtering only at render layer (sidebar, home view module cards). `computeModuleProgress()` should always receive the full module object and compute progress correctly. The completion summary and progress bars must be filtered by the same active module list before aggregating totals. Do not mutate `MODULES` — pass a filtered view as a parameter.
 
-**Phase relevance:** Progress tracking implementation phase; UX design for all module completion flows.
+**Phase to address:** FORK-03 implementation. Write a test with a 2-module active list and verify completion summary shows correct denominator.
 
 ---
 
-## 11. localStorage Schema Drift Between Versions
+## Fork Config: root-relative logo path breaks at GitHub Pages sub-path deployment
 
-**Risk:** The app ships with a progress data schema stored in localStorage. Later versions add new modules, change lesson IDs, or restructure exercise completion state. A returning learner opens the updated app; the code reads old schema data, finds unexpected keys or missing fields, and either crashes silently or shows incorrect progress (e.g., marking a new lesson as complete because a legacy key matched).
+**Pitfall:** `fork.config.json` will specify `logoPath` as an asset path. If fork operators write `"/assets/logo.png"` (root-relative), the browser resolves it to `https://org.github.io/assets/logo.png` instead of `https://org.github.io/pipeline-cyber-training/assets/logo.png`. The logo shows as a broken image. This fails silently in local dev if `vite dev` is run without the base path prefix.
 
-**Warning signs:**
-- No schema version key in localStorage data
-- Module or lesson IDs changed between versions without a migration path
-- New module added and some users show it as 100% complete immediately (because their old data had a key collision)
+**Warning sign:** Logo renders correctly in `localhost:5173` but is a broken image on GitHub Pages. No console error — just a 404 for the image resource.
 
-**Prevention:**
-- Store a `schemaVersion` key in localStorage from day one (even version `"1"`)
-- On app load, compare `schemaVersion` against the current expected version; if mismatch, run a migration function or prompt user to reset
-- Never reuse lesson or exercise IDs across content changes; treat IDs as permanent identifiers, not display names
-- Document the localStorage schema in code comments as a contract, not an implementation detail
+**Prevention:** Document in `FORK-01` that logo paths must be relative (e.g., `"assets/logo.png"` not `"/assets/logo.png"`). The app must prepend `import.meta.env.BASE_URL` when constructing the `<img src>`:
+```js
+const logoSrc = import.meta.env.BASE_URL + forkConfig.logoPath;
+```
+Include this in the fork guide's configuration example.
 
-**Phase relevance:** Initial data model design; every content update that changes module/lesson structure.
+**Phase to address:** FORK-01 documentation and FORK-03 implementation.
 
 ---
 
-## 12. Public Site Leaking Org-Specific Assumptions
+## SME: Quiz JSON hardcodes "SD-02F" — not sourced from compliance-refs.json
 
-**Risk:** PROJECT.md notes the site starts public and should be forkable for internal deployment. The risk is that content is authored with implicit assumptions about the reader's environment: specific SCADA vendor names, internal network naming conventions, IP ranges used in exercises, references to "your company's SOC," or exercises that only make sense for a particular organizational structure. These assumptions make the public site feel generic-but-broken, and make internal forks require significant content rework.
+**Pitfall:** Quiz answer explanations in module JSON files reference "TSA SD-02F" directly in `feedback` and `explanation` strings (confirmed in `public/data/modules/logging-auditing/quizzes/01.json` — the question stem reads "Under TSA SD-02F, what is the minimum retention period..."). These strings are NOT sourced from `compliance-refs.json`. When SD-02F is superseded, the quiz questions themselves become factually incorrect without a content audit. The SME review checklist (SME-02) might scope only to lesson Markdown files and miss the quiz JSON.
 
-**Warning signs:**
-- Exercise scenarios name specific vendors ("Configure the OSIsoft PI Historian...") without marking them as examples
-- PS commands in exercises use hardcoded hostnames or IP ranges that imply a specific network topology
-- Lesson text says "contact your SOC team" without noting this assumes a mature security org — many pipeline operators have no dedicated SOC
+**Warning sign:** `compliance-refs.json` is updated to the new directive version but quiz stems and explanations still reference "SD-02F" by name. The compliance badge shows the new directive but the quiz content contradicts it.
 
 **Prevention:**
-- Use clearly fictional/generic identifiers in all exercises: `PIPELINE-DC01`, `10.0.0.0/24`, `ExampleCorp`, `OT-HISTORIAN-01`
-- Add a content authoring rule: any environment-specific reference must be marked with a `[CUSTOMIZE FOR YOUR ORG]` placeholder comment in the content data file
-- Write a brief "Fork and customize" guide at the repo root explaining which content files to update for internal deployment (network ranges, org names, SCADA vendor specifics)
-- Avoid recommendations that assume enterprise-scale security teams; always provide a "smaller org" variant ("If you do not have a dedicated SOC, send alerts to...")
+- SME review checklist (SME-02) MUST explicitly scope all `quizzes/*.json`, `exercises/*.json`, and `scenarios/*.json` files, not just lesson `.md` files.
+- When updating `compliance-refs.json`, run a text search across all `public/data/` for `"SD-02F"`, `"Pipeline-2021-02F"`, and the old effective date string.
+- Consider adding a `lastReviewed` field to quiz JSON files (parallel to the lesson frontmatter `lastReviewed` that SME-03 establishes), so content currency is auditable per artifact.
 
-**Phase relevance:** Content authoring across all five modules; repository documentation at project launch.
+**Phase to address:** SME compliance phase (SME-01 through SME-03).
 
 ---
 
-## 13. Compliance Content Ownership Vacuum
+## SME: TSA SD-02F successor not yet public — expired badge state needed immediately
 
-**Risk:** Regulatory content has a short half-life. TSA directives iterate annually. NERC CIP standards update on FERC approval cycles. NIST publishes new revisions. If no named person or process owns content currency after launch, the site will silently drift out of date. Learners will cite training content in compliance audits; auditors who know the current directive version will flag discrepancies. A training site that teaches compliance incorrectly is worse than no training site.
+**Pitfall:** Research as of 2026-05-17 finds no publicly announced successor to SD-02F (expired May 2, 2026). The current `badge.js` reads `shortName` from `compliance-refs.json` and renders it directly. There is no conditional rendering for an expired directive. After the expiry date, the badge silently displays "TSA SD-02F" with no indication it is expired, signaling to compliance-aware learners that the training may be outdated.
 
-**Warning signs:**
-- No "content last verified" date on any lesson
-- No GitHub issue template or label for "regulatory update"
-- No defined owner for monitoring TSA's SD & EA page
-- Six months post-launch with no content updates despite a known directive renewal
+**Warning sign:** The badge renders "TSA SD-02F" to all users after May 2, 2026, with no expiry indicator. A learner checking TSA.gov finds no active SD-02F.
 
 **Prevention:**
-- Create a `CONTENT-MAINTENANCE.md` at the repo root defining: who monitors each regulatory source, how often, and what the update SLA is
-- Add a "Content currency" section to each module's README with: directive version it was authored against, expiry/review date, and link to official source
-- Use GitHub Issues with a `regulatory-update` label as the intake mechanism for content changes; create issues proactively when a directive is known to expire
-- Implement the single compliance-reference data file approach (see Pitfall 2) so version bumps are surgical, not scattered across lesson prose
-- Consider adding a visible "Content verified against [version] as of [date]" notice in the app UI, prominently placed, so learners know currency status
+- Add an `"expiryDate"` check to `badge.js`: if today's date exceeds `directives.TSA.expiryDate`, render a "TSA SD-02F (Pending renewal — check TSA.gov)" badge state with a warning color instead of the normal compliance tag.
+- Add a `"status": "expired"` or `"status": "active"` field to `compliance-refs.json` that the badge reads, so the update is a one-field JSON change rather than a code change.
+- Treat "update expired status" and "update to successor" as two separate tasks in SME-01.
 
-**Phase relevance:** Project close / handoff documentation; relevant from first content authoring session onward.
+**Phase to address:** SME-01. The expired status fix should be the first commit in that phase, before any successor research.
 
 ---
 
-## 14. Accessibility Neglect in Interactive Terminal
+## Progress Sync: schemaVersion bump requires migration chain before CURRENT_VERSION changes
 
-**Risk:** The simulated terminal is a custom UI element. Default implementations of fake terminals use `div`-based layouts that are not keyboard navigable and provide no screen reader context. IT/OT admins with visual impairments or motor limitations who use assistive technology will be entirely unable to use the core interactive feature of the training. In a federally regulated compliance context, accessibility is not optional posture — it is a baseline expectation.
+**Pitfall:** SYNC-02 may require new fields in the progress store (e.g., `syncState`, `deviceId`, `lastSyncedAt`). When `CURRENT_VERSION` in `progress-store.js` is bumped from 1 to 2, the `migrate()` function must include a `v1 → v2` chain step that fills in the new fields with safe defaults. The current `_blankStore()` returns the v1 shape — it must be updated to the v2 shape before `CURRENT_VERSION` is bumped. If bumped first, the `migrate()` function runs but does not know what to add, and users get a partially migrated store.
 
-**Warning signs:**
-- Terminal input field is not focusable via Tab key
-- Screen readers announce the terminal output area as a generic `div` with no role
-- There is no way to complete terminal exercises without using a mouse
-- Color alone is used to distinguish command success from error output
+**Warning sign:** A user who exported progress under v1.0 and imports it into v2.0 gets `ok: true` from `importProgress()` but the new `syncState` field is `undefined`, causing TypeErrors when sync code reads `store.syncState.deviceId`.
 
-**Prevention:**
-- Implement the terminal input as an actual `<input>` or `<textarea>` element with `aria-label="PowerShell command input"`
-- Use `role="log"` and `aria-live="polite"` on the terminal output area so screen readers announce new output
-- Ensure all terminal error/success states are communicated via text, not color alone (e.g., "[ERROR]" prefix, not just red text)
-- Test keyboard-only navigation through a full exercise before shipping any module
-- Ensure Tab order moves logically: lesson content → terminal input → submit → output → next step
+**Prevention:** Follow the sequence:
+1. Update `_blankStore()` with new v2 fields and safe defaults.
+2. Add the migration step to `migrate()`: `if (d.schemaVersion === 1) { d = migrateV1toV2(d); }`.
+3. Bump `CURRENT_VERSION` to 2.
+4. Write migration tests for `v1 → v2` in `progress-store.test.js` BEFORE writing the migration code (Red-Green pattern).
 
-**Phase relevance:** Simulated terminal build phase; accessibility audit before each module publish.
+Never bump `CURRENT_VERSION` in the same commit as adding new `_blankStore()` fields — keep them as two sequential commits so the test failure is visible.
+
+**Phase to address:** SYNC-01 ADR (plan the migration) and SYNC-02 implementation.
 
 ---
 
-## 15. Overbuilt Simulator Scope Creep
+## Progress Sync: GitHub Gist option requires PAT in client-side storage
 
-**Risk:** The simulated terminal is scoped to validate command patterns and give feedback — not to be a real PowerShell runtime. The risk is that developers expand the simulator's scope over time to handle more edge cases, parameter variations, and output permutations, creating a maintenance burden that grows with every new module. A simulator that tries to handle all valid PowerShell syntax becomes an unmaintained partial PowerShell interpreter.
+**Pitfall:** GitHub Gist API requires a Personal Access Token with `gist` scope for write access. If SYNC-01 ADR selects GitHub Gist, the PAT must be stored somewhere on the client. Storing it in localStorage means any XSS attack can exfiltrate a real GitHub credential. PATs issued with `gist` scope also allow reading private gists — broader than intended. This is especially poor optics for a cybersecurity training platform aimed at pipeline operators.
 
-**Warning signs:**
-- The simulator's command validation logic is growing into a large switch/case or regex library
-- Contributors are debating which of 40+ parameter aliases to support
-- Bugs are being filed because the simulator doesn't handle a specific command variant a learner tried
-- The simulator's codebase exceeds the size of the learning content codebase
+**Warning sign:** The sync flow works in testing but a security review of the SYNC-01 ADR flags the PAT-in-localStorage pattern as a credential exposure anti-pattern.
+
+**Prevention:** The SYNC-01 ADR must explicitly evaluate the credential exposure tradeoff for each option. Prefer Supabase anon + RLS or URL-based export over GitHub Gist. If Gist is selected, document the risk clearly in the UI and scope the PAT to only `gist` and only allow it via a user-initiated paste into a local-only settings field — never auto-populated, never transmitted except to the GitHub API.
+
+**Phase to address:** SYNC-01 ADR. This decision must be resolved before SYNC-02 begins.
+
+---
+
+## Progress Sync: Supabase table without RLS enabled is world-readable
+
+**Pitfall:** Supabase's `anon` key is intentionally public and safe to ship in frontend code — BUT only when Row Level Security (RLS) is enabled on every table. If a `progress` table is created with RLS disabled (the Supabase default for new tables), any visitor with the anon key can `SELECT * FROM progress` and see all users' data, or `DELETE FROM progress` to wipe everyone's records. This is not theoretical — multiple production Supabase deployments have had this exact exposure. Supabase shows a dashboard warning but it is easy to miss.
+
+**Warning sign:** RLS is not shown as "enabled" in the Supabase dashboard Table Editor for the `progress` table. Any browser console command `await supabase.from('progress').select('*')` returns all rows.
 
 **Prevention:**
-- Define the simulator's scope contract explicitly and publicly in the code: "This simulator validates exact command patterns specified in exercise definitions. It is not a PowerShell interpreter."
-- Build exercises around specific command forms, not open-ended free input — learners type the command the exercise specifies, not whatever they feel like
-- Use an exercise definition schema: each exercise specifies the accepted command(s), expected output template, and feedback messages; the simulator is a thin engine over this data
-- Resist adding "helpful" fallbacks for common command mistakes — if the learner types the wrong command, give them the feedback message, not a guess at what they meant
+- Enable RLS on the `progress` table immediately after creation, before any data is written.
+- Policy: all operations require `device_id = current_setting('app.device_id', true)` or equivalent JWT claim scoping.
+- Since the app has no auth, generate a `device_uuid` client-side (stored in localStorage), pass it as a custom Supabase header or via Supabase anonymous auth JWT.
+- Include RLS policy verification in the SYNC-02 phase acceptance criteria — not just "sync works" but "user A cannot read user B's rows."
 
-**Phase relevance:** Simulated terminal architecture decision (phase 1); enforce the scope contract at every module's exercise authoring stage.
+**Phase to address:** SYNC-02 implementation. RLS configuration must be in the same PR as the Supabase table creation.
+
+---
+
+## Content Additions: modules-config.js must be updated alongside every new lesson file
+
+**Pitfall:** When adding new lessons, the content author adds a `.md` file to `public/data/modules/<id>/lessons/` and updates `public/data/modules/<id>/module.json`. But `src/modules-config.js` is the authoritative source for lesson lists at runtime — `getLessonNav()`, `computeModuleProgress()`, sidebar rendering, exercise-view's lessonId derivation, and the completion summary all read from `MODULES`. A new lesson file that is not in `MODULES` is unreachable: the sidebar doesn't link to it, `getLessonNav()` returns `next: null` for the previous lesson, and the module progress denominator doesn't count it.
+
+**Warning sign:** New lesson file exists and can be fetched directly by URL, but is not visible in the sidebar. The preceding lesson's "Next lesson" link points to the wrong lesson (or shows nothing).
+
+**Prevention:** Treat `modules-config.js` as a required change alongside every new lesson. The content authoring guide (`FORK-01`) must document this dual-update requirement. After each lesson addition, run `npm test` — `content-loader.test.js` tests for `getLessonNav()` will fail if the lesson ordering is wrong. Note: the 8 test files that mock `modules-config.js` use minimal fixture arrays and do not need to mirror production lesson counts.
+
+**Phase to address:** Content additions phase (CONT-05). Verify the dual-update workflow with the first lesson addition before adding all remaining lessons.
+
+---
+
+## Content Additions: Expanded quiz questions are invisible to users who already completed the quiz
+
+**Pitfall:** The quiz engine tracks completion by comparing `answeredCount === totalQuestions` (line 240 in `quiz-engine.js`). `totalQuestions` is `quiz.questions.length` at render time. Prior completion is stored as `{ score: N, total: M }`. If CONT-07 adds 3 new questions to `logging-auditing/quizzes/01.json` (3 → 6 questions), a returning user who previously completed the quiz sees the "revisit" view (score banner + locked cards) with only 3 locked questions. The 3 new questions are never rendered for that user — they appear to have "completed" a quiz containing content they've never seen.
+
+**Warning sign:** A user who completed the logging-auditing quiz before CONT-07 deployed sees "3/3 correct — 2026-04-15" and 3 locked question cards. The 3 new questions do not appear.
+
+**Prevention:** When expanding a quiz question bank, create a new quiz file (`02.json`) rather than adding questions to an existing file. Wire it as a second quiz entry in `modules-config.js` for the appropriate lesson. Do not delete or reorder existing question IDs in quiz files — the stored `score` and `total` refer to the old question set implicitly, and reordering makes the score misleading.
+
+**Phase to address:** CONT-07. Treat expanding question banks as additive content (new quiz file), not as modifications to existing quiz files.
+
+---
+
+## Content Additions: New branching scenario nextPhaseId typos cause silent null routing
+
+**Pitfall:** `scenario-view.js` includes `validateScenario()` which checks all `nextPhaseId` references resolve to real phase IDs. When CONT-06 new multi-path scenarios are authored, a typo in `nextPhaseId` causes `validateScenario()` to return `false` and the view renders "scenario data is invalid." This failure is only visible when a user clicks the specific choice that routes to the broken phase — other paths through the scenario work fine. CI never navigates to all scenario branches.
+
+**Warning sign:** A scenario appears to work (first branch navigates correctly) but a specific choice selection triggers a "scenario data is invalid" render. Bug is only found in manual testing of all branches.
+
+**Prevention:** Add a build-time (or Vitest) validation script that loads all `scenarios/*.json` files and runs `validateScenario()` against each. This converts a runtime content error into a CI failure. The SME review checklist (SME-02) should include "all scenario branch paths manually tested." A short Node script in `scripts/validate-scenarios.js` + `npm run validate` is sufficient.
+
+**Phase to address:** Content additions phase (CONT-06). Add the validation script before authoring any new scenarios.
+
+---
+
+## Cross-Feature Pitfalls
+
+### PWA + Fork Config: public fork.config.json precached before operator customizes it
+
+**What goes wrong:** `vite-plugin-pwa` precaches all files matching `globPatterns` at build time, including `public/fork.config.json`. If the default (empty) `fork.config.json` is precached in the public build, a fork operator who edits `fork.config.json` in GitHub's web editor without triggering a CI rebuild does not regenerate the Workbox manifest. Offline users receive the uncustomized default fork config indefinitely.
+
+**Prevention:** Document in `FORK-01` that after any change to `fork.config.json`, running `npm run build` and redeploying is mandatory. If GitHub Actions CI deploys automatically on push to main, this is automatic — make CI the only deployment path for all fork deployments.
+
+**Phase to address:** FORK-01 documentation. Add a warning box to the fork guide.
+
+---
+
+### Content Additions + modules-config.js + Vitest: test count drift from real vs fixture data
+
+**What goes wrong:** Eight test files mock `../src/modules-config.js` with minimal fixture arrays. Real `MODULES` has 3 lessons per module (15 total at v1.0). Adding lessons per CONT-05 makes real `MODULES` have 5+ lessons per module (25+). Tests use their own fixtures — correct and intentional. However, if any test asserts on exact counts using hardcoded numbers that matched the v1.0 production data (e.g., `expect(items.length).toBe(15)`), those assertions will now diverge from what real users see, without the test actually failing. The tests pass but they've stopped describing production behavior.
+
+**Prevention:** Audit test files for hardcoded counts that assume v1.0 lesson structure (look for `toBe(15)`, `toBe(3)`, `toBe(5)`) before CONT-05 begins. Make count assertions use the fixture array's own length dynamically. The production code and the fixture data are intentionally decoupled — but that decoupling must not hide regressions.
+
+**Phase to address:** CONT-05. Run full test suite after first lesson additions and fix any count-based assertions that have become misleading.
+
+---
+
+## Silent Failures
+
+### Lesson content blank offline — no error shown
+
+**What happens:** `fetchLesson()` in `content-loader.js` returns `null` on fetch failure and the lesson view renders a blank content area. Offline users see a styled shell (sidebar, nav, header) with an empty main column. No error message, no "you are offline" indicator. Users assume the content is loading or that there is a bug.
+
+**Why it's silent:** The `catch` in `fetchLesson` returns `null`. The lesson view checks `if (!rawMarkdown)` and returns early without setting an error state.
+
+**Mitigation:** Add explicit offline detection to the lesson view: if `fetchLesson` returns `null`, check `navigator.onLine` — if `false`, show "You are offline. Connect to load this lesson." If `true`, show "Could not load lesson content." This is separate from the PWA-02 offline indicator which is a global status badge.
+
+---
+
+### fork.config.json 404 causes TypeError if not null-guarded throughout
+
+**What happens:** If `fork.config.json` is absent (public repo, no fork customization), `loadForkConfig()` returns `null`. Any code that reads `forkConfig.activeModules` without an optional chain guard throws `TypeError: Cannot read properties of null`. The error is caught by the view renderer's try/catch, which then sets `app.innerHTML = ''` — a blank white screen with no feedback.
+
+**Why it's silent:** The TypeError is swallowed by the view renderer's catch block. The app renders nothing. No console error is shown in production builds.
+
+**Mitigation:** `loadForkConfig()` must return a full default config object on 404, never `null`. Define `DEFAULT_FORK_CONFIG` as a module-level constant and return it on any fetch failure:
+```js
+const DEFAULT_FORK_CONFIG = {
+  orgName: '',
+  logoPath: null,
+  activeModules: null,  // null = all modules active
+  complianceRefsOverrides: {}
+};
+```
+
+---
+
+### Progress store migration silently zeroes user progress if _blankStore() keys are wrong
+
+**What happens:** The `migrate()` function fills missing keys using `if (!(key in d)) d[key] = blank[key]`. This is correct. But if a v2.0 `_blankStore()` accidentally renames an existing key (e.g., `quizzes` becomes `quizResults`), all existing quiz progress disappears on the next `init()` call — `d.quizzes` is present, but the code now reads `d.quizResults` which is blank.
+
+**Why it's silent:** The app continues to work. Quiz progress shows as not attempted. The user only notices when they return to a lesson they completed and find it unmarked.
+
+**Mitigation:** Never rename existing keys in `_blankStore()` in a version bump — only add new keys. The existing `migrate()` guard `if (!(key in d))` protects against missing keys but not against key renames. Add a test that asserts all v1 keys are present in the v2 schema: `expect(v2BlankStore).toMatchObject(v1BlankStore)`.
+
+---
+
+### Service worker update never activates for multi-tab users
+
+**What happens:** With `registerType: 'prompt'` and no `skipWaiting`, the updated service worker sits in "waiting" state indefinitely as long as at least one tab with the app is open. The learner using the training continuously (tabbed open all day) never receives content or config updates.
+
+**Why it's silent:** No error. The app works normally on the old cached version. The service worker update status is visible only in DevTools Application tab.
+
+**Mitigation:** Use `registerType: 'autoUpdate'` + `skipWaiting: true` in Workbox config. Combined with `clients.claim()`, this activates the new worker immediately without user action and without requiring tab closure.
 
 ---
 
 ## Phase-Specific Warning Summary
 
-| Phase Topic | Highest-Risk Pitfall | Mitigation Priority |
-|-------------|---------------------|---------------------|
-| Project scaffolding | SPA routing 404s (Pitfall 8) | Resolve before any routing is built |
-| Data model design | localStorage schema drift (Pitfall 11) | Schema version key from day one |
-| Content architecture | NERC CIP scope misrepresentation (Pitfall 1) | SME review before first lesson |
-| Content architecture | TSA directive version staleness (Pitfall 2) | Single reference data file |
-| Terminal build | Simulated terminal fidelity gap (Pitfall 5) | Scope contract defined before build |
-| Terminal build | Accessibility neglect (Pitfall 14) | Keyboard + screen reader from day one |
-| Terminal build | Scope creep (Pitfall 15) | Exercise definition schema enforced |
-| Lesson authoring — all modules | OT/IT conflation (Pitfall 4) | OT callout template for every applicable lesson |
-| Lesson authoring — all modules | Quiz-only transfer failure (Pitfall 6) | Terminal exercise gate for completion |
-| Lesson authoring — all modules | Regulatory complexity overload (Pitfall 7) | Lead with task, not framework |
-| Patch Management module | OT patching constraints (Pitfall 4, highest here) | Dedicated OT patching section required |
-| Progress tracking | localStorage data loss (Pitfall 10) | Export + private-mode detection |
-| All content | Public site org assumptions (Pitfall 12) | Generic identifiers + customize placeholders |
-| Post-launch | Compliance content ownership vacuum (Pitfall 13) | Maintenance runbook at launch |
-| Post-launch | NIST Rev 3 vs Rev 2 drift (Pitfall 3) | Pin to Rev 3, no section citations |
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|---------------|------------|
+| Content additions (CONT-05) | New lessons not in modules-config.js — unreachable via nav | modules-config.js update is required alongside every new lesson file |
+| Content additions (CONT-07) | Expanded quiz questions invisible to prior completers | Use new quiz file (02.json) not additions to existing file |
+| Content additions (CONT-06) | Scenario nextPhaseId typo causes silent null-routing on specific branches | Add build-time validateScenario() CI check before authoring new scenarios |
+| Fork config (FORK-02/FORK-03) | fork.config.json 404 causes TypeError if not null-guarded | Return DEFAULT_FORK_CONFIG object on 404 — never null |
+| Fork config (FORK-03) | activeModules filtering applied to computeModuleProgress breaks completion totals | Filter only at render layer; progress calculation uses full MODULES |
+| Fork config logo | Root-relative logoPath breaks at sub-path deployment | Prepend BASE_URL in app; document in FORK-01 |
+| SME update (SME-01) | Quiz JSON hardcodes "SD-02F" — not sourced from compliance-refs.json | SME checklist must scope quiz/exercise/scenario JSON files; run full-text search |
+| SME update (SME-01) | No confirmed successor directive yet — expired badge needed now | Add expiry status logic to badge.js; separate "mark expired" from "update to successor" |
+| PWA (PWA-01) | Markdown and JSON files not in default precache glob | Add `md,json` to globPatterns explicitly |
+| PWA (PWA-01) | sw.js scope mismatch at non-root GitHub Pages base path | Do not override scope/outDir in VitePWA; let plugin inherit Vite base |
+| PWA (PWA-02) | Users stuck on stale cached version indefinitely | autoUpdate + skipWaiting + reload notification |
+| Sync ADR (SYNC-01) | GitHub Gist sync exposes PAT in localStorage | Document credential exposure in ADR; prefer Supabase anon + RLS |
+| Sync implementation (SYNC-02) | Supabase table without RLS is world-readable | RLS required in acceptance criteria, not just "sync works" |
+| Sync implementation (SYNC-02) | schemaVersion bump without migration chain corrupts existing stores | Implement migrate() chain step and tests before bumping CURRENT_VERSION |
+| PWA + Sync (cross-feature) | Sync API calls cached by service worker — silent stale writes | NetworkOnly runtime caching for sync backend URLs in same PR as PWA |
+| PWA + SME (cross-feature) | Updated compliance-refs.json not reflected for offline users | Always rebuild after any public/ file change — document in SME checklist |
+| PWA + Fork Config (cross-feature) | Fork operator edits fork.config.json without rebuild — cached version not updated | Document in FORK-01: rebuild is mandatory after any fork.config.json change |
 
 ---
 
 ## Sources
 
-- TSA Security Directives and Emergency Amendments: https://www.tsa.gov/sd-and-ea
-- SD Pipeline-2021-02F (May 2025): https://www.tsa.gov/sites/default/files/tsa-security-directive-pipeline-2021-02f-and-memo-508c.pdf
-- Dragos TSA directive analysis: https://www.dragos.com/blog/us-transportation-security-administration-releases-updated-pipeline-security-directive-key-revisions-and-compliance-strategies/
-- NIST SP 800-82 Rev 3 (September 2023): https://csrc.nist.gov/pubs/sp/800/82/r3/final
-- Certrec 2025 NERC CIP updates: https://www.certrec.com/resources/nerc-primer/2025-updates-to-nerc-cip-standards-cip-015-1-cip-003-12-and-cip-005/
-- NERC CIP standards page: https://www.nerc.com/standards/reliability-standards/cip
-- GitHub Pages limits (official docs): https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-limits
-- GitHub Pages SPA routing discussion: https://github.com/orgs/community/discussions/64096
-- MDN Storage quotas and eviction: https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria
-- localStorage error handling: https://mmazzarolo.com/blog/2022-06-25-local-storage-status/
-- OT patch management constraints: https://www.action1.com/blog/patch-management/ot-patch-management/
-- Industrial Cyber OT training rethink: https://industrialcyber.co/features/rethinking-ot-cybersecurity-training-as-operators-remain-unprepared-for-converged-escalating-threat-landscape/
-- SANS 2026 OT skills crisis report: https://industrialcyber.co/reports/sans-2026-report-flags-cybersecurity-skills-crisis-putting-critical-infrastructure-and-ot-sectors-at-measurable-breach-risk/
-- Simulation fidelity and learner expectations: https://mededu.jmir.org/2026/1/e84684
-- LearnUpon e-learning pitfalls: https://www.learnupon.com/blog/elearning-pitfalls-to-avoid/
-- 18F content debt guide: https://18f.gsa.gov/2016/05/19/content-debt-what-it-is-where-to-find-it-and-how-to-prevent-it-in-the-first-place/
+- [vite-plugin-pwa: Service Worker Precache — globPatterns](https://vite-pwa-org.netlify.app/guide/service-worker-precache) — HIGH confidence
+- [vite-plugin-pwa Issue #82: Problem with path in non-root hosting like GitHub Pages](https://github.com/vite-pwa/vite-plugin-pwa/issues/82) — MEDIUM confidence
+- [Workbox: Handling service worker updates](https://developer.chrome.com/docs/workbox/handling-service-worker-updates) — HIGH confidence
+- [Supabase: Securing your API — anon key and RLS](https://supabase.com/docs/guides/api/securing-your-api) — HIGH confidence
+- [Supabase: Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security) — HIGH confidence
+- [Vitest: Mocking modules — vi.mock hoisting](https://vitest.dev/guide/mocking) — HIGH confidence
+- [TSA SD-02F PDF — confirms expiry May 2, 2026](https://www.tsa.gov/sites/default/files/tsa-security-directive-pipeline-2021-02f-and-memo-508c.pdf) — HIGH confidence; no confirmed successor as of 2026-05-17
+- Project source code direct inspection: `src/progress-store.js`, `src/quiz-engine.js`, `src/modules-config.js`, `src/content-loader.js`, `src/main.js`, `src/views/scenario-view.js`, `tests/progress-store.test.js`, `tests/quiz-engine.test.js`, `public/data/modules/logging-auditing/quizzes/01.json` — HIGH confidence
