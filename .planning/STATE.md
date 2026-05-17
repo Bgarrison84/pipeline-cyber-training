@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: MVP
-status: complete
+milestone: v2.0
+milestone_name: Content Depth & Platform Maturity
+status: planning
 last_updated: "2026-05-17T00:00:00.000Z"
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 30
-  completed_plans: 30
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # State — Pipeline Cyber Training
@@ -19,7 +19,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-05-17)
 
 **Core value:** An IT/OT admin who completes a module can perform the covered compliance control in their real environment, not just pass a quiz about it.
-**Current focus:** v1.0 milestone complete — planning next milestone (v2.0 or v1.1)
+**Current focus:** v2.0 milestone — Content Depth & Platform Maturity
+
+---
+
+## Current Position
+
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-17 — Milestone v2.0 started
 
 ---
 
@@ -34,36 +43,25 @@ All 5 modules live on GitHub Pages. Archive: `.planning/milestones/v1.0-ROADMAP.
 
 ---
 
-## Phase Summary
-
-| Phase | Name | Status |
-|-------|------|--------|
-| 1 | App Shell + Build Pipeline + Deploy | ✓ Complete (2026-05-11) |
-| 2 | Content Loader + Lesson Rendering + Module 1 | ✓ Complete (2026-05-14) |
-| 3 | Progress Store | ✓ Complete (2026-05-14) |
-| 4 | Quiz Engine + Lesson Progress UI | ✓ Complete (2026-05-15) |
-| 5 | Simulated PowerShell Terminal + Exercise View | ✓ Complete (2026-05-15) |
-| 6 | Scenario Engine + Compliance Index + Completion Summary | ✓ Complete (2026-05-16) |
-| 7 | Core Module Content (MOD-02, MOD-03, MOD-04) | ✓ Complete (2026-05-16) |
-| 8 | Patch Management Module (MOD-05) | ✓ Complete (2026-05-17) |
-
----
-
 ## Critical Compliance Constraints (Carry Forward)
 
 - **NERC CIP scope:** NERC CIP applies to electric utilities ONLY — never present as binding for pipeline operators; always add scope callout
-- **TSA current version:** SD-02F (expires May 2, 2026) — stored in compliance-refs.json, never hardcoded; **update needed before May 2026**
+- **TSA current version:** SD-02F **EXPIRED May 2, 2026** — update compliance-refs.json to successor directive as early as Phase 1 of v2.0
 - **OT/IT distinctions:** Every dual-use lesson requires explicit "In OT environments:" callout block
 - **Terminal scope contract:** Pattern-matching exercise engine ONLY — not a PS interpreter; scope callout required in UI at all times
 
 ---
 
-## Session Continuity
+## Accumulated Context
 
-**Last updated:** 2026-05-17 — v1.0 milestone complete and archived
-**Next action:** `/gsd-new-milestone` to plan v1.1 or v2.0
+**Decisions carried forward:**
+- Custom vanilla JS terminal (no jQuery Terminal)
+- localStorage-only progress for v1; v2.0 adds sync with auth decision
+- GitHub Pages static site constraint applies to all v2 features (no server-side execution)
+- Wave 0 stub file pattern established for Vite path resolution
 
 ---
 
 *State initialized: 2026-05-10*
 *v1.0 archived: 2026-05-17*
+*v2.0 started: 2026-05-17*

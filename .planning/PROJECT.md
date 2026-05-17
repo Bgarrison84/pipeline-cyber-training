@@ -39,13 +39,18 @@ An IT/OT admin who completes a module should be able to perform the covered comp
 - ✓ **DATA-04** — schemaVersion: 1 in localStorage, QuotaExceededError handled gracefully — v1.0
 - ✓ **DATA-05** — Export progress as JSON — v1.0
 
-### Active (v2 — Next Milestone)
+### Active (v2.0 — Content Depth & Platform Maturity)
 
-- [ ] Offline support (service worker / PWA) — critical for air-gapped internal org forks
-- [ ] Internal org fork guide — configuration docs for deploying as internal training tool
-- [ ] Deeper content pass — more lessons per module, advanced scenarios
-- [ ] Progress sync across devices (requires auth design decision)
-- [ ] Compliance SME review of content before marketing as authoritative
+- [ ] **CONT-05** — Additional lessons per module (≥2 new lessons each), covering advanced scenarios and edge-case controls
+- [ ] **CONT-06** — Advanced branching scenarios per module (one per module, multi-path, OT-specific outcomes)
+- [ ] **FORK-01** — Internal org fork guide: step-by-step docs for deploying as internal training tool (branding, module selection, compliance-refs customization)
+- [ ] **FORK-02** — Fork configuration system: env/config file that controls org name, logo path, active modules, custom compliance refs
+- [ ] **SME-01** — Structured SME review checklist and audit trail artifact for content accuracy sign-off
+- [ ] **SME-02** — TSA SD-02F successor directive version updated in compliance-refs.json (SD-02F expired May 2, 2026)
+- [ ] **PWA-01** — Service worker caching for offline use (lessons, quizzes, exercises playable without network)
+- [ ] **PWA-02** — Offline indicator in UI (clear signal when running cached vs. live)
+- [ ] **SYNC-01** — Auth design decision documented (ADR): choose lightweight option compatible with static-site constraint
+- [ ] **SYNC-02** — Cross-device progress sync implemented per chosen auth approach
 
 ### Out of Scope (Validated at v1.0)
 
@@ -99,4 +104,17 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-*Last updated: 2026-05-17 after v1.0 milestone — 26/26 requirements shipped, all 5 modules complete*
+## Current Milestone: v2.0 — Content Depth & Platform Maturity
+
+**Goal:** Deepen training content across all 5 modules and mature the platform for real-world org deployment, compliance currency, and offline/multi-device use.
+
+**Target features (priority order):**
+1. Deeper content — more lessons per module, advanced scenarios, expanded quizzes
+2. Internal org fork guide — configuration docs + config system for internal org deployments
+3. Compliance SME review — structured audit pass + TSA directive currency update
+4. Offline support / PWA — service worker caching for air-gapped forks
+5. Progress sync across devices — auth ADR then implementation
+
+---
+
+*Last updated: 2026-05-17 — v2.0 milestone started; v1.0 complete (26/26 requirements, 5 modules)*
