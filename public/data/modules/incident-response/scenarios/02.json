@@ -1,0 +1,78 @@
+{
+  "id": "incident-response-scenario-02",
+  "moduleId": "incident-response",
+  "title": "Ransomware Detection on the OT Network",
+  "complianceControls": ["TSA-IR", "NIST-IR-4"],
+  "narrative": "At 03:17 UTC, your EDR platform generates a critical alert: 'Possible Ransomware — Unusual encrypted file writes detected on PIPELINE-HMI01.' A second alert follows 45 seconds later: 'Suspicious outbound connection from PIPELINE-HMI01 to 203.0.113.47:443 (non-RFC1918).'\n\nPIPELINE-HMI01 is an HMI workstation on the ExampleCorp pipeline OT network at 10.0.0.45. The operations team confirms the pipeline is currently active — compressor station 3 is running overnight batch operations and PIPELINE-HMI01 is displaying real-time process data.\n\nIn OT environments: A decision to immediately isolate PIPELINE-HMI01 without operator coordination could disrupt real-time pipeline control visibility at compressor station 3. However, ransomware with an active command-and-control connection can spread to adjacent OT systems on the 10.0.0.0/24 segment, including the historian and safety instrumented systems.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Initial Containment Decision",
+      "isFinal": false,
+      "prompt": "EDR shows ransomware indicators and an active C2 connection from PIPELINE-HMI01 (10.0.0.45). The pipeline is currently active and PIPELINE-HMI01 is displaying real-time process data for compressor station 3. What is your first action?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Immediately disable the network adapter on PIPELINE-HMI01 using Disable-NetAdapter to stop the C2 connection and prevent lateral movement.",
+          "outcome": "You run Disable-NetAdapter remotely on PIPELINE-HMI01. The HMI loses network connectivity and the real-time process display goes dark. The operations control room did not know the isolation was coming — the operator at compressor station 3 loses visibility and triggers an emergency shutdown procedure as a precaution. The pipeline is now in a safe but unplanned shutdown state. The cyber threat is contained, but you have created an operational incident by acting without coordination. TSA will need to be notified of both the cybersecurity incident and the unplanned shutdown.",
+          "correct": false,
+          "nextPhaseId": "phase-2-it"
+        },
+        {
+          "id": "opt-b",
+          "text": "Immediately call the operations control room supervisor, explain the ransomware alert, and coordinate a VLAN quarantine at the switch level while the supervisor confirms manual control is available for compressor station 3.",
+          "outcome": "You reach the control room supervisor within 60 seconds. The supervisor confirms that compressor station 3 can continue running on local PLC control without PIPELINE-HMI01's display. Your network team moves PIPELINE-HMI01's switch port to the quarantine VLAN. The HMI loses external connectivity but the local PLC keeps running. The C2 connection is severed. The pipeline stays operational. You begin volatile evidence collection from the quarantine VLAN and start the TSA notification package. Coordinated containment — the OT-safe approach.",
+          "correct": true,
+          "nextPhaseId": "phase-2-ot"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-ot",
+      "type": "decision",
+      "title": "Evidence Collection and TSA Notification",
+      "isFinal": true,
+      "prompt": "PIPELINE-HMI01 is isolated in the quarantine VLAN. The pipeline is running normally on local PLC control. You have 22 hours remaining before the TSA notification deadline. You can see that the C2 connection has dropped. What do you do next?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Connect to PIPELINE-HMI01 in the quarantine VLAN, collect volatile evidence (processes, connections, event logs) with PowerShell, hash each artifact immediately, then begin drafting the TSA notification package using the timestamped incident log as the source document.",
+          "outcome": "Excellent execution. You collect Get-Process, Get-NetTCPConnection, and wevtutil exports — each hashed with Get-FileHash SHA-256 immediately after collection. The PowerShell/Operational event log contains the decoded script block of the initial ransomware dropper, giving you the full attack chain. You submit the TSA notification 4 hours after detection — well within the required window. The incident log documents every action with timestamps. Post-incident review is scheduled within 30 days per NIST IR-4. Full compliance with TSA reporting requirements and NIST IR-5 evidence preservation.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Restore PIPELINE-HMI01 from the last known-good backup immediately to restore full operational visibility for compressor station 3, then document the incident internally.",
+          "outcome": "Restoring from backup destroys all forensic evidence on PIPELINE-HMI01 — including the volatile process state, the C2 connection history, and the PowerShell/Operational logs that would reveal the attack vector. You cannot reconstruct what happened. More critically, you have not notified TSA. The current TSA pipeline security directive requires notification within 24 hours of determining a reportable incident has occurred — an internal incident report does not satisfy this requirement. You are now out of compliance on the notification requirement as well as the incident itself. Evidence collection must occur before restoration.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    },
+    {
+      "id": "phase-2-it",
+      "type": "decision",
+      "title": "Recovery After Uncoordinated Isolation",
+      "isFinal": true,
+      "prompt": "PIPELINE-HMI01 is isolated but the uncoordinated shutdown caused an unplanned compressor station 3 outage. Operations has the station back in manual control. The cyber threat is contained. How do you proceed to return to compliance?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Document both incidents — the cybersecurity event and the unplanned operational outage — in separate incident logs. Notify TSA of the cybersecurity incident within the required timeframe. Include the unplanned shutdown in the operational impact section. Conduct a post-incident review that adds 'notify operations supervisor before OT host isolation' to the IR runbook.",
+          "outcome": "This is the correct remediation path. You cannot undo the uncoordinated isolation, but you can respond correctly from this point. Documenting both events, notifying TSA with accurate operational impact (including the unplanned shutdown), and updating your IR runbook to prevent recurrence are all required responses. The post-incident review is also required by NIST IR-4 within 30 days. The lesson: the OT-specific pre-isolation coordination step must be in your IR runbook and tested in quarterly drills before the next incident.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Notify TSA only of the cybersecurity incident. Do not mention the unplanned operational shutdown in the notification — it was a precautionary operational decision, not a cybersecurity impact.",
+          "outcome": "Omitting the operational impact from the TSA notification is a compliance error. The current TSA pipeline security directive requires that the notification include the operational impact on pipeline operations — including unplanned shutdowns, even if the shutdown was triggered by the incident response action rather than the ransomware itself. An incomplete notification that omits a material operational impact can create additional TSA scrutiny. Report the full operational impact accurately, including the unplanned shutdown and its cause (uncoordinated isolation). Accurate reporting is required; incomplete reporting is a separate compliance issue.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}

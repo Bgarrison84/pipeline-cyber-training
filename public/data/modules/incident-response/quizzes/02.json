@@ -1,0 +1,106 @@
+{
+  "id": "incident-response-quiz-02",
+  "moduleId": "incident-response",
+  "title": "Incident Response — Advanced Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "In an OT pipeline environment, what is the FIRST step before isolating a SCADA host suspected of ransomware infection?",
+      "complianceControls": ["TSA-IR", "NIST-IR-4"],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Run Disable-NetAdapter on the SCADA host immediately to stop lateral movement.",
+          "correct": false,
+          "feedback": "Immediately disabling the network adapter on a SCADA host without operations coordination can disrupt active pipeline control commands and cause a process safety event. OT incident response requires operations team coordination before any SCADA host is isolated — even when a threat is confirmed. The control room supervisor must verify operational safety before isolation proceeds."
+        },
+        {
+          "id": "b",
+          "text": "Notify the operations control room supervisor and confirm the host can be safely isolated before taking any network action.",
+          "correct": true,
+          "feedback": "Correct. NIST SP 800-82 Rev 3 Section 6.4.3 requires that OT-specific incident response plans account for process safety constraints. In a pipeline environment, isolating a SCADA host without operations team coordination can disrupt real-time control commands and trigger a process safety incident. The control room supervisor confirms that failover or manual control is available before isolation proceeds. Notify first, then isolate."
+        },
+        {
+          "id": "c",
+          "text": "Collect a full disk image of the SCADA host before taking any containment action.",
+          "correct": false,
+          "feedback": "A full disk image takes 30–90 minutes. While imaging is occurring, an active ransomware infection continues to run and can spread to adjacent OT systems. In OT incident response, volatile evidence collection (processes, network connections, event logs) is collected quickly, but a full disk image is not the first step. Coordinate with operations, then contain, then collect evidence from the isolated host."
+        },
+        {
+          "id": "d",
+          "text": "Submit an internal IT ticket to the help desk and wait for approval before taking action.",
+          "correct": false,
+          "feedback": "An active ransomware infection on a SCADA host is an emergency that requires immediate, pre-authorized IR procedures — not a help desk ticket. Your IR plan should define pre-authorized containment authorities for confirmed cyber threats. Waiting for ticket approval while ransomware spreads toward safety systems is not an acceptable OT incident response practice."
+        }
+      ],
+      "explanation": "In OT environments, the order of operations for SCADA host containment is: (1) Notify the operations control room supervisor, (2) confirm that failover or manual control is available, (3) isolate at the switch VLAN level or host level with operations approval, (4) collect volatile evidence from the isolated host. This sequence is required by NIST SP 800-82 Rev 3 and the current TSA pipeline security directive's OT-specific IR plan requirements."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell command captures volatile network connection state suitable for forensic evidence and chain-of-custody documentation?",
+      "complianceControls": ["NIST-AU-9", "NIST-IR-5"],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-NetTCPConnection | Where-Object State -eq Established | Export-Csv -Path 'C:\\Evidence\\connections.csv' -NoTypeInformation",
+          "correct": true,
+          "feedback": "Correct. Get-NetTCPConnection captures the live network connection table — volatile data that is lost on reboot. Filtering to Established connections reduces noise. Export-Csv with -NoTypeInformation produces a portable, structured file suitable for chain-of-custody documentation. Follow immediately with Get-FileHash on the output file to hash the evidence for NIST AU-9 integrity verification."
+        },
+        {
+          "id": "b",
+          "text": "netstat -a | Out-File 'C:\\Evidence\\connections.txt'",
+          "correct": false,
+          "feedback": "netstat -a captures connection state but Out-File produces unstructured plain text — not a structured, portable format for chain-of-custody documentation. Get-NetTCPConnection with Export-Csv produces a structured CSV that can be ingested into SIEM tools, spreadsheets, or forensic platforms without parsing. Use netstat as a fallback only on legacy systems where Get-NetTCPConnection is unavailable."
+        },
+        {
+          "id": "c",
+          "text": "Get-NetAdapter | Select-Object Name, Status | Export-Csv 'C:\\Evidence\\adapters.csv' -NoTypeInformation",
+          "correct": false,
+          "feedback": "Get-NetAdapter captures network adapter configuration (name, MAC, status) — not network connection state. It does not show active TCP connections, remote IP addresses, or owning process IDs. Use Get-NetTCPConnection to capture the volatile connection state that identifies active C2 connections and lateral movement targets."
+        },
+        {
+          "id": "d",
+          "text": "ipconfig /all | Out-File 'C:\\Evidence\\ipconfig.txt'",
+          "correct": false,
+          "feedback": "ipconfig /all captures network adapter IP configuration — not active TCP connections. It is useful for documenting the network configuration of an evidence host but does not show active connections, remote addresses, or owning processes. It is also an unstructured text file without chain-of-custody hash support. Use Get-NetTCPConnection for volatile connection state evidence."
+        }
+      ],
+      "explanation": "Volatile evidence — data that exists only in live system state and is lost on reboot — must be collected before isolation or restart. Get-NetTCPConnection piped to Export-Csv captures the live TCP connection table in a structured, hashable format. Follow collection with Get-FileHash (SHA-256) immediately to establish the chain-of-custody integrity record required by NIST AU-9. In OT environments where PowerShell is unavailable, use netstat -ano and redirect output to a USB drive — document the fallback method in the incident log."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "Under the current TSA pipeline security directive, when must a pipeline operator report a significant cybersecurity incident to TSA?",
+      "complianceControls": ["TSA-IR"],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Within 24 hours of determining that a reportable cybersecurity incident has occurred.",
+          "correct": true,
+          "feedback": "Correct. The current TSA pipeline security directive requires notification of significant cybersecurity incidents within 24 hours of determining that a reportable incident has occurred. The clock starts at determination, not at the time the incident began. The notification must include the nature of the incident, affected systems, containment actions taken, and operational impact. Begin preparing the notification package at the same time as containment — do not wait until containment is complete."
+        },
+        {
+          "id": "b",
+          "text": "Within 72 hours, consistent with the GDPR breach notification standard.",
+          "correct": false,
+          "feedback": "The 72-hour timeline is the GDPR personal data breach notification requirement — a European data protection regulation that does not apply to US pipeline operators. The current TSA pipeline security directive has its own reporting timeline that is shorter than GDPR's 72-hour window. Do not apply GDPR timelines to TSA incident reporting obligations."
+        },
+        {
+          "id": "c",
+          "text": "After the internal investigation is complete and the root cause has been confirmed.",
+          "correct": false,
+          "feedback": "TSA notification is not contingent on completing your internal investigation. The reporting requirement is triggered by your determination that a reportable incident has occurred — not by completion of root cause analysis. Waiting for root cause confirmation before notifying TSA will typically result in a missed notification deadline. Notify TSA with known facts, and supplement the notification as the investigation progresses."
+        },
+        {
+          "id": "d",
+          "text": "Only if the incident caused a confirmed pipeline operational disruption.",
+          "correct": false,
+          "feedback": "The notification requirement under the current TSA pipeline security directive is not limited to incidents that caused confirmed operational disruptions. A significant cybersecurity incident on pipeline systems — including unauthorized access, ransomware infection, or confirmed lateral movement toward OT systems — must be reported even if pipeline operations were not disrupted. Review your TSA-approved cybersecurity plan for the specific threshold definitions applicable to your operations."
+        }
+      ],
+      "explanation": "The current TSA pipeline security directive requires notification of significant cybersecurity incidents within 24 hours of the operator determining that a reportable incident has occurred. The notification must be made to TSA's cybersecurity division with: incident nature, affected systems, detection timestamp, containment actions taken, and operational impact. Build the notification package in parallel with containment — using a real-time incident log from the first moment of response. Delays in notification are themselves compliance violations, separate from the underlying incident."
+    }
+  ]
+}
