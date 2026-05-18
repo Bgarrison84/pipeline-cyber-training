@@ -115,7 +115,20 @@ Cross-cutting constraints:
 - Logo path must be prepended with import.meta.env.BASE_URL — root-relative paths break at the GitHub Pages subpath
 - public/fork.config.json must exist in the repo before Phase 11 runs — Workbox precache manifest snapshots dist/ at build time; a missing file means offline users never receive it
 
-**Plans**: TBD
+**Plans**: 5 plans, 3 waves
+
+Plans:
+
+**Wave 1** (parallel — no dependencies)
+- [ ] 10-01-PLAN.md — Wave 1: fork-config.js module + public/fork.config.json + public/OkieOps.png (FORK-02, FORK-03)
+- [ ] 10-02-PLAN.md — Wave 1: docs/FORK-GUIDE.md IT admin deployment guide (FORK-01)
+
+**Wave 2** *(blocked on Wave 1 / Plan 10-01)*
+- [ ] 10-03-PLAN.md — Wave 2: main.js startup wiring + router.js inactive-module guard (FORK-03)
+- [ ] 10-04-PLAN.md — Wave 2: sidebar.js + home-view.js + completion-summary-view.js render filter (FORK-03)
+
+**Wave 3** *(blocked on Wave 2)*
+- [ ] 10-05-PLAN.md — Wave 3: tests/fork-config.test.js — full test coverage (FORK-02, FORK-03)
 
 ---
 
@@ -185,7 +198,7 @@ Cross-cutting constraints:
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | v1.0 | 4/4 | Complete | 2026-05-16 |
 | 8. Patch Management Module (MOD-05) | v1.0 | 4/4 | Complete | 2026-05-17 |
 | 9. Compliance Currency + Content Depth | v2.0 | 0/9 | Planned | - |
-| 10. Fork Configuration System | v2.0 | 0/TBD | Not started | - |
+| 10. Fork Configuration System | v2.0 | 0/5 | Planned | - |
 | 11. PWA / Offline Support | v2.0 | 0/TBD | Not started | - |
 | 12. Progress Sync | v2.0 | 0/TBD | Not started | - |
 
@@ -195,3 +208,4 @@ Cross-cutting constraints:
 *v1.0 milestone archived: 2026-05-17 — 26/26 requirements shipped*
 *v2.0 roadmap added: 2026-05-17 — 14/14 requirements mapped across Phases 9–12*
 *Phase 9 planned: 2026-05-17 — 9 plans across 5 waves*
+*Phase 10 planned: 2026-05-18 — 5 plans across 3 waves*
