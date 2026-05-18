@@ -1,0 +1,78 @@
+{
+  "id": "network-hardening-scenario-02",
+  "moduleId": "network-hardening",
+  "title": "Emergency Remote Access to OT Segment",
+  "complianceControls": ["TSA-NetworkSeg", "NIST-AC-17"],
+  "narrative": "An operator at ExampleCorp reports a SCADA system alarm from home during off-hours. The alarm indicates an abnormal process reading on PIPELINE-HMI01. The IT/OT security team is asked to enable remote access to the OT segment for troubleshooting.\n\nIn OT environments: Remote access to OT control systems must go through a jump host or VPN gateway in the IT/OT DMZ — direct RDP from the IT network into the OT segment is prohibited by the current TSA pipeline security directive. Any remote access session must be logged, time-limited, and recorded with the session owner's identity.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Establishing Remote Access",
+      "isFinal": false,
+      "prompt": "The operator needs immediate access to PIPELINE-HMI01 on the OT segment (10.0.0.0/24) to investigate the SCADA alarm. How do you establish remote access?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Open an inbound RDP rule (port 3389) from the IT network directly to PIPELINE-HMI01 and provide the operator with the IP address.",
+          "outcome": "Direct RDP from the IT network to the OT segment bypasses the DMZ boundary entirely. This creates an unlogged lateral path — the session would not pass through the jump host's audit trail. The current TSA pipeline security directive prohibits direct IT-to-OT connections; opening this rule without written risk acceptance and compensating controls is a network segmentation violation.",
+          "correct": false,
+          "nextPhaseId": "phase-2-it"
+        },
+        {
+          "id": "opt-b",
+          "text": "Route the operator through the DMZ jump host: authenticate to the jump host first, then establish an RDP session from the jump host to PIPELINE-HMI01.",
+          "outcome": "Correct. Routing through the DMZ jump host preserves the IT/OT network boundary. The operator authenticates to the jump host (which is in the DMZ, accessible from IT), and the RDP session from the jump host to PIPELINE-HMI01 is the only IT/OT crossing — made by an authorized, audited system, not a direct IT workstation connection.",
+          "correct": true,
+          "nextPhaseId": "phase-2-ot"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-ot",
+      "type": "decision",
+      "title": "Audit Trail and Session Controls",
+      "isFinal": true,
+      "prompt": "The operator connects to the DMZ jump host, then establishes an RDP session to PIPELINE-HMI01. The alarm turns out to be a sensor calibration drift — no security incident. How do you close out the remote access session in compliance with the current TSA pipeline security directive?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Terminate the RDP session, log the session details (operator identity, session start/end time, actions taken) in the security event log, and confirm the jump host access rule reverts to deny after the maintenance window.",
+          "outcome": "Correct. Terminating the session, logging session details at the jump host level, and reverting access rules satisfies the current TSA pipeline security directive's requirements for documented, time-limited remote access. NIST SP 800-82 Rev 3 Section 5.4 requires that all remote access sessions to OT systems are individually authorized, logged, and terminated when the need ends. The jump host provides the audit trail for all of these requirements.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Leave the jump host access rule open for future convenience — the session is complete and no security incident occurred.",
+          "outcome": "Leaving standing access open is non-compliant. The current TSA pipeline security directive requires that remote access to OT systems be time-limited and revoked when the operational need ends. A standing open path from the IT network to the DMZ jump host — even without an active session — maintains an unauthorized persistent access path to the OT segment. Revoke access and document the session closure.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    },
+    {
+      "id": "phase-2-it",
+      "type": "decision",
+      "title": "Remediation After Direct RDP Connection",
+      "isFinal": true,
+      "prompt": "The direct RDP rule from IT to PIPELINE-HMI01 was opened and the operator connected. The alarm is resolved. What steps are required to return to a compliant state?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Remove the direct RDP rule immediately, document the network segmentation exception with a written risk acceptance signed by the responsible operator, and add a compensating control (such as a time-limited VLAN ACL with session logging) for any future emergencies.",
+          "outcome": "Correct remediation. Removing the rule closes the network segmentation violation. Documenting the exception with written risk acceptance and compensating controls addresses the TSA network segmentation requirement retroactively — NIST SP 800-82 Rev 3 Section 5.4 requires that any exception to segmentation policy is formally documented even after the fact. A compensating control (VLAN ACL with logging) gives you a compliant path for future emergencies that does not require a direct IT-to-OT hole.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Leave the rule in place since the operator is now familiar with the SCADA system and may need access again.",
+          "outcome": "Leaving a direct RDP rule from the IT network to an OT host in place is a standing network segmentation violation. The current TSA pipeline security directive requires documented, enforced segmentation between IT and OT networks — a persistent open rule that was not authorized through the change management process and lacks written risk acceptance is a compliance finding. Remove the rule and use the DMZ jump host path for future access.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}

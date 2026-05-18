@@ -1,0 +1,114 @@
+{
+  "id": "network-hardening-quiz-02",
+  "moduleId": "network-hardening",
+  "title": "Network Hardening — Advanced Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "In the Purdue Model for industrial control network architecture, which level contains HMI workstations and SCADA servers?",
+      "complianceControls": [
+        "NIST-SC-7"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Level 0 — Process",
+          "correct": false,
+          "feedback": "Level 0 contains field devices — sensors, actuators, and valves that directly measure and control the physical process. HMI workstations do not reside at this level; they are supervisory systems, not direct-process devices."
+        },
+        {
+          "id": "b",
+          "text": "Level 1 — Control",
+          "correct": false,
+          "feedback": "Level 1 contains PLCs, RTUs, and DCS controllers — the devices that execute control logic based on field device inputs. HMI workstations operate at a higher level to provide operator visibility into the Level 1 controllers."
+        },
+        {
+          "id": "c",
+          "text": "Level 2 — Supervisory",
+          "correct": true,
+          "feedback": "Correct. Level 2 (Supervisory) contains HMI workstations and SCADA servers — systems that provide operator visibility and supervisory control over the Level 1 control devices. NIST SP 800-82 Rev 3 Chapter 5 defines this level as the primary boundary requiring network isolation from enterprise IT (Level 4)."
+        },
+        {
+          "id": "d",
+          "text": "Level 3 — Manufacturing Operations",
+          "correct": false,
+          "feedback": "Level 3 contains historian servers and manufacturing execution systems that aggregate data from the control network. HMI workstations belong to Level 2 (Supervisory) — one level below the historian and data integration systems at Level 3."
+        }
+      ],
+      "explanation": "HMI workstations and SCADA servers reside at Purdue Model Level 2 (Supervisory). NIST SP 800-82 Rev 3 Chapter 5 requires that Level 2 systems be isolated from enterprise IT (Level 4) by a DMZ at Level 3, with no direct IT-to-OT connections."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "You need to generate a CSV audit record of all enabled Windows Firewall rules on PIPELINE-HMI01 for compliance evidence. Which PowerShell sequence accomplishes this?",
+      "complianceControls": [
+        "NIST-CM-7",
+        "TSA-NetworkSeg"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-NetFirewallRule | Out-File C:\\Audit\\rules.txt",
+          "correct": false,
+          "feedback": "Out-File writes plain text output — it does not produce a structured CSV. Compliance evidence requires a machine-readable format that can be parsed and compared across audit cycles. Use Export-Csv for structured evidence."
+        },
+        {
+          "id": "b",
+          "text": "Get-NetFirewallRule -Enabled True | Export-Csv -Path C:\\Audit\\firewall-rules.csv -NoTypeInformation",
+          "correct": true,
+          "feedback": "Correct. Get-NetFirewallRule -Enabled True retrieves only active rules, and Export-Csv -NoTypeInformation produces a clean CSV without the .NET type header row. This structured output satisfies NIST CM-7 and TSA network segmentation documentation requirements and can be retained as dated evidence."
+        },
+        {
+          "id": "c",
+          "text": "netsh advfirewall firewall show rule name=all > C:\\Audit\\rules.txt",
+          "correct": false,
+          "feedback": "This netsh command works but produces unstructured text output — not a CSV. PowerShell's Get-NetFirewallRule with Export-Csv produces structured, machine-parseable evidence that can be imported and compared across audit cycles, which is the preferred approach for compliance documentation."
+        },
+        {
+          "id": "d",
+          "text": "Get-NetFirewallProfile | Export-Csv -Path C:\\Audit\\firewall-rules.csv",
+          "correct": false,
+          "feedback": "Get-NetFirewallProfile exports firewall profile settings (Default inbound/outbound actions, whether the firewall is enabled) — not individual rules. Use Get-NetFirewallRule to enumerate the individual allow and deny rules that constitute the audit record."
+        }
+      ],
+      "explanation": "Get-NetFirewallRule -Enabled True | Export-Csv produces a structured CSV audit record of all active firewall rules. Adding -NoTypeInformation removes the .NET type header row from the output. Retain the CSV with a dated filename (e.g., firewall-rules-20260518.csv) for the retention period required by the current TSA pipeline security directive."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "Under the current TSA pipeline security directive, what is required when a direct IT-to-OT network connection cannot be avoided for a specific operational need?",
+      "complianceControls": [
+        "TSA-NetworkSeg",
+        "NIST-RA-3"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "No additional steps are required as long as the connection uses an encrypted protocol such as TLS.",
+          "correct": false,
+          "feedback": "Encryption does not substitute for segmentation. The TSA network segmentation mandate requires physical or logical separation between IT and OT networks — an encrypted connection across a missing network boundary still violates the segmentation requirement. Encryption and segmentation are complementary controls, not alternatives."
+        },
+        {
+          "id": "b",
+          "text": "Obtain written risk acceptance from the responsible operator and document compensating controls in the system security plan.",
+          "correct": true,
+          "feedback": "Correct. When a direct IT-to-OT connection cannot be avoided, written risk acceptance from the responsible operator and documented compensating controls are required. NIST SP 800-82 Rev 3 Section 5.4 specifically states that exceptions to network segmentation requirements must be documented with a written risk acceptance and compensating controls. The TSA pipeline security directive's network segmentation mandate carries the same exception documentation requirement."
+        },
+        {
+          "id": "c",
+          "text": "Submit a waiver request to TSA and wait for approval before enabling the connection.",
+          "correct": false,
+          "feedback": "TSA does not operate a per-connection approval process for network architecture exceptions. The operator is responsible for risk acceptance and compensating controls, documented internally in the system security plan — not via a TSA waiver workflow."
+        },
+        {
+          "id": "d",
+          "text": "Install a host-based intrusion detection system on both endpoints and then enable the connection.",
+          "correct": false,
+          "feedback": "Installing detection tools is a compensating control — but it does not substitute for the required written risk acceptance and formal documentation of the exception in the system security plan. Detection does not prevent the violation; it only enables detection after the fact."
+        }
+      ],
+      "explanation": "Direct IT-to-OT connections that cannot be avoided require written risk acceptance by the responsible operator and documented compensating controls in the system security plan. NIST SP 800-82 Rev 3 Section 5.4 and the current TSA pipeline security directive both require that exceptions to network segmentation are formally documented — oral approval or informal processes are not sufficient."
+    }
+  ]
+}
