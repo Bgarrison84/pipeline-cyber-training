@@ -32,4 +32,13 @@ describe('compliance-refs.json', () => {
     expect(typeof refs.directives).toBe('object')
     expect(refs.directives).not.toBeNull()
   })
+
+  // Phase 09 Wave 0 — RED until Wave 1 adds status + expiryDate to compliance-refs.json
+  it('has directives.TSA.status equal to "expired"', () => {
+    expect(refs.directives.TSA.status).toBe('expired')
+  })
+
+  it('has directives.TSA.expiryDate equal to "2026-05-02"', () => {
+    expect(refs.directives.TSA.expiryDate).toBe('2026-05-02')
+  })
 })

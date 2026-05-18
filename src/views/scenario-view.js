@@ -23,7 +23,7 @@ function safePath(segment) {
 // validateScenario — checks all nextPhaseId references resolve to real phase IDs
 // ──────────────────────────────────────────────────────────────────────────────
 
-function validateScenario(scenario) {
+export function validateScenario(scenario) {
   const phaseIds = new Set((scenario.phases ?? []).map(p => p.id));
   for (const phase of scenario.phases ?? []) {
     for (const option of phase.options ?? []) {

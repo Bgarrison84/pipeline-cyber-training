@@ -32,7 +32,7 @@ vi.mock('../src/sidebar.js', () => ({
 }))
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
-import { renderScenario } from '../src/views/scenario-view.js'
+import { renderScenario, validateScenario } from '../src/views/scenario-view.js'
 import { progressStore } from '../src/progress-store.js'
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -175,5 +175,77 @@ describe('renderScenario — re-visit mode', () => {
     })
     await renderScenario({ moduleId: 'logging-auditing', scenarioId: '01' })
     expect(document.getElementById('app').textContent).toContain('previously completed')
+  })
+})
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Phase 09 Wave 0 — validateScenario multi-branch fixture (GREEN immediately)
+// validateScenario already handles branching scenarios (phase-2-ot / phase-2-it paths)
+// ──────────────────────────────────────────────────────────────────────────────
+
+describe('validateScenario multi-branch scenario', () => {
+  it('returns true for a valid multi-branch scenario where both terminal phases have isFinal: true', () => {
+    const fixture = {
+      id: 'logging-auditing-scenario-02',
+      moduleId: 'logging-auditing',
+      phases: [
+        {
+          id: 'phase-1',
+          type: 'decision',
+          isFinal: false,
+          title: 'Initial Response',
+          prompt: 'You receive an alert about unusual outbound traffic from PIPELINE-HMI-01. What do you do first?',
+          options: [
+            {
+              id: 'opt-a',
+              text: 'Isolate the HMI workstation immediately.',
+              outcome: 'Isolation stops the threat but may disrupt pipeline monitoring.',
+              correct: false,
+              nextPhaseId: 'phase-2-it',
+            },
+            {
+              id: 'opt-b',
+              text: 'Review firewall logs for the source and destination IPs.',
+              outcome: 'Reviewing logs first establishes whether the traffic is authorized.',
+              correct: true,
+              nextPhaseId: 'phase-2-ot',
+            },
+          ],
+        },
+        {
+          id: 'phase-2-ot',
+          type: 'decision',
+          isFinal: true,
+          title: 'OT Escalation Path',
+          prompt: 'Logs show authorized historian replication traffic. How do you close the alert?',
+          options: [
+            {
+              id: 'opt-a',
+              text: 'Document the traffic as authorized and update the allowlist.',
+              outcome: 'Correct. Documenting authorized traffic reduces false positives.',
+              correct: true,
+              nextPhaseId: null,
+            },
+          ],
+        },
+        {
+          id: 'phase-2-it',
+          type: 'decision',
+          isFinal: true,
+          title: 'IT Isolation Path',
+          prompt: 'The HMI is isolated. OT operations reports loss of historian data. What next?',
+          options: [
+            {
+              id: 'opt-a',
+              text: 'Notify OT supervisor and restore connectivity after confirming no malware.',
+              outcome: 'Notification and investigation before restore is correct procedure.',
+              correct: false,
+              nextPhaseId: null,
+            },
+          ],
+        },
+      ],
+    }
+    expect(validateScenario(fixture)).toBe(true)
   })
 })

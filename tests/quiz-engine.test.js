@@ -493,3 +493,23 @@ describe('renderQuiz — partial credit with multi-question quiz (IN-03)', () =>
     expect(lessonColumn.textContent).toContain('Quiz complete — 1/3 correct')
   })
 })
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Phase 09 Wave 0 — renderQuiz quizId '02' URL resolution (RED until Wave 2 data)
+// ──────────────────────────────────────────────────────────────────────────────
+
+describe('renderQuiz — quizId 02 fetch URL resolution', () => {
+  it('fetch is called with a URL containing quizzes/02.json when quizId is "02"', async () => {
+    // Phase 09 Wave 0 RED: quizzes/02.json does not exist yet — fetch will be called with
+    // the correct URL but will fail (or return mock data). The assertion is that the URL
+    // construction is correct for a non-'01' quizId.
+    const lessonColumn = document.querySelector('.lesson-column')
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: vi.fn().mockResolvedValue(QUIZ_JSON),
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    await renderQuiz('logging-auditing', '02', lessonColumn, 'lesson-id')
+    expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('quizzes/02.json'))
+  })
+})
