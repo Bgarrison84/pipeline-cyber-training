@@ -5,6 +5,8 @@ moduleId: network-hardening
 order: 2
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-NetworkSeg, NIST-SC-7, NIST-SI-3]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Checking Active Inbound Rules

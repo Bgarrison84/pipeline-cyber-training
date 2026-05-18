@@ -6,6 +6,8 @@ order: 3
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-Monitoring, NIST-AU-12, NIST-AU-2]
 quizId: '01'
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Why Audit Policies Matter

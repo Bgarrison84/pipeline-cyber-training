@@ -6,6 +6,8 @@ order: 3
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-IR, NIST-IR-4]
 quizId: '01'
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Why Containment Procedures Matter in OT

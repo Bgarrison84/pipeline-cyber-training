@@ -5,6 +5,8 @@ moduleId: network-hardening
 order: 1
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-NetworkSeg, NIST-SC-7]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## What Is Network Hardening?

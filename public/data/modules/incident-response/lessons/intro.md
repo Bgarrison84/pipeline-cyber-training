@@ -5,6 +5,8 @@ moduleId: incident-response
 order: 1
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-IR, NIST-IR-4]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## What Is Incident Response in a Pipeline Context?

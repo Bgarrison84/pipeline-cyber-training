@@ -5,6 +5,8 @@ moduleId: logging-auditing
 order: 2
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-Monitoring, NIST-AU-12, NIST-CM-6]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## What Is Script Block Logging?

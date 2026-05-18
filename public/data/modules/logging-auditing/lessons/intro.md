@@ -5,6 +5,8 @@ moduleId: logging-auditing
 order: 1
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-Monitoring, NIST-AU-2, NIST-AU-3]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## What Are Windows Event Logs?

@@ -5,6 +5,8 @@ moduleId: incident-response
 order: 2
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-IR, NIST-AU-12]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Evidence Collection Principles

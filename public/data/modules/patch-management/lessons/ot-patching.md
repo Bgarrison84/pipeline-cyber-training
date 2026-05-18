@@ -5,6 +5,8 @@ moduleId: patch-management
 order: 2
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-PatchMgmt, NIST-SI-2, NIST-MA-2]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Why OT Patching Is Different

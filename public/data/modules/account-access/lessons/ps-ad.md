@@ -5,6 +5,8 @@ moduleId: account-access
 order: 2
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-AccessControl, NIST-AC-2]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Auditing Domain Admin Group Membership

@@ -6,6 +6,8 @@ order: 3
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-PatchMgmt, NIST-SI-2, NIST-MA-2]
 quizId: '01'
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## The Role of Patch Policy in Compliance

@@ -6,6 +6,8 @@ order: 3
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-AccessControl, NIST-AC-6]
 quizId: '01'
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Why Least Privilege Matters in OT Environments

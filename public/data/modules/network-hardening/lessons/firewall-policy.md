@@ -6,6 +6,8 @@ order: 3
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-NetworkSeg, NIST-SC-7]
 quizId: '01'
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## Why Windows Firewall Policy Matters for OT

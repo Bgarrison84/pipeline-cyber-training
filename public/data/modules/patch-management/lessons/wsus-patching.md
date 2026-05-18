@@ -5,6 +5,8 @@ moduleId: patch-management
 order: 1
 complianceTags: [TSA, NIST]
 complianceControls: [TSA-PatchMgmt, NIST-SI-2]
+lastReviewed: ''
+reviewer: ''
 ---
 
 ## What Is Patch Management?
