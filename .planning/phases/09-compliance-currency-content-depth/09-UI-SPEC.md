@@ -1,10 +1,11 @@
 ---
 phase: 9
 slug: compliance-currency-content-depth
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-05-17
+reviewed_at: 2026-05-17
 ---
 
 # Phase 9 — UI Design Contract
