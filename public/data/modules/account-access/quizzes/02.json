@@ -1,0 +1,114 @@
+{
+  "id": "account-access-quiz-02",
+  "moduleId": "account-access",
+  "title": "Account & Access Management — Advanced Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell cmdlet enumerates all disabled accounts in Active Directory?",
+      "complianceControls": [
+        "NIST-AC-2"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-ADUser -Filter {Enabled -eq $False}",
+          "correct": false,
+          "feedback": "This syntax can work but requires the -Properties LastLogonDate flag to return useful audit data. More importantly, Search-ADAccount -AccountDisabled is the purpose-built cmdlet for finding disabled accounts and is the preferred approach for AD audit compliance evidence."
+        },
+        {
+          "id": "b",
+          "text": "Search-ADAccount -AccountDisabled",
+          "correct": true,
+          "feedback": "Correct. Search-ADAccount -AccountDisabled is the purpose-built cmdlet for querying disabled accounts across the domain. Pipe to Select-Object SamAccountName, DistinguishedName, LastLogonDate and Export-Csv for a compliance-ready audit artifact."
+        },
+        {
+          "id": "c",
+          "text": "Get-ADPrincipalGroupMembership -Identity disabled",
+          "correct": false,
+          "feedback": "Get-ADPrincipalGroupMembership retrieves group memberships for a specific account — it does not search for disabled accounts. The -Identity parameter requires a specific account, not a filter keyword."
+        },
+        {
+          "id": "d",
+          "text": "Get-ADObject -Filter {objectClass -eq 'user' -and userAccountControl -band 2}",
+          "correct": false,
+          "feedback": "While userAccountControl bit 2 does indicate a disabled account, this low-level LDAP filter approach is unnecessarily complex. Search-ADAccount -AccountDisabled is the correct, purpose-built PowerShell approach for this audit task."
+        }
+      ],
+      "explanation": "Search-ADAccount -AccountDisabled is the correct PS 5.1 cmdlet for enumerating disabled accounts in Active Directory. It supports NIST AC-2 account management by providing a clean inventory of disabled accounts that must be reviewed for deletion or documented retention holds. Pipe to Export-Csv to create a compliance evidence artifact."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "Under the current TSA pipeline security directive, which account type must NOT have standing administrative access to OT workstations?",
+      "complianceControls": [
+        "TSA-Access",
+        "NIST-AC-6"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Named individual accounts for authorized OT engineers",
+          "correct": false,
+          "feedback": "Named individual accounts for authorized personnel are the required approach under TSA access control requirements. These accounts provide individual attribution for all actions and support audit trail integrity."
+        },
+        {
+          "id": "b",
+          "text": "Group Managed Service Accounts (gMSA) running OT software services",
+          "correct": false,
+          "feedback": "gMSAs are the recommended approach for OT service accounts — automatically managed passwords, no interactive logon capability. They are compliant with both TSA access control requirements and NIST SP 800-82 Rev 3 Chapter 6."
+        },
+        {
+          "id": "c",
+          "text": "Shared/generic administrator accounts (requires named individual accounts)",
+          "correct": true,
+          "feedback": "Correct. Shared generic accounts — such as a single 'Administrator' or 'scada-admin' account used by multiple technicians — violate the TSA access control mandate because they make individual attribution impossible. The TSA directive requires that access to OT systems be individually attributed to authorized personnel. NIST AC-6 least-privilege requirements are also violated because shared accounts cannot be scoped to a specific individual's role."
+        },
+        {
+          "id": "d",
+          "text": "Time-limited contractor accounts with just-in-time elevation",
+          "correct": false,
+          "feedback": "Time-limited JIT accounts are the recommended pattern for contractor access under the TSA access control mandate. They provide individual attribution, a defined access window, and automatic expiration — all compliant with TSA and NIST AC-2 requirements."
+        }
+      ],
+      "explanation": "Shared generic administrator accounts (e.g., a single 'Administrator' used by multiple engineers) are prohibited under the TSA access control mandate because they make individual attribution of actions impossible. The TSA directive and NIST AC-6 both require that access be individually attributed and scoped to the minimum required for the specific role. Shared accounts also undermine audit trail integrity — the core of NIST AU-2 auditability requirements."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "What is the recommended approach for managing local administrator passwords on non-domain-joined OT workstations?",
+      "complianceControls": [
+        "NIST-AC-2",
+        "NIST-IA-5"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Use the same strong password across all OT workstations for ease of management",
+          "correct": false,
+          "feedback": "A shared password across multiple workstations means that a single compromised credential provides access to every OT system using that password. This violates NIST IA-5 authenticator management requirements and is a critical vulnerability in OT environments where workstations may have physical access by maintenance contractors."
+        },
+        {
+          "id": "b",
+          "text": "Disable the local Administrator account entirely on all OT workstations",
+          "correct": false,
+          "feedback": "Disabling the local Administrator account on OT workstations that are not domain-joined would leave no recovery path if network connectivity to the domain is lost. OT systems require a local admin account as a break-glass option. The requirement is to manage the password securely, not eliminate the account."
+        },
+        {
+          "id": "c",
+          "text": "LAPS (Local Administrator Password Solution) or equivalent for domain-joined systems; signed credential log in a PAM solution for air-gapped systems",
+          "correct": true,
+          "feedback": "Correct. LAPS rotates local Administrator passwords automatically and stores them in Active Directory for domain-joined OT workstations, satisfying NIST IA-5 authenticator management requirements. For non-domain-joined or air-gapped OT systems, a physically secured PAM solution or signed credential log with the same rotation cadence (typically 30 days) provides equivalent control. NIST SP 800-82 Rev 3 Section 6.3.3 requires that both approaches be applied appropriately based on whether the system is domain-joined."
+        },
+        {
+          "id": "d",
+          "text": "Require OT workstation users to set their own local admin passwords",
+          "correct": false,
+          "feedback": "User-selected passwords are not compliant with NIST IA-5 authenticator management requirements, which mandate minimum complexity, rotation cadence, and centralized storage for privileged credentials. OT workstation local admin passwords must be managed by the security team, not by individual users."
+        }
+      ],
+      "explanation": "LAPS (Local Administrator Password Solution) or equivalent is the required approach for managing local admin passwords on OT workstations per NIST SP 800-82 Rev 3 Section 6.3.3. LAPS generates unique, randomized passwords per workstation and rotates them automatically — eliminating the shared-password attack surface. For air-gapped OT systems that cannot be domain-joined, a physically secured PAM solution with the same 30-day rotation cadence provides equivalent protection. Both approaches support the TSA access control mandate's individual attribution requirement."
+    }
+  ]
+}

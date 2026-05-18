@@ -1,0 +1,78 @@
+{
+  "id": "account-access-scenario-02",
+  "moduleId": "account-access",
+  "title": "Contractor Access Request for OT System Maintenance",
+  "complianceControls": ["TSA-Access", "NIST-AC-2", "NIST-AC-17"],
+  "narrative": "A third-party contractor at ExampleCorp needs temporary administrator access to a SCADA historian server (PIPELINE-HIST01) to perform a software upgrade. The upgrade window is scheduled for a two-hour maintenance period on Saturday. The contractor does not have an existing account in the ExampleCorp Active Directory domain.\n\nIn OT environments: Contractor accounts on OT systems must be time-limited, individually named, and logged per the current TSA pipeline security directive. Shared or pre-existing generic accounts must not be used for contractor access — doing so makes individual attribution impossible and violates TSA access control requirements.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Access Provisioning Decision",
+      "isFinal": false,
+      "prompt": "The contractor's supervisor requests access for the upgrade window. Your colleague suggests using the existing shared 'Administrator' account on PIPELINE-HIST01 to save time provisioning a new account. What do you do?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Provide the contractor with the existing shared 'Administrator' account credentials — it already has the access needed and the upgrade window is short.",
+          "outcome": "Using a shared Administrator account means that actions taken during the upgrade cannot be individually attributed to the contractor. If unauthorized changes occur, there will be no audit trail identifying which person made them. The current TSA pipeline security directive requires that access to OT systems be individually attributed to authorized personnel. This choice violates TSA access control requirements and NIST AC-17 remote access controls.",
+          "correct": false,
+          "nextPhaseId": "phase-2-it"
+        },
+        {
+          "id": "opt-b",
+          "text": "Create a named, time-limited contractor account for the specific individual, with just-in-time elevation to the permissions required for the historian upgrade only — scoped to the maintenance window.",
+          "outcome": "Correct. Creating a named contractor account provides individual attribution for all actions taken during the upgrade. Time-limiting the account to the maintenance window means it expires automatically when the work is done — no manual deprovisioning required. Scoping permissions to only the historian server access required for the upgrade (not Domain Admin) applies the least-privilege principle per NIST AC-6. This approach satisfies the TSA access control mandate for contractor access to OT systems.",
+          "correct": true,
+          "nextPhaseId": "phase-2-ot"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-ot",
+      "type": "decision",
+      "title": "Compliant Contractor Access — Post-Upgrade Review",
+      "isFinal": true,
+      "prompt": "The named contractor account was created with a 4-hour expiry window and permissions scoped to PIPELINE-HIST01 local administrator. The upgrade completed successfully. The account expired automatically at the end of the maintenance window. What is the correct post-upgrade action?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Review the Security event log on PIPELINE-HIST01 for all logon and logoff events under the contractor account, export the relevant events as evidence, and document the access in the ExampleCorp contractor access register.",
+          "outcome": "Correct. Reviewing and exporting the contractor's logon events from PIPELINE-HIST01's Security log (Event IDs 4624 and 4634) creates the audit trail required by the current TSA pipeline security directive. Documenting the access in the contractor access register closes the access control loop — future audits can verify that each contractor access event was authorized, time-limited, and reviewed. NIST AC-17 requires that remote access be monitored and logged; this post-upgrade review satisfies that requirement.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "The account expired automatically so no further action is needed — the upgrade is done and access is closed.",
+          "outcome": "Account expiry closes the access path but does not complete the compliance requirement. The current TSA pipeline security directive requires that contractor access be documented and that access logs be retained as evidence. Without reviewing and exporting the Security event log for the contractor's session, there is no documented audit trail for future TSA reviews. NIST AC-17 monitoring requirements are also unsatisfied — access was not reviewed after the session ended.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    },
+    {
+      "id": "phase-2-it",
+      "type": "decision",
+      "title": "Shared Account Access — Remediation Required",
+      "isFinal": true,
+      "prompt": "The contractor used the shared Administrator account for the upgrade. The upgrade completed successfully. Post-maintenance, the security team flags the access in their review. What is the correct remediation?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Change the Administrator account password immediately to close the access path, document the policy violation, and implement a contractor access procedure requiring named time-limited accounts for all future OT maintenance work.",
+          "outcome": "Correct remediation sequence. Changing the Administrator password immediately prevents the contractor from retaining access after the maintenance window. Documenting the violation creates a record for internal review and demonstrates corrective action if the issue is identified in a TSA audit. Implementing a formal contractor access procedure prevents recurrence — the current TSA pipeline security directive requires documented access control procedures, and contractor access without individual attribution is a reportable deficiency.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "The upgrade worked and the contractor has left — no further action is needed since the work is complete.",
+          "outcome": "Taking no action leaves the Administrator password unchanged and in the contractor's possession indefinitely. More critically, there is no audit trail identifying which actions the contractor took versus pre-existing system state — if unauthorized changes or a security incident is detected later, attribution will be impossible. The TSA access control violation must be documented and remediated to demonstrate compliance with the current pipeline security directive. Shared accounts without individual attribution are a documented non-compliance finding.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}
