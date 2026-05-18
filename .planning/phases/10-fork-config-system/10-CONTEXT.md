@@ -21,7 +21,7 @@ Three deliverables:
 ### Config Schema
 - **D-01:** Exactly three fields: `orgName` (string), `logoPath` (string | null), `activeModules` (string[] of module IDs). No additional fields.
 - **D-02:** `activeModules` = array of module ID strings matching `modules-config.js` IDs (e.g., `["logging-auditing", "network-hardening"]`). Explicit inclusion — omit an ID to hide that module.
-- **D-03:** `DEFAULT_FORK_CONFIG = { orgName: 'OT Security Lab', logoPath: null, activeModules: ['logging-auditing', 'network-hardening', 'account-access-management', 'incident-response', 'patch-management'] }`. App behavior unchanged when `fork.config.json` is missing or invalid.
+- **D-03:** `DEFAULT_FORK_CONFIG = { orgName: 'OT Security Lab', logoPath: null, activeModules: ['logging-auditing', 'network-hardening', 'account-access', 'incident-response', 'patch-management'] }`. App behavior unchanged when `fork.config.json` is missing or invalid.
 - **D-04:** `logoPath` is optional — `null` means text-only header. No default placeholder logo shipped.
 - **D-05:** The COMMITTED `public/fork.config.json` ships as the OkieOps example: `{ "orgName": "OkieOps", "logoPath": "OkieOps.png", "activeModules": [all 5] }`. `OkieOps.png` must be moved from the project root to `public/OkieOps.png`.
 
@@ -45,7 +45,7 @@ Three deliverables:
 - **D-16:** Includes a config field reference table: Field | Type | Example | Effect for all three fields.
 
 ### Claude's Discretion
-- The exact module IDs for `DEFAULT_FORK_CONFIG.activeModules` — use all 5: `logging-auditing`, `network-hardening`, `account-access-management`, `incident-response`, `patch-management` (match `modules-config.js` exactly).
+- The exact module IDs for `DEFAULT_FORK_CONFIG.activeModules` — use all 5: `logging-auditing`, `network-hardening`, `account-access`, `incident-response`, `patch-management` (match `modules-config.js` exactly).
 - How `forkConfig` is shared between `sidebar.js`, `home-view.js`, and `completion-summary-view.js` — recommend a module-level export from `src/fork-config.js` (a singleton getter) so downstream views don't need main.js re-exports.
 - Logo `alt` attribute text — use `orgName` value.
 
