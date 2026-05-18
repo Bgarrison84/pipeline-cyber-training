@@ -10,6 +10,7 @@ import { progressStore } from '../progress-store.js';
 import { renderBadge } from '../badge.js';
 import { MODULES } from '../modules-config.js';
 import { computeModuleProgress } from '../quiz-engine.js';
+import { getForkConfig } from '../fork-config.js';
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Internal helpers
@@ -152,10 +153,14 @@ export function renderCompletionSummary() {
   // Step 2 — Check storage availability
   const storageOk = progressStore.isStorageAvailable();
 
-  // Step 3 — Check if there is any progress at all
-  const hasProgress = MODULES.some(mod => computeModuleProgress(mod).numerator > 0);
+  // Step 3 — Derive active module list (render-only filter per D-11)
+  const { activeModules } = getForkConfig();
+  const activeModuleList = MODULES.filter(mod => activeModules.includes(mod.id));
 
-  // Step 4 — Build and inject HTML
+  // Step 4 — Check if there is any progress at all
+  const hasProgress = activeModuleList.some(mod => computeModuleProgress(mod).numerator > 0);
+
+  // Step 5 — Build and inject HTML
   let mainContent;
 
   if (!storageOk) {
@@ -186,8 +191,8 @@ export function renderCompletionSummary() {
     `.trim();
   } else {
     // C-17 Progress table + C-18 Controls badges
-    const tableHtml = buildProgressTableHtml(MODULES);
-    const badgesHtml = buildControlsBadgesHtml(MODULES);
+    const tableHtml = buildProgressTableHtml(activeModuleList);
+    const badgesHtml = buildControlsBadgesHtml(activeModuleList);
 
     mainContent = `
       ${tableHtml}

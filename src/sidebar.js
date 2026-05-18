@@ -5,13 +5,17 @@ import { checkLessonAvailability } from './content-loader.js';
 import { activateIcons } from './utils/icons.js';
 import { progressStore } from './progress-store.js';
 import { computeModuleProgress } from './quiz-engine.js';
+import { getForkConfig } from './fork-config.js';
 
 export async function initSidebar({ onImportSuccess } = {}) {
   const sidebarModules = document.getElementById('sidebar-modules');
   if (!sidebarModules) return;
 
+  const { activeModules } = getForkConfig();
+  const visibleModules = MODULES.filter(mod => activeModules.includes(mod.id));
+
   // Run all HEAD fetch availability checks in parallel
-  const allChecks = MODULES.flatMap(mod =>
+  const allChecks = visibleModules.flatMap(mod =>
     mod.lessons.map(lesson =>
       checkLessonAvailability(mod.id, lesson.id).then(ok => ({
         key: mod.id + '/' + lesson.id,
@@ -22,7 +26,7 @@ export async function initSidebar({ onImportSuccess } = {}) {
   const results = await Promise.all(allChecks);
   const available = new Set(results.filter(r => r.ok).map(r => r.key));
 
-  sidebarModules.innerHTML = MODULES.map(mod => `
+  sidebarModules.innerHTML = visibleModules.map(mod => `
     <div class="sidebar-module" data-module-id="${esc(mod.id)}">
       <a href="#/module/${esc(mod.id)}"
          aria-label="${esc(mod.title)}"
@@ -59,7 +63,7 @@ export async function initSidebar({ onImportSuccess } = {}) {
   });
 
   // Inject progress bars below each module title link
-  MODULES.forEach(mod => {
+  visibleModules.forEach(mod => {
     const moduleEl = sidebarModules.querySelector(
       '.sidebar-module[data-module-id="' + CSS.escape(mod.id) + '"]'
     );

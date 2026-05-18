@@ -2,9 +2,13 @@
 import { MODULES } from '../modules-config.js';
 import { renderBadge } from '../badge.js';
 import { esc } from '../utils/escape.js';
+import { getForkConfig } from '../fork-config.js';
 
 export function renderHome() {
-  const cards = MODULES.map(mod => `
+  const { activeModules } = getForkConfig();
+  const visibleModules = MODULES.filter(mod => activeModules.includes(mod.id));
+
+  const cards = visibleModules.map(mod => `
     <article class="border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-[var(--spacing-lg)] rounded hover:border-[var(--color-accent)] transition-colors duration-150 cursor-pointer"
              role="link"
              tabindex="0"
