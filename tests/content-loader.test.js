@@ -68,10 +68,10 @@ describe('getLessonNav', () => {
   })
 
   it('returns null next for last lesson', () => {
-    const result = getLessonNav('logging-auditing', 'audit-policies')
+    const result = getLessonNav('logging-auditing', 'siem-integration')
 
     expect(result.next).toBeNull()
-    expect(result.prev.lessonId).toBe('ps-logging')
+    expect(result.prev.lessonId).toBe('ot-logging-advanced')
   })
 })
 

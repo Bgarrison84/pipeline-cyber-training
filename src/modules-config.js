@@ -15,7 +15,9 @@ export const MODULES = [
     lessons: [
       { id: 'intro',          title: 'Introduction to Windows Event Logs', scenarioId: '01' },
       { id: 'ps-logging',     title: 'Enabling PowerShell Script Block Logging', exerciseId: '01' },
-      { id: 'audit-policies', title: 'Configuring Audit Policies via Group Policy', quizId: '01' },
+      { id: 'audit-policies',      title: 'Configuring Audit Policies via Group Policy',       quizId: '01' },
+      { id: 'ot-logging-advanced', title: 'Advanced OT Log Collection and Retention' },
+      { id: 'siem-integration',    title: 'SIEM Integration for Pipeline OT Environments',     quizId: '02' },
     ],
     complianceTags: ['TSA', 'NIST'],
   },

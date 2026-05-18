@@ -1,0 +1,114 @@
+{
+  "id": "logging-auditing-quiz-02",
+  "moduleId": "logging-auditing",
+  "title": "Logging & Auditing — Advanced Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "Which Windows Event Forwarding (WEF) subscription type is initiated by the source (collector) machine rather than the event-generating (source) machine?",
+      "complianceControls": [
+        "NIST-AU-12"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Source-initiated subscription",
+          "correct": false,
+          "feedback": "Source-initiated subscriptions are push-based: the event-generating machine connects to the WEC and sends events. The source machine initiates the connection."
+        },
+        {
+          "id": "b",
+          "text": "Collector-initiated subscription",
+          "correct": true,
+          "feedback": "Correct. In a collector-initiated subscription, the WEC (collector) machine reaches out to each event source to pull events. This is useful when source machines cannot initiate outbound connections, such as in restricted OT segments where only inbound connections from the collector are permitted."
+        },
+        {
+          "id": "c",
+          "text": "Push subscription",
+          "correct": false,
+          "feedback": "Push subscription is another name for source-initiated subscription — the source machine pushes events to the WEC."
+        },
+        {
+          "id": "d",
+          "text": "Batch subscription",
+          "correct": false,
+          "feedback": "Batch subscription is not a WEF subscription type. WEF supports source-initiated (push) and collector-initiated (pull) modes."
+        }
+      ],
+      "explanation": "WEF supports two subscription types: source-initiated (the OT host pushes events to the WEC) and collector-initiated (the WEC pulls events from the OT host). Collector-initiated is preferred in OT environments where firewall policies only permit inbound connections from a trusted collector host — the OT host does not need to initiate any outbound WinRM connection. NIST AU-12 requires that audit records be generated on all relevant systems; the subscription type affects whether you can collect those records, not whether they are generated."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "When normalizing OT Windows events for SIEM ingestion, which Event ID from a SCADA server is most immediately indicative of unauthorized activity on a locked-down OT host?",
+      "complianceControls": [
+        "TSA-Monitoring",
+        "NIST-SI-4"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "4624 — Logon success from the standard operator account",
+          "correct": false,
+          "feedback": "A logon success from an expected operator account during normal operating hours is baseline behavior for an HMI station, not an immediate alert condition."
+        },
+        {
+          "id": "b",
+          "text": "4688 — Process creation for a process not in the approved OT software baseline",
+          "correct": true,
+          "feedback": "Correct. On a locked-down OT host (HMI or SCADA), the approved process list should be static. Any 4688 event recording a process not in the approved baseline is an alert condition under both the current TSA pipeline security directive's monitoring requirements and NIST SI-4 (system monitoring). This is why maintaining a process hash baseline is critical for OT environments."
+        },
+        {
+          "id": "c",
+          "text": "4634 — Logoff from the standard operator account",
+          "correct": false,
+          "feedback": "A normal logoff from the expected operator account is routine activity and not an alert condition."
+        },
+        {
+          "id": "d",
+          "text": "4104 — Script block logging for a scheduled PowerShell maintenance script",
+          "correct": false,
+          "feedback": "If a PowerShell maintenance script is approved, scheduled, and expected, its 4104 events are baseline noise. An unknown or unexpected script would be alert-worthy, but a known scheduled task is not."
+        }
+      ],
+      "explanation": "OT SIEM normalization focuses on deviation from a known-good baseline rather than generic threat signatures. Because OT hosts run a fixed set of approved applications, a new process creation (4688) from an unknown executable is one of the strongest indicators of compromise in an OT context. The current TSA pipeline security directive's continuous monitoring requirement supports automated comparison against an approved process hash baseline as a detective control. NIST SP 800-82 Rev 3 Section 6.3 and NIST SI-4 both support this baselining approach."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "Under the current TSA pipeline security directive, what is the minimum retention period for cybersecurity event logs collected from pipeline OT systems?",
+      "complianceControls": [
+        "TSA-Monitoring",
+        "NIST-AU-11"
+      ],
+      "answers": [
+        {
+          "id": "a",
+          "text": "30 days",
+          "correct": false,
+          "feedback": "30 days is insufficient. The current TSA pipeline security directive requires a longer retention period to support post-incident investigation and compliance audits."
+        },
+        {
+          "id": "b",
+          "text": "6 months",
+          "correct": false,
+          "feedback": "6 months does not meet the current TSA pipeline security directive retention requirement for pipeline operators."
+        },
+        {
+          "id": "c",
+          "text": "12 months",
+          "correct": true,
+          "feedback": "Correct. The current TSA pipeline security directive requires pipeline operators to retain cybersecurity event logs — including OT-sourced logs — for a minimum of 12 months. Retention must occur in a location separate from the OT host (e.g., the DMZ collector or enterprise SIEM) because local OT host storage is typically insufficient and logs must survive a host compromise. NIST AU-11 supports this requirement."
+        },
+        {
+          "id": "d",
+          "text": "3 years",
+          "correct": false,
+          "feedback": "3 years exceeds the current TSA pipeline security directive requirement. This extended period may apply to other regulatory frameworks (financial records, HIPAA) but is not the TSA minimum for cybersecurity event logs."
+        }
+      ],
+      "explanation": "The current TSA pipeline security directive mandates a 12-month minimum retention period for cybersecurity event logs. For OT systems, local retention on the OT host is impractical due to disk constraints; the correct architecture is to forward logs to the DMZ collector or enterprise SIEM where sufficient storage exists. NIST AU-11 (audit record retention) reinforces this requirement. Logs must be protected from tampering and available for inspection on demand."
+    }
+  ]
+}

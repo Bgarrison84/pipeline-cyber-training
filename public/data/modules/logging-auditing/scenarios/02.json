@@ -1,0 +1,78 @@
+{
+  "id": "logging-auditing-scenario-02",
+  "moduleId": "logging-auditing",
+  "title": "Log Retention Decision in an Air-Gapped OT Segment",
+  "complianceControls": ["TSA-Monitoring", "NIST-AU-11"],
+  "narrative": "You are the IT/OT admin at ExampleCorp. Your SIEM shows a gap in OT log collection from the PIPELINE-HMI01 segment.\n\nIn OT environments: HMI and SCADA systems may have limited disk capacity for local log storage and limited bandwidth to forward logs to central collection. The PIPELINE-HMI01 Security event log has rolled over and older events are gone — the local log was at maximum capacity. You must decide how to fix the retention gap going forward.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Addressing the OT Log Gap",
+      "isFinal": false,
+      "prompt": "Your SIEM shows a 3-day gap in Security events from PIPELINE-HMI01. Investigation reveals the local Security log filled its 20 MB limit and started overwriting. You need to fix this before your next compliance audit. What is your approach?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Increase the local Security log size on PIPELINE-HMI01 to 512 MB and implement WEF forwarding to a DMZ collector host, so logs are forwarded before the local log fills.",
+          "outcome": "Good choice. Increasing the local buffer gives headroom for short-term collection gaps, and WEF forwarding to a DMZ collector host ensures events are captured centrally before local overwrite occurs. This is the OT-aware architecture recommended by NIST SP 800-82 Rev 3 Section 6.2.",
+          "correct": true,
+          "nextPhaseId": "phase-2-ot"
+        },
+        {
+          "id": "opt-b",
+          "text": "Install a SIEM agent directly on PIPELINE-HMI01 to forward logs in real time, just like you would on an IT workstation.",
+          "outcome": "Installing a third-party SIEM agent on an OT host introduces unapproved software onto a validated OT platform. On HMI and SCADA systems, any software change requires a change management review and vendor validation. This is the standard IT approach but is not appropriate for OT without a full change-control process.",
+          "correct": false,
+          "nextPhaseId": "phase-2-it"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-ot",
+      "type": "decision",
+      "title": "OT-Aware Remediation: Configuring WEF on the DMZ Collector",
+      "isFinal": true,
+      "prompt": "You have increased the local log size on PIPELINE-HMI01 and confirmed the DMZ collector (PIPELINE-DC01 in the OT DMZ) can reach PIPELINE-HMI01 on port 5985. You configure a collector-initiated WEF subscription. What must you also verify to meet the current TSA pipeline security directive retention requirement?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Verify that the DMZ collector retains forwarded OT events for at least 12 months and that logs are stored in a tamper-resistant location separate from the OT host.",
+          "outcome": "Correct. The WEF subscription solves the collection gap, but the retention requirement is independent. The current TSA pipeline security directive requires 12 months of retention in a location that would survive a compromise of the OT host itself. The DMZ collector must have sufficient storage, and events must ultimately reach the enterprise SIEM for long-term retention. NIST AU-11 reinforces this requirement.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Verify that the local Security log on PIPELINE-HMI01 holds 12 months of events by increasing its maximum size further.",
+          "outcome": "Retaining 12 months of events locally on an OT host is not the correct architecture. OT systems have limited disk capacity, and local-only retention means logs are lost if the host is compromised or reimaged. The current TSA pipeline security directive requires retention in a location separate from the OT host — the DMZ collector and enterprise SIEM fulfill this requirement; local-only storage does not.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    },
+    {
+      "id": "phase-2-it",
+      "type": "decision",
+      "title": "IT-Standard Approach: Risk Review for OT Context",
+      "isFinal": true,
+      "prompt": "You have submitted a change request to install the SIEM agent on PIPELINE-HMI01. The OT vendor has responded that agent installation voids the HMI software support contract and requires a full re-validation of the OT platform before returning to production. How do you proceed?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Withdraw the agent install change request and implement a WEF collector-initiated subscription from a DMZ host instead — an agentless approach that does not modify the OT host software stack.",
+          "outcome": "Correct. WEF collector-initiated subscriptions are the OT-compatible alternative to agent-based forwarding. No software is installed on the OT host, the vendor support contract is preserved, and the change-management burden is minimal. This is the NIST SP 800-82 Rev 3 Section 6.2 recommended architecture for Windows-based OT log collection.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Proceed with the agent install anyway — the compliance gap from missing logs is more urgent than the vendor support contract concern.",
+          "outcome": "Installing unapproved software on an OT host to resolve a log gap creates a new risk (unsupported OT platform, voided vendor contract) that may be more severe than the original problem. The OT-aware approach is to use WEF or other agentless methods that do not modify the validated OT software stack. Proceeding without vendor approval can result in a platform that cannot be supported during a real incident.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}
