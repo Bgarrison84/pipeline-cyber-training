@@ -1,6 +1,7 @@
 // src/router.js
 import { renderHome }             from './views/home-view.js';
 import { renderModule }           from './views/module-view.js';
+import { getForkConfig }          from './fork-config.js';
 import { renderNotFound }         from './views/not-found-view.js';
 import { renderLesson }           from './views/lesson-view.js';
 import { renderExercise }         from './views/exercise-view.js';
@@ -47,7 +48,14 @@ export function matchRoute(hash) {
 
 const viewRenderers = {
   home:                (params) => renderHome(params),
-  module:              (params) => renderModule(params),
+  module:              async (params) => {
+    const { moduleId } = params;
+    const { activeModules } = getForkConfig();
+    if (Array.isArray(activeModules) && !activeModules.includes(moduleId)) {
+      return '<div class="lesson-wrapper"><div class="lesson-column" style="max-width:720px;margin:0 auto;padding:var(--spacing-xl);"><p style="color:var(--color-text-muted);font-size:var(--text-body);">This module is not enabled for your organization&#8217;s training program.</p></div></div>';
+    }
+    return await renderModule(params);
+  },
   lesson:              (params) => renderLesson(params),
   exercise:            (params) => renderExercise(params),
   scenario:            (params) => renderScenario(params),

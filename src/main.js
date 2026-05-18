@@ -3,6 +3,7 @@ import { handleRoute } from './router.js';
 import { initSidebar } from './sidebar.js';
 import { setComplianceRefs, renderBadge } from './badge.js';
 import { progressStore } from './progress-store.js';
+import { loadForkConfig, applyForkBranding } from './fork-config.js';
 import './style.css';
 
 export { renderBadge };
@@ -27,6 +28,8 @@ export function getComplianceRefs() {
 }
 
 async function init() {
+  const forkConfig = await loadForkConfig();
+  applyForkBranding(forkConfig);
   await loadComplianceRefs();
   await progressStore.init();
   await Promise.all([handleRoute(), initSidebar({ onImportSuccess: handleRoute })]);
