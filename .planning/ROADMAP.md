@@ -153,7 +153,19 @@ Plans:
 - Check .github/workflows/ to confirm whether GitHub Actions auto-deploys on push to main; if not, document the manual build requirement — editing compliance-refs.json in the GitHub web editor without triggering CI leaves offline users on the expired version
 - PWA icon assets (pwa-192x192.png, pwa-512x512.png, apple-touch-icon.png) must exist in public/ before build; create from the existing color scheme (#111827 background) if absent
 
-**Plans**: TBD
+**Plans**: 4 plans, 3 waves
+
+Plans:
+
+**Wave 0** (parallel — no shared files)
+- [ ] 11-01-PLAN.md — Wave 0: npm install vite-plugin-pwa + pureimage; scripts/generate-icons.js; commit 3 icon PNGs to public/ (PWA-01, PWA-02)
+- [ ] 11-02-PLAN.md — Wave 0: tests/offline-indicator.test.js — failing tests RED state (PWA-03)
+
+**Wave 1** *(blocked on Plan 11-01 — icons must exist before build)*
+- [ ] 11-03-PLAN.md — Wave 1: vite.config.js — add VitePWA plugin with globPatterns, scope, autoUpdate (PWA-01, PWA-02)
+
+**Wave 2** *(blocked on Plans 11-02 and 11-03)*
+- [ ] 11-04-PLAN.md — Wave 2: src/offline-indicator.js + src/main.js wiring — GREEN tests; human verify checkpoint (PWA-03)
 
 **UI hint**: yes
 
@@ -199,7 +211,7 @@ Plans:
 | 8. Patch Management Module (MOD-05) | v1.0 | 4/4 | Complete | 2026-05-17 |
 | 9. Compliance Currency + Content Depth | v2.0 | 9/9 | Complete | 2026-05-18 |
 | 10. Fork Configuration System | v2.0 | 5/5 | Complete | 2026-05-18 |
-| 11. PWA / Offline Support | v2.0 | 0/TBD | Not started | - |
+| 11. PWA / Offline Support | v2.0 | 0/4 | Not started | - |
 | 12. Progress Sync | v2.0 | 0/TBD | Not started | - |
 
 ---
@@ -211,3 +223,4 @@ Plans:
 *v2.0 roadmap added: 2026-05-17 — 14/14 requirements mapped across Phases 9–12*
 *Phase 9 planned: 2026-05-17 — 9 plans across 5 waves*
 *Phase 10 planned: 2026-05-18 — 5 plans across 3 waves*
+*Phase 11 planned: 2026-05-18 — 4 plans across 3 waves*
