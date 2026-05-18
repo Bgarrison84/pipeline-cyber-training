@@ -59,7 +59,35 @@ Full archive: `.planning/milestones/v1.0-ROADMAP.md`
 - Run a text search across all public/data/ for hardcoded "SD-02F" strings in quiz/exercise/scenario JSON before marking SME-01 complete — logging-auditing/quizzes/01.json is confirmed to contain a hardcoded version string that bypasses compliance-refs.json
 - CLAUDE.md references marked.js v17 but the installed version is 18.0.3 — update CLAUDE.md as housekeeping in this phase
 
-**Plans**: TBD
+**Plans**: 9 plans, 5 waves
+
+Plans:
+
+**Wave 0** (test scaffolding — RED before implementation)
+- [ ] 09-01-PLAN.md — Wave 0: Author failing tests (badge-expired.test.js + extend compliance-refs/scenario-view/quiz-engine tests)
+
+**Wave 1** *(blocked on Wave 0 completion)*
+- [ ] 09-02-PLAN.md — Wave 1: Day 1 badge fix — compliance-refs.json expired status + badge.js expired branch + style.css tokens
+
+**Wave 2** *(blocked on Wave 1 completion)*
+- [ ] 09-03-PLAN.md — Wave 2: SME-01 hardcode audit — remediate SD-02F in quiz/scenario JSON + compliance-index-view.js + CLAUDE.md
+- [ ] 09-04-PLAN.md — Wave 2: SME-02/03 — docs/SME-REVIEW-CHECKLIST.md + lastReviewed frontmatter on all 15 existing lessons
+
+**Wave 3** *(blocked on Wave 2 completion)*
+- [ ] 09-05-PLAN.md — Wave 3: logging-auditing content (2 lessons + quiz 02 + scenario 02 + modules-config)
+- [ ] 09-06-PLAN.md — Wave 3: network-hardening content (2 lessons + quiz 02 + scenario 02 + modules-config)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+- [ ] 09-07-PLAN.md — Wave 4: account-access content (2 lessons + quiz 02 + scenario 02 + modules-config)
+- [ ] 09-08-PLAN.md — Wave 4: incident-response content (2 lessons + quiz 02 + scenario 02 + modules-config)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+- [ ] 09-09-PLAN.md — Wave 5: patch-management content (2 lessons + quiz 02 + scenario 04 + modules-config final)
+
+Cross-cutting constraints:
+- No TSA successor string committed — expired state only until manual TSA.gov verification
+- New quiz questions ONLY in 02.json files (never append to 01.json)
+- Every new lesson .md requires simultaneous modules-config.js update in the same task
 
 **UI hint**: yes
 
@@ -156,7 +184,7 @@ Full archive: `.planning/milestones/v1.0-ROADMAP.md`
 | 6. Scenario Engine + Compliance Index + Completion Summary | v1.0 | 4/4 | Complete | 2026-05-16 |
 | 7. Core Module Content (MOD-02, MOD-03, MOD-04) | v1.0 | 4/4 | Complete | 2026-05-16 |
 | 8. Patch Management Module (MOD-05) | v1.0 | 4/4 | Complete | 2026-05-17 |
-| 9. Compliance Currency + Content Depth | v2.0 | 0/TBD | Not started | - |
+| 9. Compliance Currency + Content Depth | v2.0 | 0/9 | Planned | - |
 | 10. Fork Configuration System | v2.0 | 0/TBD | Not started | - |
 | 11. PWA / Offline Support | v2.0 | 0/TBD | Not started | - |
 | 12. Progress Sync | v2.0 | 0/TBD | Not started | - |
@@ -166,3 +194,4 @@ Full archive: `.planning/milestones/v1.0-ROADMAP.md`
 *Roadmap created: 2026-05-10*
 *v1.0 milestone archived: 2026-05-17 — 26/26 requirements shipped*
 *v2.0 roadmap added: 2026-05-17 — 14/14 requirements mapped across Phases 9–12*
+*Phase 9 planned: 2026-05-17 — 9 plans across 5 waves*
