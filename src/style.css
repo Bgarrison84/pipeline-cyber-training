@@ -18,6 +18,8 @@
   --color-badge-tsa-text: #93c5fd;
   --color-badge-nist-bg: #1a3a2a;
   --color-badge-nist-text: #86efac;
+  --color-badge-expired-bg: #2a2a2a;
+  --color-badge-expired-text: #737373;
 
   /* Typography */
   --font-sans: "Inter", system-ui, sans-serif;

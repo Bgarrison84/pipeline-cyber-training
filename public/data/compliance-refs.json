@@ -1,12 +1,13 @@
 {
   "schemaVersion": 1,
-  "lastVerified": "2026-05-11",
+  "lastVerified": "2026-05-17",
   "directives": {
     "TSA": {
       "name": "TSA Security Directive Pipeline-2021-02F",
       "shortName": "TSA SD-02F",
       "effectiveDate": "2025-05-03",
       "expiryDate": "2026-05-02",
+      "status": "expired",
       "sourceUrl": "https://www.tsa.gov/sites/default/files/tsa-security-directive-pipeline-2021-02f-and-memo-508c.pdf"
     },
     "NIST": {
