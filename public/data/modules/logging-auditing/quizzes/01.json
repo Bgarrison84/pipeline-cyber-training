@@ -76,7 +76,7 @@
     {
       "id": "q-03",
       "type": "multiple-choice",
-      "stem": "Under TSA SD-02F, what is the minimum retention period for cybersecurity event logs on pipeline OT systems?",
+      "stem": "Under the current TSA pipeline security directive, what is the minimum retention period for cybersecurity event logs on pipeline OT systems?",
       "complianceControls": [
         "TSA-SD-02F"
       ],
@@ -85,19 +85,19 @@
           "id": "a",
           "text": "30 days",
           "correct": false,
-          "feedback": "30 days is insufficient. TSA SD-02F requires a longer retention period to support incident investigations."
+          "feedback": "30 days is insufficient. The current TSA pipeline security directive requires a longer retention period to support incident investigations."
         },
         {
           "id": "b",
           "text": "90 days",
           "correct": false,
-          "feedback": "90 days is a common IT benchmark but does not meet the TSA SD-02F requirement for pipeline operators."
+          "feedback": "90 days is a common IT benchmark but does not meet the current TSA pipeline security directive requirement for pipeline operators."
         },
         {
           "id": "c",
           "text": "12 months",
           "correct": true,
-          "feedback": "Correct. TSA SD-02F requires pipeline operators to retain cybersecurity event logs for a minimum of 12 months to support investigations and compliance audits."
+          "feedback": "Correct. The current TSA pipeline security directive requires pipeline operators to retain cybersecurity event logs for a minimum of 12 months to support investigations and compliance audits."
         },
         {
           "id": "d",
@@ -106,7 +106,7 @@
           "feedback": "7 years is a financial records standard (SOX), not a TSA cybersecurity log retention requirement."
         }
       ],
-      "explanation": "TSA SD-02F mandates a 12-month minimum retention period for cybersecurity event logs. Operators should store logs in a tamper-resistant location separate from the OT network to ensure they are available for post-incident analysis."
+      "explanation": "The current TSA pipeline security directive mandates a 12-month minimum retention period for cybersecurity event logs. Operators should store logs in a tamper-resistant location separate from the OT network to ensure they are available for post-incident analysis."
     }
   ]
 }

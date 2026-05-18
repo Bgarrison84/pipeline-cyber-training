@@ -38,14 +38,14 @@
         {
           "id": "opt-a",
           "text": "Immediately disable the service account and notify OT operations that historian data collection may be interrupted.",
-          "outcome": "Disabling the account stops the threat but historian data collection pauses. In a pipeline OT context, you must notify operations before disabling any account that may affect safety system logging. However, given the confirmed compromise, this is the correct priority order. TSA SD-02F requires prompt incident response and notification to relevant personnel.",
+          "outcome": "Disabling the account stops the threat but historian data collection pauses. In a pipeline OT context, you must notify operations before disabling any account that may affect safety system logging. However, given the confirmed compromise, this is the correct priority order. The current TSA pipeline security directive requires prompt incident response and notification to relevant personnel.",
           "correct": true,
           "nextPhaseId": null
         },
         {
           "id": "opt-b",
           "text": "Reset the service account password only, without notifying OT operations, to avoid an alarm.",
-          "outcome": "Resetting the password without notifying OT operations violates TSA SD-02F incident notification requirements and leaves OT operators unaware of a potential safety-relevant event. Notification is mandatory. Additionally, password reset alone may not stop an attacker who has established persistence through other means.",
+          "outcome": "Resetting the password without notifying OT operations violates current TSA pipeline security directive incident notification requirements and leaves OT operators unaware of a potential safety-relevant event. Notification is mandatory. Additionally, password reset alone may not stop an attacker who has established persistence through other means.",
           "correct": false,
           "nextPhaseId": null
         }

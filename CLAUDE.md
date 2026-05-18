@@ -16,7 +16,7 @@ A static GitHub Pages web application that teaches IT/OT admins at oil and gas p
 - **Build:** Vite (required — Tailwind v4 dropped CDN)
 - **CSS:** Tailwind v4 via `@tailwindcss/vite`
 - **Terminal:** jQuery Terminal (fake-terminal pattern, not xterm.js)
-- **Markdown:** marked.js v17
+- **Markdown:** marked.js v18 (installed: v18.0.3)
 - **Syntax highlighting:** Shiki v4 (PS 5.1 grammar)
 - **Routing:** Hash-based (`#/module/:id/lesson/:n`) — no 404.html trick
 - **Progress:** localStorage with `schemaVersion` key
@@ -81,11 +81,10 @@ Phase 1 (Shell + Router + Deploy)
 3. All environment identifiers are generic: `PIPELINE-DC01`, `10.0.0.0/24`, `ExampleCorp`
 4. Compliance control IDs always sourced from `data/compliance-refs.json`
 
-## Open Decisions (resolve in Phase 5)
+## Resolved Decisions (v1.0)
 
-- jQuery Terminal vs. custom vanilla JS terminal — prototype one exercise before committing
-- PS command parser: regex match vs. tokenized approach — spike on 5–10 real commands
-- Multi-line PS pipeline support (e.g. `Get-EventLog | Where-Object | Select-Object`) — complexity decision
+- Custom vanilla JS terminal (no jQuery Terminal)
+- Regex-based PS command parser; multi-line pipelines supported via continuation
 
 ## Planning Artifacts
 

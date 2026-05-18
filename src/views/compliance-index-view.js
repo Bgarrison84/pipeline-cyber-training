@@ -120,7 +120,7 @@ function buildPageHeaderHtml() {
     <div style="margin-bottom:var(--spacing-lg);">
       <p style="font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-muted);margin-bottom:var(--spacing-xs);">COMPLIANCE INDEX</p>
       <h1 style="font-size:var(--text-heading);font-weight:600;margin-bottom:var(--spacing-sm);">Compliance Control Coverage</h1>
-      <p style="font-size:var(--text-body);color:var(--color-text-muted);">Every TSA SD-02F and NIST SP 800-82 Rev 3 control covered by this training platform, with links to all lessons and exercises that address it.</p>
+      <p style="font-size:var(--text-body);color:var(--color-text-muted);">Every TSA pipeline security directive and NIST SP 800-82 Rev 3 control covered by this training platform, with links to all lessons and exercises that address it.</p>
     </div>
   `;
 }
