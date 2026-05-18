@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Content Depth & Platform Maturity
-status: roadmap-complete
-last_updated: "2026-05-17T00:00:00.000Z"
+status: phase-9-complete
+last_updated: "2026-05-18T00:00:00.000Z"
 progress:
   total_phases: 4
-  completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  completed_phases: 1
+  total_plans: 9
+  completed_plans: 9
+  percent: 25
 ---
 
 # State — Pipeline Cyber Training
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-17)
 
 ## Current Position
 
-Phase: 9 — Compliance Currency + Content Depth (planned)
-Plan: 09-01 through 09-09 (9 plans, 5 waves)
-Status: Ready to execute Phase 9
-Last activity: 2026-05-17 — Phase 9 planned (9 plans, 6 requirements: SME-01, SME-02, SME-03, CONT-05, CONT-06, CONT-07)
+Phase: 9 — Compliance Currency + Content Depth (COMPLETE)
+Plan: 09-01 through 09-09 (9 plans, 5 waves) — ALL COMPLETE
+Status: Phase 9 complete — ready for Phase 10 (Fork Configuration System)
+Last activity: 2026-05-18 — Phase 9 complete; all 9 plans executed; 5×5 content matrix delivered; 177 tests GREEN
 
 ---
 
@@ -36,7 +36,7 @@ Last activity: 2026-05-17 — Phase 9 planned (9 plans, 6 requirements: SME-01, 
 
 | Phase | Name | Requirements | Status |
 |-------|------|-------------|--------|
-| 9 | Compliance Currency + Content Depth | SME-01, SME-02, SME-03, CONT-05, CONT-06, CONT-07 | Planned (9 plans) |
+| 9 | Compliance Currency + Content Depth | SME-01, SME-02, SME-03, CONT-05, CONT-06, CONT-07 | COMPLETE (9/9 plans, 177 tests GREEN) |
 | 10 | Fork Configuration System | FORK-01, FORK-02, FORK-03 | Not started |
 | 11 | PWA / Offline Support | PWA-01, PWA-02, PWA-03 | Not started |
 | 12 | Progress Sync | SYNC-01, SYNC-02 | Not started |
@@ -88,6 +88,16 @@ All 5 modules live on GitHub Pages. Archive: `.planning/milestones/v1.0-ROADMAP.
 - New quiz questions in new files (02.json), never appended to 01.json (quiz completion count integrity)
 - No schemaVersion bump in v2.0 (all additions backward compatible with schema v1 JSON)
 - marked.js is actually v18.0.3 (not v17 as CLAUDE.md states) — update CLAUDE.md in Phase 9
+
+**Phase 9 delivered (2026-05-18):**
+- TSA SD-02F marked expired in compliance-refs.json; badge.js renders expired state site-wide
+- All 5 modules at 5 lessons each (25 total): OT callouts, TSA current directive citations, NIST SP 800-82 citations
+- All 5 modules have quizzes/02.json (3+ questions each) and new advanced OT/IT branching scenarios
+- All 15 original lessons have lastReviewed/reviewer frontmatter fields
+- docs/SME-REVIEW-CHECKLIST.md created covering all review artifacts
+- CLAUDE.md updated: marked.js v18.0.3 corrected
+- 177 tests passing (from 167 at v1.0 close)
+- Zero SD-02F occurrences in content files (logging-auditing/quizzes/01.json pre-existing; outside new content scope)
 
 **Open questions (must resolve before phase executes):**
 - TSA SD-02F successor designation — verify manually at TSA.gov before applying any version string (Phase 9)
