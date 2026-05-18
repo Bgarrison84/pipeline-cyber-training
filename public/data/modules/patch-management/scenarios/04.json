@@ -1,0 +1,78 @@
+{
+  "id": "patch-management-scenario-04",
+  "moduleId": "patch-management",
+  "title": "Zero-Day Patch for OT SCADA Software",
+  "complianceControls": ["TSA-PatchMgmt", "NIST-SI-2"],
+  "narrative": "A zero-day vulnerability has been publicly disclosed affecting the historian software running on ExampleCorp's OT SCADA server (PIPELINE-HIST01). The vulnerability allows unauthenticated remote code execution via the historian's OPC-UA port. The SCADA vendor has acknowledged the vulnerability but has not yet issued a certified patch.\n\nIn OT environments: A zero-day affecting OT software that has no vendor patch requires immediate compensating controls while waiting for certified remediation. The risk cannot be accepted passively — regulatory requirements mandate that the organization document what it is doing to protect the unpatched system, not just wait for a patch to arrive.",
+  "phases": [
+    {
+      "id": "phase-1",
+      "type": "decision",
+      "title": "Zero-Day Disclosed — No Vendor Patch Available",
+      "isFinal": false,
+      "prompt": "A zero-day RCE vulnerability has been disclosed for your PIPELINE-HIST01 historian software. The vendor has not issued a certified patch. The vulnerable OPC-UA port (4840) is currently reachable from the OT DMZ. What is the correct immediate response?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Wait for the vendor to issue a certified patch before taking any action — applying unapproved changes to OT systems without vendor guidance could introduce new instability",
+          "outcome": "Waiting without any compensating controls leaves PIPELINE-HIST01 exposed to the publicly disclosed RCE vulnerability for the duration of the vendor's certification cycle (potentially 3–12 months). The current TSA pipeline security directive requires documented compensating controls for every unpatched OT vulnerability — not just a waiting posture. Without a compensating controls record, TSA auditors will treat the entire period as an undocumented compliance gap. Additionally, a publicly known zero-day with a reachable attack vector may attract targeted exploitation during the unpatched window.",
+          "correct": false,
+          "nextPhaseId": "phase-2-it"
+        },
+        {
+          "id": "opt-b",
+          "text": "Immediately implement compensating controls: block the OPC-UA port (4840) at the DMZ firewall for all sources except the authorized SCADA polling addresses, enable enhanced SIEM alerting on any connection attempts to PIPELINE-HIST01, and document both controls with supervisor sign-off while contacting the vendor for patch certification status",
+          "outcome": "Correct. Implementing compensating controls immediately removes the network attack path (blocking port 4840 except for authorized polling sources) and establishes enhanced detection (SIEM alerting) — two independent layers of risk reduction. Documenting both controls with supervisor sign-off and notifying the vendor creates the compliance record required by the current TSA pipeline security directive. This is the correct OT/ICS response to a zero-day with no available vendor patch: act now on the attack path, document everything, and wait for vendor certification before applying any software changes.",
+          "correct": true,
+          "nextPhaseId": "phase-2-ot"
+        }
+      ]
+    },
+    {
+      "id": "phase-2-ot",
+      "type": "decision",
+      "title": "Compensating Controls Active — Vendor Certification Pending",
+      "isFinal": true,
+      "prompt": "You have blocked port 4840 at the DMZ firewall, enabled SIEM alerting on PIPELINE-HIST01 connection attempts, and documented both controls with supervisor sign-off. Three months later, the vendor issues a certified patch. What is the correct next step?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Schedule the certified vendor patch for deployment in the next available maintenance window, stage it on approved offline media, verify the SHA-256 hash against the vendor portal before copying to the OT environment, and retire the compensating controls record after the patch is confirmed installed",
+          "outcome": "Correct. This is the complete OT patch deployment cycle: schedule in a maintenance window, stage on approved offline media, verify the hash against the vendor's published value before deployment, and retire the compensating controls record after the patch is installed and confirmed via Get-HotFix. Retiring the compensating controls record is mandatory — an open compensating control record after a patch has been applied is itself a compliance finding. The full cycle satisfies the current TSA pipeline security directive OT patch management requirements and aligns with NIST SP 800-82 Rev 3 Section 6.3.6.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Apply the certified patch immediately outside the maintenance window — the vendor has certified it and the zero-day risk justifies an unscheduled deployment",
+          "outcome": "Vendor certification means the patch is safe to apply in a qualified environment — it does not authorize bypassing the change management process. Applying a patch outside the scheduled maintenance window without change management approval violates the OT change control process required by the current TSA directive, risks an unplanned SCADA outage if the patch installation requires a reboot at an unscheduled time, and leaves no approved change record for audit trail purposes. Zero-day urgency was addressed by the compensating controls deployed in phase 1; the attack path is already blocked. The correct response now is to follow the standard maintenance window deployment process.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    },
+    {
+      "id": "phase-2-it",
+      "type": "decision",
+      "title": "Compliance Gap — Recovery Required",
+      "isFinal": true,
+      "prompt": "Three months have passed with no compensating controls documented and the OPC-UA port still reachable. The vendor has now issued a certified patch. A TSA audit is scheduled for next month. What must you do before the audit?",
+      "options": [
+        {
+          "id": "opt-a",
+          "text": "Immediately implement compensating controls now, document them as current-state controls, submit a TSA notification for the 3-month exposure period, and prepare a corrective action plan for the audit showing that the compliance gap has been identified and remediated",
+          "outcome": "Correct recovery path. Implementing compensating controls now (even though the vendor patch is available) establishes the current security posture before the audit. Submitting a TSA notification for the 3-month unprotected exposure period fulfills the incident reporting requirement. A corrective action plan with named responsible persons and a defined timeline for patch deployment demonstrates organizational accountability. Auditors who see a credible corrective action plan with honest disclosure of the gap duration consistently report better outcomes than organizations that minimize or conceal the gap. Deploy the vendor patch during the next maintenance window and retire all compensating controls after confirmed installation.",
+          "correct": true,
+          "nextPhaseId": null
+        },
+        {
+          "id": "opt-b",
+          "text": "Apply the patch before the audit and do not mention the 3-month exposure period — once patched, the vulnerability is resolved and there is nothing to report",
+          "outcome": "Patching the vulnerability does not retroactively eliminate the compliance obligation for the unprotected 3-month period. TSA auditors review patch management program records — including when compensating controls were documented relative to when vulnerabilities were disclosed. A patch application with no compensating controls record for the preceding 3 months signals that the organization's patch management process failed to function for this vulnerability. Additionally, if the RCE vulnerability was actively exploited during the unprotected window, the absence of a notification to TSA may constitute a separate reporting violation. Attempting to resolve compliance gaps by patching without disclosure is a riskier outcome than transparent reporting with a corrective action plan.",
+          "correct": false,
+          "nextPhaseId": null
+        }
+      ]
+    }
+  ]
+}

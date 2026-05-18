@@ -1,0 +1,106 @@
+{
+  "id": "patch-management-quiz-02",
+  "moduleId": "patch-management",
+  "title": "Patch Management — Advanced Knowledge Check",
+  "questions": [
+    {
+      "id": "q-01",
+      "type": "multiple-choice",
+      "stem": "When assessing OT patch risk, what additional dimension must be evaluated beyond the standard CVSS base score?",
+      "complianceControls": ["TSA-PatchMgmt", "NIST-SI-2"],
+      "answers": [
+        {
+          "id": "a",
+          "text": "The patch's download file size and installation time",
+          "correct": false,
+          "feedback": "File size and installation time are operational scheduling considerations, not risk assessment dimensions. The critical missing dimension is operational criticality — how severely would the pipeline operation be affected if the targeted OT system went offline during patching or experienced a failed rollback."
+        },
+        {
+          "id": "b",
+          "text": "The age of the vulnerability since it was first published in the NVD",
+          "correct": false,
+          "feedback": "Vulnerability age is a useful indicator of exposure duration but is not the additional risk dimension needed for OT patch decisions. OT patch risk assessment requires understanding the operational impact of the affected system on pipeline control continuity — not when the CVE was first published."
+        },
+        {
+          "id": "c",
+          "text": "Operational criticality — the impact on pipeline control continuity if the affected OT system is unavailable during patching or requires rollback",
+          "correct": true,
+          "feedback": "Correct. CVSS scores measure vulnerability severity (exploitability and impact at the system level) but do not capture the operational consequence to pipeline operations if the affected OT system (historian, SCADA server, HMI) is unavailable during a patch reboot or requires emergency rollback. A CVSS 9.8 CVE on a non-critical isolated test system may have lower effective OT risk than a CVSS 7.2 CVE on the primary SCADA historian feeding regulatory flow reporting. The OT patch risk matrix combines CVSS score, exploitability in the OT network context, and operational criticality to produce a complete risk picture aligned with current TSA pipeline security directive requirements."
+        },
+        {
+          "id": "d",
+          "text": "The number of other organizations that have already applied the patch",
+          "correct": false,
+          "feedback": "Patch adoption rate across other organizations is not a risk dimension in the OT patch assessment framework. The relevant additional dimension is operational criticality — how much pipeline control continuity depends on the availability of the affected OT system. High adoption elsewhere does not reduce the operational risk of an unplanned SCADA outage in your environment."
+        }
+      ],
+      "explanation": "OT patch risk assessment extends the standard CVSS-based IT model by adding two OT-specific dimensions: exploitability in the OT network context (is the attack path reachable given your segmentation?) and operational criticality (how severely does pipeline control continuity depend on the affected system's availability?). NIST SP 800-82 Rev 3 Chapter 6 identifies OT patch management as a distinct discipline requiring these additional dimensions beyond IT-standard vulnerability scoring."
+    },
+    {
+      "id": "q-02",
+      "type": "multiple-choice",
+      "stem": "Which PowerShell command generates an audit-ready inventory of recently installed patches on a Windows system, sorted with the most recent patch first?",
+      "complianceControls": ["NIST-SI-2", "NIST-CM-6"],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Get-WindowsUpdate | Sort-Object Date -Descending",
+          "correct": false,
+          "feedback": "Get-WindowsUpdate is part of the PSWindowsUpdate module which is not installed by default on PS 5.1 systems. OT workstations and servers may not have this module available. Get-HotFix is the PS 5.1 built-in cmdlet that reads directly from WMI (Win32_QuickFixEngineering) and requires no additional modules."
+        },
+        {
+          "id": "b",
+          "text": "Get-WinEvent -LogName System | Where-Object {$_.Id -eq 19}",
+          "correct": false,
+          "feedback": "Event ID 19 (WindowsUpdateClient/OperationalSuccess) captures individual update installation events in the event log but does not return a structured, queryable patch inventory. Get-HotFix returns a structured object collection that can be piped to Sort-Object, Select-Object, and Export-Csv for compliance reporting."
+        },
+        {
+          "id": "c",
+          "text": "Get-HotFix | Sort-Object InstalledOn -Descending",
+          "correct": true,
+          "feedback": "Correct. Get-HotFix reads from WMI Win32_QuickFixEngineering and returns all installed QFE patches as structured objects with HotFixID, Description, InstalledOn, and InstalledBy fields. Piping to Sort-Object InstalledOn -Descending puts the most recently installed patches at the top — making it easy to verify that a scheduled patch deployment landed correctly. This is the PS 5.1 built-in approach that works on any Windows system, including OT workstations that do not have the PSWindowsUpdate module installed."
+        },
+        {
+          "id": "d",
+          "text": "Get-Process | Where-Object {$_.Name -like '*update*'}",
+          "correct": false,
+          "feedback": "Get-Process returns running processes, not installed patches. Filtering for update-related process names would only show update-related services that happen to be running at query time — it does not produce a patch inventory. Use Get-HotFix for installed patch inventory."
+        }
+      ],
+      "explanation": "Get-HotFix is the PS 5.1 built-in cmdlet for querying installed Windows patches. It reads from WMI (Win32_QuickFixEngineering) and returns structured objects suitable for Sort-Object, Select-Object, and Export-Csv operations. Piping to Sort-Object InstalledOn -Descending produces an audit-ready view with the most recently installed patches first. Use Export-Csv with -NoTypeInformation to generate the compliance evidence artifact required by TSA auditors."
+    },
+    {
+      "id": "q-03",
+      "type": "multiple-choice",
+      "stem": "Under the current TSA pipeline security directive, what is required when a critical OT patch cannot be applied immediately because the OEM vendor has not yet issued certification?",
+      "complianceControls": ["TSA-PatchMgmt", "NIST-RA-3"],
+      "answers": [
+        {
+          "id": "a",
+          "text": "Apply the uncertified patch anyway — critical CVSS scores override vendor certification requirements",
+          "correct": false,
+          "feedback": "Applying an uncertified patch to an OT system overrides the vendor's qualified software configuration, voids the support agreement, and accepts full risk of OT service instability without vendor assistance. The current TSA pipeline security directive does not provide a CVSS-based exception to the OEM certification requirement. Critical CVE severity triggers a requirement for documented compensating controls, not unauthorized patch application."
+        },
+        {
+          "id": "b",
+          "text": "Document compensating controls (network isolation, enhanced monitoring) with written approval from a named responsible person, and accept the residual risk in writing until the vendor certifies the patch",
+          "correct": true,
+          "feedback": "Correct. When an OT patch cannot be applied immediately, the current TSA pipeline security directive requires organizations to document compensating controls — specific, implemented security measures that reduce the risk of the unpatched vulnerability. Compensating controls must be documented in writing, approved by a named individual (not a team), reviewed at defined intervals (minimum every 30 days), and explicitly accepted as residual risk until the patch certification cycle completes. A missing compensating control record is the most common patch management finding in TSA pipeline security audits."
+        },
+        {
+          "id": "c",
+          "text": "Request a formal TSA compliance waiver before the patch deadline expires",
+          "correct": false,
+          "feedback": "TSA compliance waivers are not the standard mechanism for handling OT patch delays caused by vendor certification timelines. The required response is a documented compensating controls record with written risk acceptance — not a waiver request. Compensating controls are the expected and accepted approach for OT patches pending OEM certification, provided the documentation requirements are met."
+        },
+        {
+          "id": "d",
+          "text": "Defer all action until the OEM vendor issues certification — no documentation is required during the waiting period",
+          "correct": false,
+          "feedback": "Deferring action without documentation leaves the organization with no compliance evidence for the period between the CVE advisory and the eventual patch application. The absence of a compensating controls record is itself an audit finding. Even when an OT system is safely isolated (and therefore the operational risk is genuinely low), the documentation requirement still applies — TSA auditors cannot verify that the risk was assessed without the written record."
+        }
+      ],
+      "explanation": "Under the current TSA pipeline security directive, every deferred OT patch requires a written compensating controls record that documents the vulnerability, the compensating measure implemented, the approval date and approver name, and the residual risk acceptance. This record must be reviewed at minimum every 30 days and retired when the patch is applied. The absence of a compensating controls record — not just the missing patch itself — is treated as a compliance gap in TSA audits."
+    }
+  ]
+}
