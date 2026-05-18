@@ -1,0 +1,11 @@
+{
+  "orgName": "OkieOps",
+  "logoPath": "OkieOps.png",
+  "activeModules": [
+    "logging-auditing",
+    "network-hardening",
+    "account-access",
+    "incident-response",
+    "patch-management"
+  ]
+}
