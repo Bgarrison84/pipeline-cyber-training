@@ -211,7 +211,7 @@ Plans:
 | 8. Patch Management Module (MOD-05) | v1.0 | 4/4 | Complete | 2026-05-17 |
 | 9. Compliance Currency + Content Depth | v2.0 | 9/9 | Complete | 2026-05-18 |
 | 10. Fork Configuration System | v2.0 | 5/5 | Complete | 2026-05-18 |
-| 11. PWA / Offline Support | v2.0 | 0/4 | Not started | - |
+| 11. PWA / Offline Support | v2.0 | 0/4 | Planned | - |
 | 12. Progress Sync | v2.0 | 0/TBD | Not started | - |
 
 ---

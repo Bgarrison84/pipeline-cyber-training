@@ -2,12 +2,12 @@
 gsd_state_version: 1.0
 milestone: v2.0
 milestone_name: Content Depth & Platform Maturity
-status: phase-10-planned
+status: phase-11-planned
 last_updated: "2026-05-18T00:00:00.000Z"
 progress:
   total_phases: 4
   completed_phases: 1
-  total_plans: 14
+  total_plans: 18
   completed_plans: 9
   percent: 25
 ---
@@ -25,10 +25,10 @@ See: .planning/PROJECT.md (updated 2026-05-17)
 
 ## Current Position
 
-Phase: 10 — Fork Configuration System (PLANNED — ready to execute)
-Plan: 10-01 through 10-05 (5 plans, 3 waves)
-Status: Phase 10 planned — ready to execute
-Last activity: 2026-05-18 — Phase 10 planned; 5 plans across 3 waves; verification passed
+Phase: 11 — PWA / Offline Support (PLANNED — ready to execute)
+Plan: 11-01 through 11-04 (4 plans, 3 waves)
+Status: Phase 11 planned — ready to execute
+Last activity: 2026-05-18 — Phase 11 planned; 4 plans across 3 waves; verification passed
 
 ---
 
@@ -38,7 +38,7 @@ Last activity: 2026-05-18 — Phase 10 planned; 5 plans across 3 waves; verifica
 |-------|------|-------------|--------|
 | 9 | Compliance Currency + Content Depth | SME-01, SME-02, SME-03, CONT-05, CONT-06, CONT-07 | COMPLETE (9/9 plans, 177 tests GREEN) |
 | 10 | Fork Configuration System | FORK-01, FORK-02, FORK-03 | Planned (5 plans, 3 waves) — ready to execute |
-| 11 | PWA / Offline Support | PWA-01, PWA-02, PWA-03 | Not started |
+| 11 | PWA / Offline Support | PWA-01, PWA-02, PWA-03 | Planned (4 plans, 3 waves) — ready to execute |
 | 12 | Progress Sync | SYNC-01, SYNC-02 | Not started |
 
 **Phase dependency chain:**
