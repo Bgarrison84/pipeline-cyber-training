@@ -4,6 +4,7 @@ import { initSidebar } from './sidebar.js';
 import { setComplianceRefs, renderBadge } from './badge.js';
 import { progressStore } from './progress-store.js';
 import { loadForkConfig, applyForkBranding } from './fork-config.js';
+import { initOfflineIndicator } from './offline-indicator.js';
 import './style.css';
 
 export { renderBadge };
@@ -30,6 +31,7 @@ export function getComplianceRefs() {
 async function init() {
   const forkConfig = await loadForkConfig();
   applyForkBranding(forkConfig);
+  initOfflineIndicator(); // synchronous — indicator visible immediately, before async fetches
   await loadComplianceRefs();
   await progressStore.init();
   await Promise.all([handleRoute(), initSidebar({ onImportSuccess: handleRoute })]);
